@@ -16,7 +16,7 @@ import FormInput from "./ReportInputs";
 const CreateReport = () => {
   const [reportType, setReportType] = useState("lost");
   const [completion, setCompletion] = useState(0);
-
+  // list for guidline post at eside
   const guidelines = [
     "Be as specific as possible in description.",
     "Don't include personal contact info in the public description.",
@@ -30,14 +30,13 @@ const CreateReport = () => {
     location: "",
     description: "",
   });
-
+  // if we need to add sub Categories from here!!! then go to select category to add value
   const subCategories = {
     electronics: ["Mobile", "Tablet", "Laptop", "Camera", "others"],
     documents: ["ID Card", "Passport", "Driving License", "others"],
     walletsKeys: ["Home Keys", "Car Keys", "Others"],
   };
 
-  // مصفوفة الحقول اللي عايز تتابعها (موجودة أصلاً في الـ formData بتاعتك)
   const requiredFields = [
     "itemName",
     "category",
@@ -45,14 +44,14 @@ const CreateReport = () => {
     "location",
     "description",
   ];
-
-  // حساب النسبة المئوية بناءً على البيانات اللي المستخدم دخلها
+  //-logic to handle progress par with form "dont touch it"-
   const filledFields = requiredFields.filter(
     (field) => formData[field] && formData[field].toString().trim() !== "",
   );
   const currentProgress = Math.round(
     (filledFields.length / requiredFields.length) * 100,
   );
+  //-------------------------------------------------------------------
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +77,7 @@ const CreateReport = () => {
       </header>
 
       <main className="flex-1 p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-5 ">
-        {/* الفورم (75%) */}
+        {/*  75% */}
         <div className="lg:col-span-9">
           <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-2xl">
             <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-8 max-w-xl mx-auto">
@@ -121,7 +120,6 @@ const CreateReport = () => {
                     <option value="walletsKeys">Wallets/Keys</option>
                     <option value="documents">Documents</option>
                   </select>
-                  {/* تظهر فقط إذا كانت الـ category المختارة لها subCategories */}
                   {formData.category && subCategories[formData.category] && (
                     <div className="flex flex-col gap-2 animate-in fade-in duration-300">
                       <label className="text-sm font-semibold text-slate-700">
@@ -176,7 +174,7 @@ const CreateReport = () => {
                 />
               </div>
 
-              {/* رفع الصور */}
+              {/* upload imahes */}
               <div className="space-y-3">
                 <div className="flex flex-col items-center justify-center w-full p-10 border-2 border-dashed border-blue-200 bg-blue-50/20 rounded-3xl group hover:border-blue-400 cursor-pointer">
                   <Camera className="w-12 h-12 text-blue-500 mb-3" />
@@ -208,7 +206,7 @@ const CreateReport = () => {
           </div>
         </div>
 
-        {/* السايد بار (25%) */}
+        {/*   (25%) */}
 
         <aside className="lg:col-span-3 hidden lg:block">
           <div className="bg-white p-6 rounded-3xl border border-slate-200 sticky top-10 shadow-sm mb-5">
@@ -233,7 +231,7 @@ const CreateReport = () => {
         </aside>
       </main>
 
-      {/* الناف بار (موبايل) */}
+      {/* mobile nav */}
       <nav className="fixed bottom-0 w-full bg-white border-t border-slate-100 px-6 py-4 flex justify-between lg:hidden">
         <NavItem icon={Home} label="HOME" />
         <NavItem icon={PlusCircle} label="REPORT" active />
