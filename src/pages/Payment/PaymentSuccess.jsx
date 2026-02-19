@@ -108,18 +108,19 @@ const PaymentSuccess = () => {
               Download Receipt (PDF)
             </Button>
           </div>
-
-          {/* Footer Links */}
           <div className="mt-8 text-xs text-gray-400 flex flex-col gap-2">
             <p>
               Questions? <a href="#" className="text-blue-600 hover:underline">Contact Support</a> or visit our <a href="#" className="text-blue-600 hover:underline">Help Center</a>.
             </p>
-            <div className="flex justify-center gap-4 mt-2">
-              <a href="#" className="hover:text-gray-600">Privacy Policy</a>
-              <a href="#" className="hover:text-gray-600">Terms of Service</a>
-            </div>
           </div>
 
+        </div>
+        {/* Footer Links */}
+        <div className="mt-8 text-xs text-gray-400 flex flex-col gap-2">
+          <div className="flex justify-center gap-4 mt-2">
+            <a href="#" className="hover:text-gray-600">Privacy Policy</a>
+            <a href="#" className="hover:text-gray-600">Terms of Service</a>
+          </div>
         </div>
       </div>
     </div>
