@@ -1,8 +1,5 @@
 import { useState } from "react"
 import { Outlet } from "react-router-dom"
-import Navbar from "../common/Navbar"
-import Footer from "../common/Footer"
-import Sidebar, { MobileSidebar } from "../common/Sidebar"
 import { ThemeProvider } from "../providers/ThemeProvider"
 
 function MainLayout() {
@@ -24,7 +21,6 @@ function MainLayout() {
           <main className="flex-1 grow">
             <Outlet />
           </main>
-        <Footer />
       </div>
     </ThemeProvider>
   )
