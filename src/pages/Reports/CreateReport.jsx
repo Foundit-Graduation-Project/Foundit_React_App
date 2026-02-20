@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import PostingGuidelines from "./PostGuideLine";
 import { resetForm } from "../../features/reports/reportsSlice";
 import { useDispatch } from "react-redux";
+import ReportFooter from "./ReportFooter";
 
 import {
   Camera,
@@ -260,6 +261,7 @@ const CreateReport = () => {
         <NavItem icon={Search} label="SEARCH" />
         <NavItem icon={User} label="PROFILE" />
       </nav>
+      <ReportFooter />
     </article>
   );
 };
