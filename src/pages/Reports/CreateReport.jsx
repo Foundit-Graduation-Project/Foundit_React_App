@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import PostingGuidelines from "./PostGuideLine";
+import { resetForm } from "../../features/reports/reportsSlice";
+import { useDispatch } from "react-redux";
+
 import {
   Camera,
   MapPin,
@@ -14,14 +17,12 @@ import {
 import FormInput from "./ReportInputs";
 
 const CreateReport = () => {
+  const dispatch = useDispatch();
+  const handleCancle = () => {
+    dispatch(resetForm());
+  };
+
   const [reportType, setReportType] = useState("lost");
-  const [completion, setCompletion] = useState(0);
-  // list for guidline post at eside
-  const guidelines = [
-    "Be as specific as possible in description.",
-    "Don't include personal contact info in the public description.",
-    "Use high-quality photos in good lighting.",
-  ];
 
   const [formData, setFormData] = useState({
     itemName: "",
@@ -35,6 +36,7 @@ const CreateReport = () => {
     electronics: ["Mobile", "Tablet", "Laptop", "Camera", "others"],
     documents: ["ID Card", "Passport", "Driving License", "others"],
     walletsKeys: ["Home Keys", "Car Keys", "Others"],
+    pets: ["dogs", "cats", "reptile"],
   };
 
   const requiredFields = [
@@ -51,6 +53,9 @@ const CreateReport = () => {
   const currentProgress = Math.round(
     (filledFields.length / requiredFields.length) * 100,
   );
+
+  // funcation to detect map was here
+
   //-------------------------------------------------------------------
 
   const handleInputChange = (e) => {
@@ -142,7 +147,7 @@ const CreateReport = () => {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                 <FormInput
                   label="Date"
                   id="date"
@@ -154,11 +159,26 @@ const CreateReport = () => {
                 <FormInput
                   label="Location"
                   id="location"
-                  placeholder="Where was it seen?"
+                  placeholder="Where was it ? EX: Cairo, helwan, <area name>/street name"
                   icon={MapPin}
                   value={formData.location}
                   onChange={handleInputChange}
                 />
+                <div className="hidden lg:block">
+                  <span className="text-sm text-slate-500 m-0 p-0">
+                    map help you detect the location address
+                  </span>
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3458.1123456789!2d31.2357!3d30.0444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDAyJzQwLjAiTiAzMcKwMTQnMDguNSJF!5e0!3m2!1sen!2seg!4v123456789"
+                    width="100%"
+                    height="450"
+                    className="border-slate-500 border-3 rounded-2xl"
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Google Maps"
+                  ></iframe>
+                </div>
               </div>
 
               <div className="flex flex-col gap-2">
@@ -168,6 +188,7 @@ const CreateReport = () => {
                 <textarea
                   name="description"
                   rows="4"
+                  placeholder="Provide color or unique marks, serial numbers, or any details that help identify the item..."
                   value={formData.description}
                   onChange={handleInputChange}
                   className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
@@ -190,7 +211,8 @@ const CreateReport = () => {
 
               <div className="flex w-full lg:justify-between">
                 <button
-                  type="reset"
+                  onClick={() => dispatch(resetForm())}
+                  type="button"
                   className="hidden lg:block  py-5 bg-white text-black font-bold text-lg rounded-2xl  hover:text-red-500 active:scale-[0.98] transition-all"
                 >
                   Cancel or save draft
