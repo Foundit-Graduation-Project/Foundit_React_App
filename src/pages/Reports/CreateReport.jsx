@@ -4,6 +4,7 @@ import PostingGuidelines from "./PostGuideLine";
 import { resetForm } from "../../features/reports/reportsSlice";
 import { useDispatch } from "react-redux";
 import ReportFooter from "./ReportFooter";
+import ReportHeader from "./ReportHeader";
 
 import {
   Camera,
@@ -72,6 +73,8 @@ const CreateReport = () => {
 
   return (
     <article className="w-full mx-auto bg-slate-50 min-h-screen flex flex-col transition-all">
+      {/* header for desktop */}
+      <ReportHeader />
       {/*  header الموبايل */}
       <header className="w-full px-4 py-5 flex items-center bg-white sticky top-0 z-10 border-b border-slate-200 lg:hidden ">
         <button className="flex p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -81,21 +84,20 @@ const CreateReport = () => {
           Report an Item
         </h1>
       </header>
-
       <main className="flex-1 p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-5 ">
         {/*  75% */}
         <div className="lg:col-span-9">
-          <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-2xl">
-            <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-8 max-w-xl mx-auto">
+          <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-2xl ">
+            <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-8 max-w-xl mx-auto ">
               <button
                 onClick={() => setReportType("lost")}
-                className={`${reportType === "lost" ? "bg-white shadow-md text-blue-600" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
+                className={`${reportType === "lost" ? "bg-white shadow-md text-blue-600 lg:bg-blue-600 lg:text-white" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
               >
                 I Lost Something
               </button>
               <button
                 onClick={() => setReportType("found")}
-                className={`${reportType === "found" ? "bg-white shadow-md text-blue-600" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
+                className={`${reportType === "found" ? "bg-white shadow-md text-blue-600 lg:bg-blue-600 lg:text-white" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
               >
                 I Found Something
               </button>
@@ -253,7 +255,6 @@ const CreateReport = () => {
           <PostingGuidelines />
         </aside>
       </main>
-
       {/* mobile nav */}
       <nav className="fixed bottom-0 w-full bg-white border-t border-slate-100 px-6 py-4 flex justify-between lg:hidden">
         <NavItem icon={Home} label="HOME" />
