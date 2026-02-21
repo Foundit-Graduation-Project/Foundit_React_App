@@ -1,5 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit'
-
+import { configureStore } from "@reduxjs/toolkit";
+import reportReducer from "../features/reports/reportsSlice";
 export const store = configureStore({
-  reducer: {},
-})
+  reducer: {
+    report: reportReducer,
+  },
+});
