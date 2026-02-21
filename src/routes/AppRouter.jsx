@@ -46,7 +46,7 @@ function AppRouter() {
         </Route>
 
         {/* Protected Routes */}
-        <Route path="/app" element={<MainLayout />}>
+        <Route path="/" element={<MainLayout />}>
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="account-security" element={<AccountSecurity />} />
