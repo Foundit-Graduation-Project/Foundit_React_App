@@ -8,7 +8,7 @@ function ReportHeader() {
         <nav className="">
           <ul className="flex">
             <Button variant="defualt">
-              <li className="text-slate-500">Home</li>
+              <li className="text-slate-500 hover:text-slate-900">Home</li>
             </Button>
             <Button variant="defualt" size="icon">
               <li>
@@ -39,7 +39,7 @@ function ReportHeader() {
             <h2>Create a New Report</h2>
           </div>
           <p className="text-slate-500 text-lg max-w-lg leading-relaxed">
-            Provide details to help out community to find you lost item
+            Provide details to help our community to find your lost item
           </p>
         </div>
       </div>
