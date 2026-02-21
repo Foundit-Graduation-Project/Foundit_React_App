@@ -1,6 +1,7 @@
 import { Input } from "../../ui/input";
 import { Search, Plus, Database } from "lucide-react";
 import { Button } from "../../ui/button";
+import { Link } from "react-router-dom";
 
 
 const myReportsNav = () => {
@@ -27,7 +28,9 @@ const myReportsNav = () => {
                     <Input placeholder="Search reports..." className="pl-9 bg-gray-50 border-gray-200" />
                 </div>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    <Plus className="w-4 h-4 mr-2" /> New Report
+                    <Link to="/create-report" className="flex items-center">
+                        <Plus className="w-4 h-4 mr-2" /> New Report
+                    </Link>
                 </Button>
                 <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold ml-2">
                     JD
