@@ -3,8 +3,14 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type,leadingIcon, ...props }, ref) => {
     return (
+       <div className="relative w-full ">
+        {leadingIcon && (
+          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
+            {leadingIcon}
+          </span>
+        )}
       <input
         type={type}
         className={cn(
@@ -14,6 +20,8 @@ const Input = React.forwardRef(
         ref={ref}
         {...props}
       />
+            </div>
+
     )
   }
 )
