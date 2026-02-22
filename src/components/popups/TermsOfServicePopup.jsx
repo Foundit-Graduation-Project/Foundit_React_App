@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {  ShieldCheck, UserCircle, Gavel, ArrowRight, ShieldAlert, Lock } from "lucide-react";
-import { DialogDescription, DialogOverlay } from "@radix-ui/react-dialog";
+
+import {  UserCircle, Gavel,  ShieldAlert, Lock } from "lucide-react";
+import TermsNav from './../layout/customNavbars/termsNav';
+import TermsFooter from './../layout/customFooters/termsFooter';
 
 export default function TermsOfServicePopup({ open, setOpen }) {
   const [agreed, setAgreed] = useState(false);
@@ -31,42 +29,10 @@ export default function TermsOfServicePopup({ open, setOpen }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-        {/* <DialogOverlay className="bg-slate-900/40 backdrop-blur-md" />*/}
         
       <DialogContent className="max-w-2xl p-0 overflow-hidden border-none rounded-xl shadow-2xl bg-white">
         
-        {/* Header Section */}
-        <div className="p-8 pb-4 border-b border-slate-50">
-          <div className="flex items-center justify-between mb-1">
-            <DialogTitle className="text-2xl font-bold tracking-tight text-slate-900">
-              Terms of Service
-            </DialogTitle>
-            <button 
-              onClick={() => setOpen(false)}
-              className="p-1 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
-            >
-            </button>
-          </div>
-          
-          <DialogDescription className="text-xs font-medium text-slate-400 mb-6">
-            Version 1.0 • Last updated: Jan 24, 2026
-          </DialogDescription>
-
-          {/* Dynamic Progress Bar */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              <span>Reading progress</span>
-              <span className="text-blue-600 transition-all duration-300">{progress}%</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-600 rounded-full transition-all duration-200 ease-out" 
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
+<TermsNav progress={progress} setOpen={setOpen} />
         {/* Content Area (Scrollable) */}
         <div 
           ref={scrollRef}
@@ -129,39 +95,7 @@ export default function TermsOfServicePopup({ open, setOpen }) {
           </section>
         </div>
 
-        {/* Footer Section */}
-        <DialogFooter className="flex flex-row items-center justify-between p-6 bg-slate-50/50 border-t border-slate-100">
-          <div className="flex flex-1 items-center space-x-2 ">
-            <Checkbox 
-                id="terms" 
-                checked={agreed} 
-                onCheckedChange={setAgreed}
-                className="border-slate-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-            />
-            <label 
-              htmlFor="terms" 
-              className="text-sm font-medium text-slate-400 cursor-pointer select-none"
-            >
-              I have read and agree to the terms
-            </label>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <button 
-                onClick={() => setOpen(false)}
-                className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              Decline
-            </button>
-            <Button
-              disabled={!agreed}
-              onClick={() => setOpen(false)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-7 py-5 rounded-lg flex items-center gap-2 font-semibold shadow-md shadow-blue-200 transition-all active:scale-95 disabled:opacity-50"
-            >
-              Accept Terms <ArrowRight size={16} />
-            </Button>
-          </div>
-        </DialogFooter>
+        <TermsFooter agreed={agreed} setAgreed={setAgreed} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
