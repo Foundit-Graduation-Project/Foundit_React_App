@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { chatApi } from '../api/chatApi';
+import { chatApi } from './chatApi';
 
 export const fetchChatData = createAsyncThunk(
   'chat/fetchChatData',
