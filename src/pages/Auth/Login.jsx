@@ -1,10 +1,20 @@
 import React from "react";
-import { Mail, Lock, Eye, ArrowRight, Earth, Facebook } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  ArrowRight,
+  Earth,
+  Facebook,
+  EyeOff,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import WelcomeText from "./WelcomeText";
+import TypeIt from "typeit-react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,8 +24,13 @@ import {
 } from "@/components/ui/card";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisability = () => {
+    setShowPassword(!showPassword);
+  };
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#f8faff]">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#f8faff] ">
       <Card className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden border-none shadow-2xl">
         <div className="bg-[#eef4ff] p-10 hidden md:flex flex-col justify-between">
           <div className="space-y-6">
@@ -43,7 +58,7 @@ const Login = () => {
           <div className="bg-white/60 rounded-3xl ">
             <div className="aspect-video bg-slate-200 rounded-2xl flex items-center justify-center text-slate-400">
               <video autoPlay loop muted className="w-full h-full object-cover">
-                <source src="/videos/vid.mp4" type="video/mp4" />
+                <source src="/videos/loginVideo.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -53,7 +68,19 @@ const Login = () => {
         <div className="bg-white p-8 md:p-16 flex flex-col justify-center">
           <CardHeader className="p-0 mb-8 flex content-center text-center w-full">
             <CardTitle className="text-3xl font-bold text-slate-900">
-              Find Whats Your`s
+              <TypeIt
+                options={{
+                  strings: [
+                    "Lost something?",
+                    "Found something?",
+                    "We help you find it.",
+                  ],
+                  speed: 100,
+                  waitUntilVisible: true,
+                  breakLines: false, // عشان يمسح السطر ويكتب اللي بعده في نفس المكان
+                  loop: true,
+                }}
+              />
             </CardTitle>
             <CardDescription className="text-slate-500 text-base">
               Login to track your lost item or report a find.
@@ -89,11 +116,16 @@ const Login = () => {
                   <Lock className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     className="pl-10 h-12 rounded-xl border-slate-200 focus-visible:ring-[#1d63ed]"
                   />
-                  <Eye className="absolute right-3 top-3 h-5 w-5 text-slate-400 cursor-pointer" />
+                  <span
+                    onClick={togglePasswordVisability}
+                    className="absolute right-3 top-3 h-5 w-5 text-slate-400 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </span>
                 </div>
               </div>
 
