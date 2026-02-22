@@ -18,10 +18,10 @@ const PaymentNav = () => {
             <div className="flex items-center gap-8">
                 {/* 2. Navigation Links - Now moved right */}
                 <div className="hidden md:flex items-center gap-8">
-                    <NavLink to="/dashboard" label="Dashboard" />
-                    <NavLink to="/reports" label="Reports" />
-                    <NavLink to="/billing" label="Billing" />
-                    <NavLink to="/settings" label="Settings" isActive={true} />
+                    <NavLink to="/profile" label="Profile" />
+                    <NavLink to="/my-reports" label="Reports" />
+                    <NavLink to="/payment/checkout" label="Billing" />
+                    <NavLink to="/profile/settings" label="Settings" isActive={true} />
                 </div>
 
                 {/* 3. User Profile */}
