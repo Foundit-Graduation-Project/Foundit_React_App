@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   BarChart3, Calendar, Award, Wallet, FileText,
-  Settings, CreditCard, RefreshCw, Sun, Moon, ChevronDown
+  Settings, CreditCard, RefreshCw, Sun, Moon, ChevronDown, Globe
 } from "lucide-react";
 
 // 1. Import UI Components
@@ -20,7 +20,7 @@ const Profile = () => {
   const [settings, setSettings] = useState({
     notifications: true,
     darkMode: false,
-    twoFactor: true,
+    language: "en",
   });
 
   // Handle Resize
@@ -40,6 +40,13 @@ const Profile = () => {
     const root = document.documentElement;
     root.classList.toggle("dark"); // Adds 'dark' class to <html>
     setSettings((prev) => ({ ...prev, darkMode: !prev.darkMode }));
+  };
+
+  const toggleLanguage = () => {
+    setSettings((prev) => ({
+      ...prev,
+      language: prev.language === "en" ? "ar" : "en"
+    }));
   };
 
   return (
@@ -226,7 +233,7 @@ const Profile = () => {
               </div>
               <div className="p-6 space-y-6">
 
-                {/* Toggle 1 */}
+                {/* Toggle 1: Notifications */}
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Email Notifications</label>
@@ -239,7 +246,7 @@ const Profile = () => {
                   />
                 </div>
 
-                {/* Toggle 2: Dark Mode */}
+                {/* Toggle 2: Appearance (Dark Mode) */}
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Appearance</label>
@@ -252,10 +259,10 @@ const Profile = () => {
                     size="icon"
                     onClick={toggleTheme}
                     className="rounded-full transition-all duration-300
-                               bg-white border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-gray-900
-                               dark:bg-transparent dark:border-slate-700 dark:text-slate-400 
-                               dark:hover:text-blue-400 dark:hover:border-blue-800
-                               dark:hover:bg-blue-900/20"
+                     bg-white border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-gray-900
+                     dark:bg-transparent dark:border-slate-700 dark:text-slate-400 
+                     dark:hover:text-blue-400 dark:hover:border-blue-800
+                     dark:hover:bg-blue-900/20"
                   >
                     {settings.darkMode ? (
                       <Moon className="h-5 w-5 fill-current" />
@@ -265,10 +272,32 @@ const Profile = () => {
                   </Button>
                 </div>
 
+                {/* Toggle 3: Language (NEW) */}
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Language</label>
+                    <p className="text-xs text-gray-500 dark:text-slate-400">
+                      {settings.language === "en" ? "English (US)" : "Arabic (EG)"}
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={toggleLanguage}
+                    className="h-9 px-3 rounded-full border-gray-200 dark:border-slate-700 
+                     text-gray-700 dark:text-slate-300 bg-transparent
+                     hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200
+                     dark:hover:bg-blue-900/20 dark:hover:text-blue-400 dark:hover:border-blue-800
+                     transition-all duration-300"
+                  >
+                    <Globe className="w-4 h-4 mr-2" />
+                    <span className="font-bold text-xs uppercase">{settings.language}</span>
+                  </Button>
+                </div>
+
                 <div className="pt-4">
                   <Button variant="outline" className="w-full border-gray-200 dark:border-slate-700 
-                                                   text-gray-700 dark:text-slate-300 
-                                                   hover:bg-gray-50 dark:hover:bg-slate-800 h-10">
+                                         text-gray-700 dark:text-slate-300 
+                                         hover:bg-gray-50 dark:hover:bg-slate-800 h-10">
                     View Full Settings
                   </Button>
                 </div>
