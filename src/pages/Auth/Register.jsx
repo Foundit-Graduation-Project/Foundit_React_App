@@ -1,15 +1,19 @@
 import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import RegisterNav from "./../../components/layout/customNavbars/registerNav";
 import { Button } from "../../components/ui/button";
+import { Checkbox } from "../../components/ui/checkbox";
 import { Input } from "../../components/ui/input";
 import PasswordStrengthBar from "../../features/auth/component/PasswordStrengthBar";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import RegisterFooter from "../../components/layout/customFooter/registerFooter";
+import { Link } from "react-router-dom";
+import HowItWorksPopup from "../../components/popups/HowItWorksPopup";
+import { useState } from "react";
+import TermsOfServicePopup from "../../components/popups/TermsOfServicePopup";
 
-const registerSchema = z
-  .object({
+const registerSchema = z.object({
     name: z.string().min(2, "Full name is required"),
     email: z.string().email("Invalid email address"),
     password: z
@@ -22,8 +26,8 @@ const registerSchema = z
         "Password must contain a number or special character",
       ),
     confirmPassword: z.string(),
-    terms: z.literal(true, {
-      errorMap: () => ({ message: "You must accept the terms" }),
+    terms: z.boolean().refine((val) => val === true, {
+      message: "You must accept the terms",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -36,10 +40,15 @@ export default function Register() {
     register,
     handleSubmit,
     watch,
+    control,
+
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
-    mode: "onChange",
+    mode: "onBlur",
+    defaultValues: {
+      terms: false,
+    },
   });
 
   const onSubmit = (data) => {
@@ -47,6 +56,8 @@ export default function Register() {
     alert("Registration successful!");
   };
 
+    const [termsOpen, setTermsOpen] = useState(false)
+  const [privacyOpen, setPrivacyOpen] = useState(false)
   return (
     <>
       <RegisterNav />
@@ -154,19 +165,30 @@ export default function Register() {
               {/* Terms Checkbox */}
               <div className="flex flex-col gap-2 items-start">
                 <label className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    {...register("terms")}
-                    className="accent-blue-600"
+                  <Controller
+                    name="terms"
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="
+                        data-[state=checked]:bg-blue-600
+                        data-[state=checked]:text-white "
+                      />
+                    )}
                   />
-                  I agree to the
-                  <a href="" className="text-blue-600">
-                    Terms of Services
+                  <p>
+
+                  I agree to the{" "}
+                  <a href="" className="text-blue-600 " onClick={(e) =>  {e.preventDefault();setTermsOpen(true)}} >
+                     Terms of Services
                   </a>
-                  and
-                  <a href="" className="text-blue-600">
+                  {" "}and{" "}
+                  <a href="" className="text-blue-600" onClick={() => setPrivacyOpen(true)}>
                     Privacy Policy
                   </a>
+                  </p>
                 </label>
                 {errors.terms && (
                   <p className="text-red-500 text-xs">{errors.terms.message}</p>
@@ -184,13 +206,18 @@ export default function Register() {
 
             <p className="mt-4 text-sm text-gray-500">
               Already have an account?{" "}
-              <a href="#" className="text-blue-600 font-semibold">
+              <Link to="/login" className="text-blue-600 font-semibold">
                 Login
-              </a>
+              </Link>
             </p>
           </div>
         </div>
       </div>
+
+      {/* Popups for Terms and Privacy */}
+<TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />
+<PrivacyPolicyPopup open={privacyOpen} setOpen={setPrivacyOpen} />
+
       <RegisterFooter />
     </>
   );
