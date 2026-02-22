@@ -19,7 +19,7 @@ const PaymentSuccess = () => {
       <PaymentNav />
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md mb-6 text-sm text-gray-500">
-          <span className="text-blue-600 hover:underline cursor-pointer">Billing</span>
+          <span className="text-blue-600">Billing</span>
           <span className="mx-2">›</span>
           <span className="font-medium text-gray-900">Payment Success</span>
         </div>
@@ -92,7 +92,7 @@ const PaymentSuccess = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3">
-            <Link to="/app/create-report">
+            <Link to="/create-report">
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base">
                 <Plus className="mr-2 h-5 w-5" />
                 Create New Report
