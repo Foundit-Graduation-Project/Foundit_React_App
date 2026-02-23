@@ -83,7 +83,7 @@ const Login = () => {
               />
             </CardTitle>
             <CardDescription className="text-slate-500 text-base">
-              Login to track your lost item or report a find.
+              Login to track your lost item or report a find..
             </CardDescription>
           </CardHeader>
 
