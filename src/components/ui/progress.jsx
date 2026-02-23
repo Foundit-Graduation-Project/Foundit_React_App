@@ -22,4 +22,8 @@ const Progress = React.forwardRef(({ className, value, ...props }, ref) => (
 
 Progress.displayName = ProgressPrimitive.Root.displayName;
 
+<<<<<<< HEAD
 export { Progress }
+=======
+export { Progress }
+>>>>>>> dev
