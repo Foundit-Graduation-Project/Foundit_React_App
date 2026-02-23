@@ -1,14 +1,21 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import * as React from "react"
 =======
 import React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
 >>>>>>> origin/dev
+=======
+import React from "react"
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
+import { Check } from "lucide-react"
+>>>>>>> 8ba1bd4f3704fb54e66cb21e1502634e800622bd
 
 import { cn } from "@/lib/utils"
 
 const Checkbox = React.forwardRef(({ className, ...props }, ref) => (
+<<<<<<< HEAD
 <<<<<<< HEAD
   <input
     type="checkbox"
@@ -24,6 +31,8 @@ Checkbox.displayName = "Checkbox"
 
 export { Checkbox }
 =======
+=======
+>>>>>>> 8ba1bd4f3704fb54e66cb21e1502634e800622bd
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
@@ -43,4 +52,7 @@ export { Checkbox }
 Checkbox.displayName = "Checkbox"
 
 export { Checkbox }
+<<<<<<< HEAD
 >>>>>>> origin/dev
+=======
+>>>>>>> 8ba1bd4f3704fb54e66cb21e1502634e800622bd
