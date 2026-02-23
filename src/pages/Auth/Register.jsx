@@ -1,63 +1,18 @@
-import { ArrowRight, Lock, Mail, User } from "lucide-react";
+import {  Info } from "lucide-react";
 import RegisterNav from "./../../components/layout/customNavbars/registerNav";
 import { Button } from "../../components/ui/button";
-import { Checkbox } from "../../components/ui/checkbox";
-import { Input } from "../../components/ui/input";
-import PasswordStrengthBar from "../../features/auth/component/PasswordStrengthBar";
-import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import RegisterFooter from "../../components/layout/customFooter/registerFooter";
+
+import RegisterFooter from "../../components/layout/customFooters/registerFooter";
 import { Link } from "react-router-dom";
 import HowItWorksPopup from "../../components/popups/HowItWorksPopup";
 import { useState } from "react";
-import TermsOfServicePopup from "../../components/popups/TermsOfServicePopup";
 
-const registerSchema = z.object({
-    name: z.string().min(2, "Full name is required"),
-    email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(50)
-      .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
-      .regex(
-        /[0-9!@#$%^&*]/,
-        "Password must contain a number or special character",
-      ),
-    confirmPassword: z.string(),
-    terms: z.boolean().refine((val) => val === true, {
-      message: "You must accept the terms",
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
+import RegisterForm from './../../components/forms/registerForm';
 
 export default function Register() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    control,
 
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(registerSchema),
-    mode: "onBlur",
-    defaultValues: {
-      terms: false,
-    },
-  });
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-    alert("Registration successful!");
-  };
-
-    const [termsOpen, setTermsOpen] = useState(false)
-  const [privacyOpen, setPrivacyOpen] = useState(false)
   return (
     <>
       <RegisterNav />
@@ -72,137 +27,23 @@ export default function Register() {
               <p className="text-slate-500 mb-8 text-base">
                 Start reporting or finding lost items today.
               </p>
+              {/* How it work fire */}
+              <Button
+                type="button"
+                onClick={() => setHowItWorksOpen(true)}
+                className="flex items-center gap-1.5  font-semibold bg-transparent hover:bg-transparent hover:text-blue-800 text-blue-600 transition-colors shadow-none "
+              >
+                <Info
+                  size={16}
+                  className="group-hover:scale-110 transition-transform"
+                />
+                <span className="cursor-pointer underline-offset-4">
+                  See how it works
+                </span>
+              </Button>
             </div>
 
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-5"
-            >
-              {/* Name */}
-              <div className="flex flex-col gap-2 items-start">
-                <label htmlFor="name" className="text-slate-700 font-semibold">
-                  Full Name
-                </label>
-                <Input
-                  placeholder="John Doe"
-                  id="name"
-                  {...register("name")}
-                  leadingIcon={<User />}
-                  className="text-base py-6"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs">{errors.name.message}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="flex flex-col gap-2 items-start">
-                <label htmlFor="email" className="text-slate-700 font-semibold">
-                  Email Address
-                </label>
-                <Input
-                  placeholder="name@example.com"
-                  id="email"
-                  {...register("email")}
-                  leadingIcon={<Mail />}
-                  className="text-base py-6"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email.message}</p>
-                )}
-              </div>
-
-              {/* Passwords */}
-              <div className="flex flex-row gap-5">
-                <div className="flex flex-col gap-2 items-start flex-1">
-                  <label
-                    htmlFor="password"
-                    className="text-slate-700 font-semibold"
-                  >
-                    Password
-                  </label>
-                  <Input
-                    type="password"
-                    placeholder="******"
-                    id="password"
-                    {...register("password")}
-                    leadingIcon={<Lock />}
-                    className="text-base py-6"
-                  />
-                  {errors.password && (
-                    <p className="text-red-500 text-xs">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                {/* Confirm Password */}
-                <div className="flex flex-col gap-2 items-start flex-1">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="text-slate-700 font-semibold"
-                  >
-                    Confirm Password
-                  </label>
-                  <Input
-                    type="password"
-                    placeholder="******"
-                    id="confirmPassword"
-                    {...register("confirmPassword")}
-                    leadingIcon={<Lock />}
-                    className="text-base py-6"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Password Strength */}
-              <PasswordStrengthBar password={watch("password")} />
-
-              {/* Terms Checkbox */}
-              <div className="flex flex-col gap-2 items-start">
-                <label className="flex items-center gap-2 text-sm text-gray-700">
-                  <Controller
-                    name="terms"
-                    control={control}
-                    render={({ field }) => (
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="
-                        data-[state=checked]:bg-blue-600
-                        data-[state=checked]:text-white "
-                      />
-                    )}
-                  />
-                  <p>
-
-                  I agree to the{" "}
-                  <a href="" className="text-blue-600 " onClick={(e) =>  {e.preventDefault();setTermsOpen(true)}} >
-                     Terms of Services
-                  </a>
-                  {" "}and{" "}
-                  <a href="" className="text-blue-600" onClick={() => setPrivacyOpen(true)}>
-                    Privacy Policy
-                  </a>
-                  </p>
-                </label>
-                {errors.terms && (
-                  <p className="text-red-500 text-xs">{errors.terms.message}</p>
-                )}
-              </div>
-
-              {/* Register Button */}
-              <Button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base"
-              >
-                Create Account <ArrowRight />
-              </Button>
-            </form>
+         <RegisterForm />
 
             <p className="mt-4 text-sm text-gray-500">
               Already have an account?{" "}
@@ -213,11 +54,9 @@ export default function Register() {
           </div>
         </div>
       </div>
-
-      {/* Popups for Terms and Privacy */}
-<TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />
-<PrivacyPolicyPopup open={privacyOpen} setOpen={setPrivacyOpen} />
-
+      {/* Popup */}
+      <HowItWorksPopup open={howItWorksOpen} setOpen={setHowItWorksOpen} />
+      
       <RegisterFooter />
     </>
   );
