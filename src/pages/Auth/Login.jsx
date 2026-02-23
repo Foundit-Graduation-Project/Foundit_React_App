@@ -22,6 +22,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -177,7 +178,7 @@ const Login = () => {
             <p className="text-slate-500 font-medium">
               Don't have an account?
               <Button variant="link" className="text-[#1d63ed] font-bold p-1">
-                Sign up for free
+                <Link to="/Register">Sign up for free</Link>
               </Button>
             </p>
           </footer>
