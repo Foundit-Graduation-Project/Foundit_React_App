@@ -13,6 +13,7 @@ import {
 import RegisterNav from "../../components/layout/customNavbars/registerNav";
 import { Link } from "react-router-dom";
 import ResetForm from './../../components/forms/resetForm';
+import ResetPasswordFooter from './../../components/layout/customFooters/resetPasswordFooter';
 
 export default function ResetPassword() {
 
@@ -45,19 +46,7 @@ export default function ResetPassword() {
         </CardFooter>
       </Card>
 
-      <footer className="mt-8 text-center space-y-2 pb-10">
-        <p className="text-xs text-slate-400">
-          © 2026 Acme Corp. All rights reserved.
-        </p>
-        <div className="flex gap-4 text-xs text-slate-400 justify-center">
-          <a href="#" className="hover:underline">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:underline">
-            Terms of Service
-          </a>
-        </div>
-      </footer>
+      <ResetPasswordFooter />
     </div>
   );
 }
