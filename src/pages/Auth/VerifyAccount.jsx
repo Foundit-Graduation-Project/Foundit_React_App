@@ -41,7 +41,23 @@ function VerifyAccount() {
             </p>
           </div>
 
-          {/*  OTP should be here */}
+          {/*  OTP */}
+          <div className="flex justify-center py-2">
+            <InputOTP
+              maxLength={5}
+              render={({ slots }) => (
+                <InputOTPGroup className="gap-3">
+                  {slots.map((slot, index) => (
+                    <InputOTPSlot
+                      key={index}
+                      {...slot}
+                      className="w-12 h-14 text-xl font-bold rounded-xl border-slate-200 bg-white"
+                    />
+                  ))}
+                </InputOTPGroup>
+              )}
+            />
+          </div>
 
           <Button className="w-full h-14 bg-[#1d63ed] hover:bg-blue-700 text-white font-bold rounded-2xl text-lg group">
             Verify Account
