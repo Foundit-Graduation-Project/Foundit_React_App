@@ -5,7 +5,7 @@ import MainLayout from "../components/layout/MainLayout";
 
 // Public Routes
 import Home from "../pages/Home";
-import NotFound from "../pages/NotFound";
+import NotFound from "../pages/NotFound/NotFound";
 import ReportDetails from "../pages/Reports/ReportDetails";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
@@ -40,8 +40,6 @@ function AppRouter() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
-          
-          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Protected Routes */}
@@ -57,6 +55,7 @@ function AppRouter() {
           <Route path="payment/checkout" element={<PaymentCheckout />} />
           <Route path="payment/success" element={<PaymentSuccess />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
