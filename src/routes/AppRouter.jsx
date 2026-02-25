@@ -25,6 +25,7 @@ import Notifications from "../pages/Notifications/Notifications";
 import MyReports from "../pages/Reports/MyReports";
 import CreateReport from "../pages/Reports/CreateReport";
 import PaymentCheckout from "../pages/Payment/PaymentCheckout";
+import HomeFeed from "../pages/HomeFeed/HomeFeed";
 
 function AppRouter() {
   return (
@@ -44,6 +45,7 @@ function AppRouter() {
 
         {/* Protected Routes */}
         <Route path="/" element={<MainLayout />}>
+          <Route path="home" element={<HomeFeed />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="account-security" element={<AccountSecurity />} />
