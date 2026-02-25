@@ -5,7 +5,7 @@ import MainLayout from "../components/layout/MainLayout";
 
 // Public Routes
 import Home from "../pages/Home";
-import NotFound from "../pages/NotFound";
+import NotFound from "../pages/NotFound/NotFound";
 import ReportDetails from "../pages/Reports/ReportDetails";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
