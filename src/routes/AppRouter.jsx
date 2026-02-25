@@ -5,7 +5,7 @@ import MainLayout from "../components/layout/MainLayout";
 
 // Public Routes
 import Home from "../pages/Home";
-import NotFound from "../pages/NotFound";
+import NotFound from "../pages/NotFound/NotFound";
 import ReportDetails from "../pages/Reports/ReportDetails";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
@@ -21,7 +21,6 @@ import Settings from "../pages/Settings/Settings";
 import AccountSecurity from "../pages/Settings/AccountSecurity";
 import Personalization from "../pages/Settings/Personalization";
 import Chat from "../pages/Chat/Chat";
-import Messages from "../pages/Chat/Messages";
 import Notifications from "../pages/Notifications/Notifications";
 import MyReports from "../pages/Reports/MyReports";
 import CreateReport from "../pages/Reports/CreateReport";
@@ -41,8 +40,6 @@ function AppRouter() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
-          
-          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Protected Routes */}
@@ -52,13 +49,13 @@ function AppRouter() {
           <Route path="account-security" element={<AccountSecurity />} />
           <Route path="personalization" element={<Personalization />} />
           <Route path="chat" element={<Chat />} />
-          <Route path="messages" element={<Messages />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="my-reports" element={<MyReports />} />
           <Route path="create-report" element={<CreateReport />} />
           <Route path="payment/checkout" element={<PaymentCheckout />} />
           <Route path="payment/success" element={<PaymentSuccess />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

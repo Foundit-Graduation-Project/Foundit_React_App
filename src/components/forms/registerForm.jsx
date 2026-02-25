@@ -149,7 +149,7 @@ export default function RegisterForm() {
               </div>
 
               {/* Password Strength */}
-              <PasswordStrengthBar password={watch("password")} />
+              <PasswordStrengthBar password={watch("password")} mode="segments" />
 
               {/* Terms Checkbox */}
               <div className="flex flex-col gap-2 items-start">
