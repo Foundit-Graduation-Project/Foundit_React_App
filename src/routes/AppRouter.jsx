@@ -41,8 +41,6 @@ function AppRouter() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
-          
-          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Protected Routes */}
@@ -59,6 +57,7 @@ function AppRouter() {
           <Route path="payment/checkout" element={<PaymentCheckout />} />
           <Route path="payment/success" element={<PaymentSuccess />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
