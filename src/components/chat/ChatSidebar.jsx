@@ -71,8 +71,4 @@ export function ChatSidebar({ isHiddenOnMobile }) {
       </div>
     </aside>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> edade4da5cc3c73f1d50ad22ec23ec132f0febe9
