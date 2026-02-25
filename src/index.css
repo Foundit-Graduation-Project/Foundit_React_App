@@ -113,3 +113,36 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+
+
+@theme {
+  /* Keyframes for the 404 Illustration */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(12deg); }
+    50% { transform: translateY(-15px) rotate(12deg); }
+  }
+  @keyframes float-reverse {
+    0%, 100% { transform: translateY(0px) rotate(-12deg); }
+    50% { transform: translateY(15px) rotate(-12deg); }
+  }
+  @keyframes scan {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Map animations to utility classes */
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-float-reverse: float-reverse 3s ease-in-out infinite;
+  --animate-scan: scan 10s linear infinite;
+/* //////////////////////////////////// */
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Modern Shadow Glows */
+  --shadow-glow: 0 0 20px -5px rgba(59, 130, 246, 0.5);
+
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Modern Glass Shadows */
+  --shadow-glass: 0 20px 50px rgba(0, 0, 0, 0.05);
+  --shadow-blue-glow: 0 15px 30px -10px rgba(37, 99, 235, 0.4);
+}
