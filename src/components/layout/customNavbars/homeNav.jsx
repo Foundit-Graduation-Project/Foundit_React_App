@@ -1,7 +1,16 @@
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, User, Bell, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
-import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { currentUser } from "../../chat/mockData";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const homeNav = () => {
     return (
@@ -45,10 +54,56 @@ const homeNav = () => {
                 </button>
 
                 {/* User Avatar */}
-                <Avatar className="w-9 h-9 border-2 border-white shadow-sm cursor-pointer hover:ring-2 hover:ring-blue-100 transition-all">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback className="bg-orange-100 text-orange-600 font-bold">JD</AvatarFallback>
-                </Avatar>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button className="flex items-center gap-3 hover:bg-slate-50 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                            <div className="hidden sm:flex flex-col items-end">
+                                <span className="text-sm font-semibold leading-tight text-slate-900">{currentUser.name}</span>
+                                <span className="text-xs text-slate-500">{currentUser.role}</span>
+                            </div>
+                            <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
+                                <AvatarImage src={currentUser?.avatarUrl} alt={currentUser.name} />
+                                <AvatarFallback className={`font-medium ${currentUser.color}`}>
+                                    {currentUser.initials}
+                                </AvatarFallback>
+                            </Avatar>
+                        </button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                        <DropdownMenuLabel className="font-normal">
+                            <div className="flex flex-col space-y-1">
+                                <p className="text-sm font-medium leading-none text-slate-900">{currentUser.name}</p>
+                                <p className="text-xs leading-none text-slate-500">alex.rivera@example.com</p>
+                            </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <Link to="/profile" className="flex items-center w-full">
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Profile</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <Link to="/settings" className="flex items-center w-full">
+                                    <SettingsIcon className="mr-2 h-4 w-4" />
+                                    <span>Settings</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <Link to="/notifications" className="flex items-center w-full">
+                                    <Bell className="mr-2 h-4 w-4" />
+                                    <span>Notifications</span>
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                            <LogOut className="mr-2 h-4 w-4" /><span>Log out</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
             </div>
 
