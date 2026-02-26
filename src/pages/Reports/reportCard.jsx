@@ -2,10 +2,21 @@ import { MapPin, Calendar, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Badge } from "../../components/ui/badge"; // Check your ui folder for badge.jsx
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setSelectedReport } from "../../features/reports/reportsSlice";
 
 const ReportCard = ({ report }) => {
     const { title, location, date, image, type, status } = report;
 
+    //  Initialize hooks
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleViewDetails = () => {
+        dispatch(setSelectedReport(report));
+        navigate(`/report/${report.id}`);
+    };
     const getBadgeStyle = () => {
         if (status === "Matched") return "bg-green-100 text-green-700 hover:bg-green-100";
         if (type === "Found") return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
@@ -18,7 +29,7 @@ const ReportCard = ({ report }) => {
     };
 
     return (
-        <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group">
+        <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group" onClick={handleViewDetails}>
             <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                 <img
                     src={image}
@@ -51,7 +62,8 @@ const ReportCard = ({ report }) => {
                         View Outcome <CheckCircle2 className="ml-2 w-4 h-4" />
                     </Button>
                 ) : (
-                    <Button variant="secondary" className="w-full bg-blue-50 text-blue-600 hover:bg-blue-100">
+                    <Button variant="secondary" className="w-full bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    onClick={(e) => { e.stopPropagation(); handleViewDetails(); }}>
                         View Details <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                 )}
