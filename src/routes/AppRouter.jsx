@@ -7,6 +7,7 @@ import MainLayout from "../components/layout/MainLayout";
 import Home from "../pages/Home";
 import NotFound from "../pages/NotFound/NotFound";
 import ReportDetails from "../pages/Reports/ReportDetails";
+import GetStart from "../pages/Start/GetStart";
 
 // Auth Routes
 import Login from "../pages/Auth/Login";
@@ -33,6 +34,7 @@ function AppRouter() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="report/:id" element={<ReportDetails />} />
+          <Route path="get-start" element={<GetStart />} />
 
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
