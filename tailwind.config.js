@@ -1,6 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 export default {
-  darkMode: 'class',
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -12,6 +12,9 @@ export default {
       },
       animation: {
         "progress-indicator": "progress-indicator 0.6s ease-in-out",
+      },
+      backgroundImage: {
+        "hero-pattern": "url('/images/bg.jpg')",
       },
     },
   },
