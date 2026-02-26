@@ -89,6 +89,115 @@ const GetStart = () => {
           </div>
         </div>
       </main>
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {/* Header Section */}
+          <div className="text-center space-y-4 mb-20">
+            <h3 className="text-[#1d63ed] font-bold uppercase tracking-widest text-sm">
+              About Us
+            </h3>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight max-w-3xl mx-auto">
+              Building safer, more connected communities through technology.
+            </h2>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1: Our Mission */}
+            <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+                <svg
+                  className="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+              <h4 className="text-2xl font-bold text-slate-900">Our Mission</h4>
+              <p className="text-slate-500 leading-relaxed">
+                Building safer, more connected communities through technology.
+                We empower people to help one another efficiently.
+              </p>
+            </div>
+
+            {/* Feature 2: How it Works */}
+            <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+                <svg
+                  className="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <h4 className="text-2xl font-bold text-slate-900">
+                How it Works
+              </h4>
+              <p className="text-slate-500 leading-relaxed">
+                Simple reporting and AI-driven matching. Our system identifies
+                matches between lost and found items in real-time.
+              </p>
+            </div>
+
+            {/* Feature 3: Community First */}
+            <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+                <svg
+                  className="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </div>
+              <h4 className="text-2xl font-bold text-slate-900">
+                Community First
+              </h4>
+              <p className="text-slate-500 leading-relaxed">
+                Designed for universities, compounds, and organizations. A
+                tailored experience for closed and open groups.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer className="w-full py-4 border-t border-slate-100 bg-white/50">
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-[11px] font-medium text-slate-400">
+          <p>© 2026 FindHub</p>
+
+          <div className="flex gap-4">
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Privacy
+            </a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Terms
+            </a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Support
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
