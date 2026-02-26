@@ -1,13 +1,13 @@
-import { BookOpen, User, FileText, Mail, Bell, Settings, Home } from "lucide-react"; // LayoutDashboard commented out as per your code
+import { BookOpen, User, FileText, Mail, Bell, Settings, Home, Search } from "lucide-react"; // LayoutDashboard commented out as per your code
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { NavLink, useLocation } from "react-router-dom"; // 1. Import NavLink
 
 const NAV_ITEMS = [
-  { label: "Home",          path: "/home",          icon: <Home className="w-4.5 h-4.5" /> },
-  { label: "My Reports",    path: "/my-reports",    icon: <FileText className="w-4.5 h-4.5" /> },
-  { label: "Messages",      path: "/chat",          icon: <Mail className="w-4.5 h-4.5" /> },
+  { label: "Home", path: "/home", icon: <Home className="w-4.5 h-4.5" /> },
+  { label: "My Reports", path: "/my-reports", icon: <FileText className="w-4.5 h-4.5" /> },
+  { label: "Messages", path: "/chat", icon: <Mail className="w-4.5 h-4.5" /> },
   { label: "Notifications", path: "/notifications", icon: <Bell className="w-4.5 h-4.5" /> },
-  { label: "Settings",      path: "/settings",      icon: <Settings className="w-4.5 h-4.5" /> },
+  { label: "Settings", path: "/settings", icon: <Settings className="w-4.5 h-4.5" /> },
 ];
 
 export function AppSidebar({ collapsed, isMobile, mobileOpen, onClose }) {
@@ -20,12 +20,11 @@ export function AppSidebar({ collapsed, isMobile, mobileOpen, onClose }) {
     <>
       {/* Header / Logo Area */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-5 overflow-hidden shrink-0">
-        <div className="w-9 h-9 min-w-9 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
-          <BookOpen className="w-5 h-5" />
+        <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+          <Search className="w-5 h-5" />
         </div>
         <div className={`overflow-hidden whitespace-nowrap transition-all duration-220 ${collapsed && !isMobile ? "opacity-0 w-0" : "opacity-100"}`}>
-          <h2 className="text-[15px] font-bold tracking-tight leading-tight dark:text-white">Lost & Found</h2>
-          <span className="text-[11px] text-muted-foreground">Portal v2.4</span>
+          <h2 className="text-[15px] font-bold tracking-tight leading-tight dark:text-white">Foundit</h2>
         </div>
       </div>
 
@@ -38,12 +37,10 @@ export function AppSidebar({ collapsed, isMobile, mobileOpen, onClose }) {
               to={item.path}
               onClick={() => isMobile && onClose()} // Close sidebar on mobile when clicked
               className={({ isActive }) =>
-                `flex items-center gap-3 px-2 py-2 rounded-md text-[13.5px] font-medium whitespace-nowrap transition-colors duration-220 ${
-                  collapsed && !isMobile ? "justify-center" : ""
-                } ${
-                  location.pathname === item.path
-                    ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                `flex items-center gap-3 px-2 py-2 rounded-md text-[13.5px] font-medium whitespace-nowrap transition-colors duration-220 ${collapsed && !isMobile ? "justify-center" : ""
+                } ${location.pathname === item.path
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 }`
               }
             >

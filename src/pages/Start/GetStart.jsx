@@ -1,13 +1,17 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import SupportModel from "../Auth/SupportModel";
 import { useState } from "react";
 import StartHeroText from "./StartHeroText";
+import TermsOfServicePopup from "../../components/popups/TermsOfServicePopup";
+import PrivacyPolicyPopup from "../../components/popups/PrivacyPolicyPopup";
 
 const GetStart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   return (
     <div className="min-h-screen font-sans overflow-x-hidden bg-slate-50">
@@ -15,11 +19,11 @@ const GetStart = () => {
         <nav className="fixed top-3 left-0 right-0 z-50 w-[95%] lg:w-4/5 mx-auto px-4 py-4 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-700">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <div className="bg-[#1d63ed] p-2 rounded-xl animate-pulse">
-                <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white rounded-md " />
+              <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-md">
+                <Search className="w-5 h-5" />
               </div>
               <span className="font-bold text-lg md:text-xl text-white">
-                FindHub
+                Foundit
               </span>
             </div>
           </div>
@@ -59,11 +63,13 @@ const GetStart = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <Button className="w-full sm:w-auto bg-[#1d63ed] hover:bg-blue-700 text-white rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group shadow-lg shadow-blue-200">
-              Get Started{" "}
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Link to="/Login">
+            <Link to="/register">
+              <Button className="w-full sm:w-auto bg-[#1d63ed] hover:bg-blue-700 text-white rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group shadow-lg shadow-blue-200">
+                Get Started{" "}
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/login">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto bg-slate-50/50 border-slate-200 hover:bg-white text-slate-900 rounded-2xl h-14 px-8 text-lg font-bold shadow-sm"
@@ -183,19 +189,16 @@ const GetStart = () => {
       </section>
       <footer className="w-full py-4 border-t border-slate-100 bg-white/50">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-[11px] font-medium text-slate-400">
-          <p>© 2026 FindHub</p>
+          <p>© 2026 Foundit</p>
 
           <div className="flex gap-4">
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Terms
-            </a>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Support
-            </a>
+            <button onClick={() => setTermsOpen(true)} className="hover:text-gray-900 transition-colors">Terms of Service</button>
+            <button onClick={() => setPrivacyOpen(true)} className="hover:text-gray-900 transition-colors">Privacy Policy</button>
+            <button onClick={() => setIsModalOpen(true)} className="hover:text-gray-900 transition-colors">Contact Support</button>
           </div>
+          <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+          <TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />
+          <PrivacyPolicyPopup open={privacyOpen} setOpen={setPrivacyOpen} />
         </div>
       </footer>
     </div>
