@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Wallet } from "lucide-react";
+import { Search, Wallet } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
 
 const PaymentNav = () => {
@@ -7,11 +7,11 @@ const PaymentNav = () => {
         <nav className="w-full h-16 bg-white border-b border-gray-100 px-4 md:px-10 flex items-center justify-between sticky top-0 z-50">
 
             <div className="flex items-center gap-2">
-                <div className="bg-blue-600 p-1.5 rounded-lg flex items-center justify-center">
-                    <Wallet className="h-5 w-5 text-white" />
+                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                    <Search className="w-5 h-5" />
                 </div>
                 <span className="text-xl font-bold text-gray-900 tracking-tight">
-                    FinTrack
+                    Foundit
                 </span>
             </div>
 
