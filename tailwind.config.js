@@ -1,9 +1,12 @@
 import tailwindcss from "@tailwindcss/vite";
 export default {
-  darkMode: 'class',
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      // backgroundImage: {
+      //   "hero-bg": "url('/images/bg.jpg')",
+      // },
       keyframes: {
         "progress-indicator": {
           "0%": { transform: "translateX(-100%)" },
