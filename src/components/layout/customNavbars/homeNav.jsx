@@ -1,4 +1,4 @@
-import { Search, Plus, User, Bell, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { Search, Plus, User, Bell, Settings as SettingsIcon, LogOut, Sun, Moon } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
 import { Link } from "react-router-dom";
 import { currentUser } from "../../chat/mockData";
@@ -11,8 +11,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 const homeNav = () => {
+    const [isDark, setIsDark] = useState(false);
+
+    const toggleTheme = () => {
+        const root = document.documentElement;
+        root.classList.toggle("dark");
+        setIsDark(!isDark);
+    };
+
     return (
         <>
             {/* 1. LEFT: Logo */}
@@ -51,6 +60,13 @@ const homeNav = () => {
                 <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors hidden sm:block">
                     <Bell className="w-5 h-5" />
                     <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+
+                <button
+                    onClick={toggleTheme}
+                    className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                >
+                    {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 </button>
 
                 {/* User Avatar */}
