@@ -6,8 +6,8 @@ import Login from "../Auth/Login";
 
 const GetStart = () => {
   return (
-    <div className="min-h-screen bg-[#f8faff] font-sans overflow-x-hidden bg-hero-pattern bg-cover bg-fixed">
-      <nav className="w-full px-12 py-6 flex items-center justify-between bg-white border-b border-slate-100">
+    <div className="min-h-screen bg-[#f8faff] font-sans overflow-x-hidden bg-hero-pattern bg-cover bg-fixed ">
+      <nav className="w-full px-12 flex items-center justify-between bg-white border-b border-slate-100">
         <div className="flex items-center gap-2">
           {/* Logo Placeholder */}
           <div className="flex items-center gap-2  animate-infinite animate-duration-[2000ms] animate-ease-in-out animate-alternate">
@@ -76,8 +76,7 @@ const GetStart = () => {
               ))}
             </div>
             <p className="text-sm text-slate-500">
-              Trusted by{" "}
-              <span className="font-bold text-slate-900">10,000+</span>{" "}
+              Trusted by <span className="font-bold text-slate-900">+1000</span>{" "}
               community members
             </p>
           </div>
