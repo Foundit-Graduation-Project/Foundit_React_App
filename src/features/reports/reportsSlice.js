@@ -5,8 +5,15 @@ export const reportsSlice = createSlice({
   initialState: {
     formData: {
       location: "",
+      itemName: "",
+      category: "",
+      subCategory: "",
+      date: "",
+      description: "",
     },
     progress: 0,
+    selectedReport: null,
+
   },
   reducers: {
     updateField: (state, action) => {
@@ -24,8 +31,11 @@ export const reportsSlice = createSlice({
       };
       state.progress = 0;
     },
+    setSelectedReport: (state, action) => {
+    state.selectedReport = action.payload;
+    },
   },
 });
 
-export const { updateField, resetForm } = reportsSlice.actions;
+export const { updateField, resetForm,setSelectedReport } = reportsSlice.actions;
 export default reportsSlice.reducer;
