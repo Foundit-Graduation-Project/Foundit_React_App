@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from 'react-router-dom';
 
 export function Header() {
   return (
@@ -60,13 +61,22 @@ export function Header() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer">
-                <User className="mr-2 h-4 w-4" /><span>Profile</span>
+                <Link to="/profile" className="flex items-center w-full">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <SettingsIcon className="mr-2 h-4 w-4" /><span>Settings</span>
+                <Link to="/settings" className="flex items-center w-full">
+                  <SettingsIcon className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <Bell className="mr-2 h-4 w-4" /><span>Notifications</span>
+                <Link to="/notifications" className="flex items-center w-full">
+                  <Bell className="mr-2 h-4 w-4" />
+                  <span>Notifications</span>
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
