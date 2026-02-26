@@ -7,7 +7,6 @@ import MainLayout from "../components/layout/MainLayout";
 import Home from "../pages/Home";
 import NotFound from "../pages/NotFound/NotFound";
 import ReportDetails from "../pages/Reports/ReportDetails";
-import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
 // Auth Routes
 import Login from "../pages/Auth/Login";
@@ -18,13 +17,12 @@ import VerifyAccount from "../pages/Auth/VerifyAccount";
 // Protected Routes
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
-import AccountSecurity from "../pages/Settings/AccountSecurity";
-import Personalization from "../pages/Settings/Personalization";
 import Chat from "../pages/Chat/Chat";
 import Notifications from "../pages/Notifications/Notifications";
 import MyReports from "../pages/Reports/MyReports";
 import CreateReport from "../pages/Reports/CreateReport";
 import PaymentCheckout from "../pages/Payment/PaymentCheckout";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import HomeFeed from "../pages/HomeFeed/HomeFeed";
 
 function AppRouter() {
@@ -48,8 +46,6 @@ function AppRouter() {
           <Route path="home" element={<HomeFeed />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="account-security" element={<AccountSecurity />} />
-          <Route path="personalization" element={<Personalization />} />
           <Route path="chat" element={<Chat />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="my-reports" element={<MyReports />} />

@@ -1,4 +1,4 @@
-// import React, { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import TypeIt from "typeit-react";
 import HoldUpAnimated from "./HoldUpAnimate";
-
+import SupportModel from "./SupportModel";
 import {
   InputOTP,
   InputOTPGroup,
@@ -21,6 +21,7 @@ import {
 
 function VerifyAccount() {
   // const [otp, setOtp] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="min-h-screen w-full bg-slate-100 flex flex-col items-center">
       <header className="w-full flex items-center justify-between p-6 bg-transparent">
@@ -28,6 +29,7 @@ function VerifyAccount() {
           <ShieldCheck className="h-7 w-7 text-black" />
           <span>Security Portal</span>
         </div>
+
         <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>User</AvatarFallback>
@@ -45,7 +47,6 @@ function VerifyAccount() {
               id="asyncExec"
             >
               <HoldUpAnimated />
-              
             </h1>
             <p className="text-slate-500 text-sm leading-relaxed">
               We've sent a 6-digit verification code to <br />
@@ -114,6 +115,18 @@ function VerifyAccount() {
           </div>
         </div>
       </main>
+      {/* calling support model */}
+      <footer>
+        <div>
+          <button
+            className="cursor-pointer p-5"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Need help?
+          </button>
+          <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+        </div>
+      </footer>
     </div>
   );
 }
