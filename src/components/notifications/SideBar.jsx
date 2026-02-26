@@ -5,8 +5,7 @@ import { NavLink, useLocation } from "react-router-dom"; // 1. Import NavLink
 const NAV_ITEMS = [
   { label: "Home",          path: "/home",          icon: <Home className="w-4.5 h-4.5" /> },
   { label: "My Reports",    path: "/my-reports",    icon: <FileText className="w-4.5 h-4.5" /> },
-  { label: "My Reports",    path: "/my-reports",    icon: <FileText className="w-4.5 h-4.5" /> },
-  { label: "Messages",      path: "/chat",      icon: <Mail className="w-4.5 h-4.5" /> },
+  { label: "Messages",      path: "/chat",          icon: <Mail className="w-4.5 h-4.5" /> },
   { label: "Notifications", path: "/notifications", icon: <Bell className="w-4.5 h-4.5" /> },
   { label: "Settings",      path: "/settings",      icon: <Settings className="w-4.5 h-4.5" /> },
 ];
