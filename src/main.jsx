@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
-
+import 'leaflet/dist/leaflet.css';
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
