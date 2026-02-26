@@ -1,5 +1,6 @@
 import { ShieldCheck, Handshake, Mail, Share2, Flag, CheckCircle2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function ReportSidebar( ) {
   return (
@@ -10,12 +11,18 @@ export default function ReportSidebar( ) {
         <p className="text-sm text-slate-500 mb-6">Help return this item to its owner safely.</p>
         
         <div className="space-y-3 mb-6">
+            <Link to={`/create-report`} className="block">
           <Button className="w-full bg-[#1d61f2] hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
             <Handshake size={20} /> I Found This
           </Button>
+          </Link>
+
+            <Link to={`/chat`} className="block">
+
           <Button variant="ghost" className="w-full bg-[#f1f5f9] hover:bg-slate-200 h-14 rounded-lg text-base font-bold text-slate-900 flex items-center justify-center gap-2">
             <Mail size={20} /> Contact Owner
           </Button>
+          </Link>
         </div>
 
         <div className="pt-4 border-t border-slate-50 flex justify-center">
