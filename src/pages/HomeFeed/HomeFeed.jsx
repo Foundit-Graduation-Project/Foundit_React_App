@@ -150,7 +150,7 @@ const HomeFeed = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="hidden lg:block lg:col-span-3 sticky top-24"
+                        className="hidden lg:block lg:col-span-2 sticky top-24"
                     >
                         <div className="space-y-8 pr-2">
 
@@ -215,7 +215,7 @@ const HomeFeed = () => {
                     </motion.div>
 
                     {/* --- CENTER FEED --- */}
-                    <div className="lg:col-span-9 space-y-6">
+                    <div className="lg:col-span-10 space-y-6">
 
                         {/* Feed Header */}
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
