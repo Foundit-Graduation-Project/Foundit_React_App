@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedReport } from "../../features/reports/reportsSlice";
 
 const ReportCard = ({ report }) => {
-    const { title, location, date, image, type, status } = report;
+    const { id,title, location, date, images, type, status } = report;
 
     //  Initialize hooks
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ReportCard = ({ report }) => {
 
     const handleViewDetails = () => {
         dispatch(setSelectedReport(report));
-        navigate(`/report/${report.id}`);
+        navigate(`/report/${id}`);
     };
     const getBadgeStyle = () => {
         if (status === "Matched") return "bg-green-100 text-green-700 hover:bg-green-100";
@@ -32,7 +32,7 @@ const ReportCard = ({ report }) => {
         <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group" onClick={handleViewDetails}>
             <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                 <img
-                    src={image}
+                    src={images[0]}
                     alt={title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
