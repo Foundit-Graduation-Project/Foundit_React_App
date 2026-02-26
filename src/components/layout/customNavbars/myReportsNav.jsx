@@ -20,8 +20,8 @@ const myReportsNav = () => {
         <>
             <div className="flex items-center gap-8">
                 <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Database className="h-5 w-5 text-blue-600" />
+                    <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                        <Search className="w-5 h-5" />
                     </div>
                     <span className="font-bold text-lg text-gray-900 tracking-tight">FoundIt</span>
                 </div>
