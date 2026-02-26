@@ -10,8 +10,14 @@ const GetStart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen font-sans overflow-x-hidden bg-slate-50">
-      <div className="w-full relative">
+    <div className="min-h-screen font-sans ">
+      <div className="w-full z-20 relati flex flex-col overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-fixed bg-center -z-10"
+          style={{ backgroundImage: "url('/images/bg.gif')" }}
+        >
+          <div className="absolute inset-0 bg-slate-900/70"></div>
+        </div>
         <nav className="fixed top-3 left-0 right-0 z-50 w-[95%] lg:w-4/5 mx-auto px-4 py-4 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-700">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
@@ -42,10 +48,10 @@ const GetStart = () => {
         </nav>
       </div>
 
-      <main className="max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 lg:pt-24 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-8 duration-700 text-center lg:text-left">
+      <main className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 lg:pt-24 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-8 duration-700 text-center lg:text-left pt-15">
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-200 leading-[1.1] tracking-tight">
               Reconnecting <br className="hidden md:block" />
               You With{" "}
               <span className="text-[#1d63ed]">
@@ -59,7 +65,10 @@ const GetStart = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <Button className="w-full sm:w-auto bg-[#1d63ed] hover:bg-blue-700 text-white rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group shadow-lg shadow-blue-200">
+            <Button
+              className="w-full sm:w-auto bg-blue hover:bg-blue-500 text-white rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group transpa"
+              variant="outline"
+            >
               Get Started{" "}
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -78,7 +87,7 @@ const GetStart = () => {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 shadow-sm"
+                  className="w-10 h-10 rounded-full border-2 border-white bg-slate-500 shadow-sm"
                 />
               ))}
             </div>
