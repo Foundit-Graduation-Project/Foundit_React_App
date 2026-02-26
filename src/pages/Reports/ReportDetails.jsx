@@ -12,6 +12,7 @@ import ReportSidebar from "./ReportSidebar";
 
 import { MOCK_REPORTS } from "../../features/reports/reportConstants";
 import { setSelectedReport } from "../../features/reports/reportsSlice";
+import NotFound from './../NotFound/NotFound';
 
 export default function ReportDetails() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export default function ReportDetails() {
     }
   }, [id, item, dispatch]);
 
-  if (!item) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  if (!item) return <NotFound />;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">

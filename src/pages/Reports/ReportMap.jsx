@@ -1,8 +1,9 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import  { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icon not showing in React-Leaflet
+// Leaflet icon fix
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -14,19 +15,29 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-export default function ReportMap({ position = [51.505, -0.09] }) {
+// Helper to fix mobile rendering
+function MapEffect() {
+  const map = useMap();
+  useEffect(() => {
+    map.invalidateSize();
+  }, [map]);
+  return null;
+}
+
+export default function ReportMap({ position }) {
   return (
     <MapContainer 
       center={position} 
-      zoom={13} 
-      scrollWheelZoom={false} 
-      className="w-full h-full z-0" // Ensure z-0 so it doesn't overlap nav
+      zoom={14} 
+      scrollWheelZoom={false}
+      className="w-full h-full min-h-75 z-0" 
     >
       <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
+        attribution='&copy; OpenStreetMap'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker position={position} />
+      <MapEffect />
     </MapContainer>
   );
 }
