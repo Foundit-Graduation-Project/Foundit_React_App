@@ -7,6 +7,7 @@ import {
   Earth,
   Facebook,
   EyeOff,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,9 +37,8 @@ const Login = () => {
         <div className="bg-[#eef4ff] p-10 hidden md:flex flex-col justify-between">
           <div className="space-y-6">
             <div className="flex items-center gap-2 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in-out animate-alternate">
-              <div className="bg-[#1d63ed] p-2 rounded-xl animate-pulse">
-                <div className="w-5 h-5 border-2 border-white rounded-md " />
-                <div />
+              <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                <Search className="w-5 h-5" />
               </div>
               <span className="font-bold text-xl text-slate-900">Foundit</span>
             </div>
@@ -176,9 +177,11 @@ const Login = () => {
           <footer className="mt-8 text-center">
             <p className="text-slate-500 font-medium">
               Don't have an account?
-              <Button variant="link" className="text-[#1d63ed] font-bold p-1">
-                Sign up for free
-              </Button>
+              <Link to="/register">
+                <Button variant="link" className="text-[#1d63ed] font-bold p-1">
+                  Sign up for free
+                </Button>
+              </Link>
             </p>
           </footer>
         </div>
