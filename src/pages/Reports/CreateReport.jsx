@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import PostingGuidelines from "./PostGuideLine";
 import { resetForm } from "../../features/reports/reportsSlice";
 import { useDispatch } from "react-redux";
-import ReportFooter from "./ReportFooter";
+import Footer from "../../components/layout/customFooters/myReportsFooter"
 import ReportHeader from "./ReportHeader";
 
 import {
@@ -262,7 +262,7 @@ const CreateReport = () => {
         <NavItem icon={Search} label="SEARCH" />
         <NavItem icon={User} label="PROFILE" />
       </nav>
-      <ReportFooter />
+      <Footer />
     </article>
   );
 };

@@ -16,7 +16,7 @@ function SupportModel({ isOpen, setIsOpen }) {
       <DialogContent className="max-w-[500px] rounded-[24px] p-8 gap-6 border-none shadow-2xl">
         <DialogHeader className="text-left space-y-1">
           <DialogTitle className="text-2xl font-bold text-slate-900">
-            Registration Assistance
+            Support
           </DialogTitle>
           <DialogDescription className="text-slate-500 text-sm">
             Get help with your community profile

@@ -35,9 +35,6 @@ export default function ReportDetails() {
       </div>
 
       <main className="grow container mx-auto px-4 py-8 mt-0">
-    
-      <ReportHeader />
-
         {/* Title Section */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
