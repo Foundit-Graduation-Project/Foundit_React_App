@@ -70,7 +70,7 @@ const GetStart = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
             <Button
-              className="w-full sm:w-auto bg-blue hover:bg-blue-500 text-white rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group transpa"
+              className="w-full sm:w-auto bg-blue hover:bg-blue-500 text-white  rounded-2xl h-14 px-8 text-lg font-bold flex items-center justify-center gap-2 group transpa"
               variant="outline"
             >
               Get Started{" "}
@@ -79,7 +79,7 @@ const GetStart = () => {
             <Link to="/Login">
               <Button
                 variant="outline"
-                className="w-full sm:w-auto bg-slate-50/50 border-slate-200 hover:bg-white text-slate-900 rounded-2xl h-14 px-8 text-lg font-bold shadow-sm"
+                className="w-full sm:w-auto bg-slate-50/50 border-slate-200  hover:bg-white text-slate-900 rounded-2xl h-14 px-8 text-lg font-bold shadow-sm"
               >
                 Sign In
               </Button>
@@ -199,9 +199,24 @@ const GetStart = () => {
           <p>© 2026 Foundit</p>
 
           <div className="flex gap-4">
-            <button onClick={() => setTermsOpen(true)} className="hover:text-gray-900 transition-colors">Terms of Service</button>
-            <button onClick={() => setPrivacyOpen(true)} className="hover:text-gray-900 transition-colors">Privacy Policy</button>
-            <button onClick={() => setIsModalOpen(true)} className="hover:text-gray-900 transition-colors">Contact Support</button>
+            <button
+              onClick={() => setTermsOpen(true)}
+              className="hover:text-gray-900 transition-colors"
+            >
+              Terms of Service
+            </button>
+            <button
+              onClick={() => setPrivacyOpen(true)}
+              className="hover:text-gray-900 transition-colors"
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="hover:text-gray-900 transition-colors"
+            >
+              Contact Support
+            </button>
           </div>
           <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
           <TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />
