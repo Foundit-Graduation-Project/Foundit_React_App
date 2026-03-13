@@ -9,7 +9,7 @@ export const store = configureStore({
     report: reportReducer,
     chat: chatReducer,
     settings: settingsReducer,
-    auth: authReducer,
+    auth: authReducer
   },
 });
 
