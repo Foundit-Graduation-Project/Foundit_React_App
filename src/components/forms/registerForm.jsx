@@ -54,7 +54,7 @@ export default function RegisterForm() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
       terms: false,
     },
@@ -209,8 +209,14 @@ export default function RegisterForm() {
         {/* Register Button */}
         <Button
           type="submit"
-          disabled={isLoading} // Disables button while API call is running
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base flex items-center justify-center gap-2 transition-all mt-2"
+          // 👇 1. Disable if loading OR if terms are NOT checked
+          disabled={isLoading || !watch("terms")}
+          className={`w-full h-12 text-base flex items-center justify-center gap-2 transition-all mt-2 ${
+            // 👇 2. Change colors dynamically based on if terms are checked
+            !watch("terms")
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300 shadow-none"
+              : "bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20"
+            }`}
         >
           {isLoading ? (
             <>

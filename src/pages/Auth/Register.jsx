@@ -24,7 +24,7 @@ export default function Register() {
               <h2 className="font-bold text-3xl text-slate-800">
                 Join the Community
               </h2>
-              <p className="text-slate-500 mb-8 text-base">
+              <p className="text-slate-500 mb-2 text-base">
                 Start reporting or finding lost items today.
               </p>
               {/* How it work fire */}
@@ -38,7 +38,7 @@ export default function Register() {
                   className="group-hover:scale-110 transition-transform"
                 />
                 <span className="cursor-pointer underline-offset-4">
-                  See how it works
+                  How it works
                 </span>
               </Button>
             </div>
