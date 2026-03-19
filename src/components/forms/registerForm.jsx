@@ -4,17 +4,20 @@ import PasswordStrengthBar from "../../features/auth/component/PasswordStrengthB
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { ArrowRight, Loader2, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Loader2, Lock, Mail, User, Facebook } from 'lucide-react'; // Added Facebook icon
 import { Button } from '../ui/button';
 import TermsOfServicePopup from '../popups/TermsOfServicePopup';
 import PrivacyPolicyPopup from '../popups/PrivacyPolicyPopup';
 import { useState } from 'react';
 
+// --- Google Auth Import ---
+import { useGoogleLogin } from '@react-oauth/google';
+
 // --- Redux & Router Imports ---
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { registerUser, selectAuthLoading } from '../../features/auth'; // Using your barrel file!
+import { registerUser, loginWithGoogle, selectAuthLoading } from '../../features/auth'; // Added loginWithGoogle
 
 // --- 1. Synced Zod Schema (Matches Backend Joi exactly) ---
 const registerSchema = z
@@ -23,9 +26,9 @@ const registerSchema = z
     email: z.string().email("Invalid email address"),
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters") // Matched backend
+      .min(8, "Password must be at least 8 characters")
       .max(50)
-      .regex(/[a-zA-Z]/, "Password must contain at least 1 letter") // Matched backend regex logic
+      .regex(/[a-zA-Z]/, "Password must contain at least 1 letter")
       .regex(/[0-9]/, "Password must contain at least 1 number"),
     confirmPassword: z.string(),
     terms: z.boolean().refine((val) => val === true, {
@@ -44,7 +47,7 @@ export default function RegisterForm() {
   // --- 2. Redux & Navigation Hooks ---
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isLoading = useSelector(selectAuthLoading); // Get loading state from Redux!
+  const isLoading = useSelector(selectAuthLoading);
 
   const {
     register,
@@ -60,9 +63,30 @@ export default function RegisterForm() {
     },
   });
 
-  // --- 3. Submit Handler (Integration) ---
+  // --- 3. Google Login/Register Hook ---
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      // Dispatch the thunk using the token from Google
+      const resultAction = await dispatch(loginWithGoogle(tokenResponse.access_token));
+
+      if (loginWithGoogle.fulfilled.match(resultAction)) {
+        const isNewUser = resultAction.payload.isNewUser;
+
+        if (isNewUser) {
+          toast.success("Account created successfully! Welcome to FoundIt.");
+        } else {
+          toast.success("Welcome back! You already had an account."); // Or just "Welcome back!"
+        }
+        navigate("/home"); // Bypass login/verification and go straight to Home!
+      } else {
+        toast.error(resultAction.payload || "Google Sign-Up failed. Please try again.");
+      }
+    },
+    onError: () => toast.error("Google popup closed or failed."),
+  });
+
+  // --- 4. Standard Form Submit Handler ---
   const onSubmit = async (data) => {
-    // We only send what the backend expects (ignore confirmPassword and terms)
     const payload = {
       name: data.name,
       email: data.email,
@@ -70,15 +94,12 @@ export default function RegisterForm() {
       confirmPassword: data.confirmPassword
     };
 
-    // Dispatch the Redux Thunk
     const resultAction = await dispatch(registerUser(payload));
 
     if (registerUser.fulfilled.match(resultAction)) {
-      // Success! Backend returns: { message: "Account created successfully." }
       toast.success("Account created! Please check your email to verify.");
-      navigate('/login'); // Redirect to login page
+      navigate('/login');
     } else {
-      // Fail! Backend returns custom JSend error message
       toast.error(resultAction.payload || "Registration failed. Please try again.");
     }
   };
@@ -88,7 +109,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
         {/* Name */}
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col gap-2 items-start text-left">
           <label htmlFor="name" className="text-slate-700 font-semibold">
             Full Name
           </label>
@@ -97,7 +118,7 @@ export default function RegisterForm() {
             id="name"
             {...register("name")}
             leadingIcon={<User />}
-            className="text-base py-6"
+            className={`text-base py-6 ${errors.name ? 'border-red-500' : ''}`}
           />
           {errors.name && (
             <p className="text-red-500 text-xs">{errors.name.message}</p>
@@ -105,7 +126,7 @@ export default function RegisterForm() {
         </div>
 
         {/* Email */}
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col gap-2 items-start text-left">
           <label htmlFor="email" className="text-slate-700 font-semibold">
             Email Address
           </label>
@@ -114,16 +135,16 @@ export default function RegisterForm() {
             id="email"
             {...register("email")}
             leadingIcon={<Mail />}
-            className="text-base py-6"
+            className={`text-base py-6 ${errors.email ? 'border-red-500' : ''}`}
           />
           {errors.email && (
             <p className="text-red-500 text-xs">{errors.email.message}</p>
           )}
         </div>
 
-        {/* Passwords (Enhanced Mobile Responsiveness: flex-col sm:flex-row) */}
+        {/* Passwords */}
         <div className="flex flex-col sm:flex-row gap-5">
-          <div className="flex flex-col gap-2 items-start flex-1">
+          <div className="flex flex-col gap-2 items-start flex-1 text-left">
             <label htmlFor="password" className="text-slate-700 font-semibold">
               Password
             </label>
@@ -133,15 +154,14 @@ export default function RegisterForm() {
               id="password"
               {...register("password")}
               leadingIcon={<Lock />}
-              className="text-base py-6"
+              className={`text-base py-6 ${errors.password ? 'border-red-500' : ''}`}
             />
             {errors.password && (
               <p className="text-red-500 text-xs">{errors.password.message}</p>
             )}
           </div>
 
-          {/* Confirm Password */}
-          <div className="flex flex-col gap-2 items-start flex-1">
+          <div className="flex flex-col gap-2 items-start flex-1 text-left">
             <label htmlFor="confirmPassword" className="text-slate-700 font-semibold">
               Confirm Password
             </label>
@@ -151,7 +171,7 @@ export default function RegisterForm() {
               id="confirmPassword"
               {...register("confirmPassword")}
               leadingIcon={<Lock />}
-              className="text-base py-6"
+              className={`text-base py-6 ${errors.confirmPassword ? 'border-red-500' : ''}`}
             />
             {errors.confirmPassword && (
               <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>
@@ -181,10 +201,7 @@ export default function RegisterForm() {
               <a
                 href="#"
                 className="text-blue-600 hover:underline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTermsOpen(true);
-                }}
+                onClick={(e) => { e.preventDefault(); setTermsOpen(true); }}
               >
                 Terms of Services
               </a>{" "}
@@ -192,10 +209,7 @@ export default function RegisterForm() {
               <a
                 href="#"
                 className="text-blue-600 hover:underline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPrivacyOpen(true);
-                }}
+                onClick={(e) => { e.preventDefault(); setPrivacyOpen(true); }}
               >
                 Privacy Policy
               </a>
@@ -209,13 +223,10 @@ export default function RegisterForm() {
         {/* Register Button */}
         <Button
           type="submit"
-          // 👇 1. Disable if loading OR if terms are NOT checked
           disabled={isLoading || !watch("terms")}
-          className={`w-full h-12 text-base flex items-center justify-center gap-2 transition-all mt-2 ${
-            // 👇 2. Change colors dynamically based on if terms are checked
-            !watch("terms")
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300 shadow-none"
-              : "bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20"
+          className={`w-full h-12 text-base flex items-center justify-center gap-2 transition-all mt-2 ${!watch("terms")
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+            : "bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20"
             }`}
         >
           {isLoading ? (
@@ -229,6 +240,29 @@ export default function RegisterForm() {
             </>
           )}
         </Button>
+
+        {/* --- NEW: Social Login Separator --- */}
+        <div className="relative flex items-center py-2 mt-2">
+          <div className="flex-grow border-t border-slate-200"></div>
+          <span className="flex-shrink mx-4 text-xs text-slate-400 font-bold uppercase tracking-wider">
+            Or Sign Up With
+          </span>
+          <div className="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        {/* --- NEW: Social Buttons --- */}
+        <div className="grid">
+          <Button
+            type="button" // CRITICAL: Prevents triggering standard form validation
+            variant="outline"
+            onClick={() => googleLogin()}
+            className="h-12 rounded-xl border-slate-200 font-semibold hover:bg-slate-50 shadow-sm transition-colors w-full"
+          >
+            <Mail className="text-red-500 mr-2 h-5 w-5" /> {/* Use Google Icon if you have one! */}
+            Google
+          </Button>
+        </div>
+
       </form>
 
       {/* Popups */}
