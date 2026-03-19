@@ -27,3 +27,8 @@ export const resetPasswordAPI = async (token, passwords) => {
     const response = await api.patch(`/auth/reset-password/${token}`, passwords);
     return response.data.data;
 };
+
+export const googleLoginAPI = async (googleAccessToken) => {
+    const response = await api.post('/auth/google', { access_token: googleAccessToken });
+    return response.data.data;
+};

@@ -20,35 +20,32 @@ api.interceptors.request.use(
 
 // 3. Response Interceptor: Handle automatic token refreshing
 api.interceptors.response.use(
-    (response) => response, // If request succeeds, let it pass
+    (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
-        // If backend returns 401 (Unauthorized) and we haven't tried to retry yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // 🔥 THE FIX: Don't trigger refresh logic if the request was to the login endpoint
+        const isLoginRequest = originalRequest.url.includes('/auth/login');
+
+        // If backend returns 401, we haven't retried yet, AND it's NOT a login attempt
+        if (error.response?.status === 401 && !originalRequest._retry && !isLoginRequest) {
             originalRequest._retry = true;
 
             try {
-                // Try to get a new access token using the HttpOnly cookie
                 const res = await axios.get('http://localhost:3000/api/v1/auth/refresh-token', {
                     withCredentials: true
                 });
 
-                // Assuming JSend response: { status: 'success', data: { accessToken: '...' } }
                 const newAccessToken = res.data.data.accessToken;
-
-                // Save new token
                 localStorage.setItem('accessToken', newAccessToken);
 
-                // Update the failed request with the new token and try again
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
 
             } catch (refreshError) {
-                // If refresh-token fails (cookie expired/invalid), log the user out
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('user');
-                window.location.href = '/login'; // Force redirect to login
+                window.location.href = '/login';
                 return Promise.reject(refreshError);
             }
         }
@@ -58,18 +55,16 @@ api.interceptors.response.use(
         let errorMessage = 'An error occurred. Please try again.';
 
         if (resData) {
-            // 1. Check if it's a Joi Validation Error (Our backend sends this as an array inside 'data')
+            // 1. Check if it's a Joi Validation Error 
             if (resData.status === 'fail' && Array.isArray(resData.data)) {
-                // Combine all Joi error messages into one string separated by a dot
                 errorMessage = resData.data.map(err => err.message).join(' • ');
             }
-            // 2. Check if it's a standard backend AppError message
+            // 2. Check if it's a standard backend AppError message (like "Invalid password")
             else if (resData.message) {
                 errorMessage = resData.message;
             }
         }
 
-        // Return the clean string message to Redux
         return Promise.reject(errorMessage);
     }
 );
