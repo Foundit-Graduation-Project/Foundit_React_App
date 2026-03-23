@@ -2,11 +2,11 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../features/auth';
 
-const ProtectedRoute = () => {
+const PublicRoute = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated);
     
-    // If not logged in, redirect to login
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+    // If already logged in, redirect to home feed
+    return isAuthenticated ? <Navigate to="/home" replace /> : <Outlet />;
 };
 
-export default ProtectedRoute;
+export default PublicRoute;
