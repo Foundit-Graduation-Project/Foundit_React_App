@@ -1,5 +1,8 @@
+
+
+
 import { MapPin, Calendar, ArrowRight, CheckCircle2 } from "lucide-react";
-import { Badge } from "../../components/ui/badge"; // Check your ui folder for badge.jsx
+import { Badge } from "../../components/ui/badge"; 
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { useDispatch } from "react-redux";
@@ -7,37 +10,43 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedReport } from "../../features/reports/reportsSlice";
 
 const ReportCard = ({ report }) => {
-    const { id,title, location, date, images, type, status } = report;
+    const { id, title, locationName, dateHappened, images, type, status } = report;
 
-    //  Initialize hooks
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleViewDetails = () => {
-        dispatch(setSelectedReport(report));
-        navigate(`/report/${id}`);
-    };
-    const getBadgeStyle = () => {
-        if (status === "Matched") return "bg-green-100 text-green-700 hover:bg-green-100";
-        if (type === "Found") return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
-        return "bg-blue-100 text-blue-700 hover:bg-blue-100"; // Default Lost
+   
+    const BASE_URL = "http://localhost:3000"; 
+
+    const getImageUrl = (img) => {
+        if (!img) return "https://via.placeholder.com/400x300?text=No+Image";
+        if (img.startsWith('http')) return img; 
+        return `${BASE_URL}/${img.replace(/\\/g, '/')}`;
     };
 
-    const getBadgeLabel = () => {
-        if (status === "Matched") return "MATCHED";
-        return type.toUpperCase();
+    const handleViewDetails = () => {
+        dispatch(setSelectedReport(report));
+        navigate(`/report/${report._id}`);
+    };
+
+    const getBadgeStyle = () => {
+        if (status === "Matched" || status === "MATCHED") return "bg-green-100 text-green-700 hover:bg-green-100";
+        if (type === "Found" || type === "FOUND") return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
+        return "bg-blue-100 text-blue-700 hover:bg-blue-100"; 
     };
 
     return (
-        <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group" onClick={handleViewDetails}>
+        <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={handleViewDetails}>
             <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                 <img
-                    src={images[0]}
+                    src={getImageUrl(images?.[0])}
                     alt={title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                   
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/400x300?text=Image+Error"; }}
                 />
                 <Badge className={`absolute top-3 right-3 px-3 py-1 text-xs font-bold border-0 ${getBadgeStyle()}`}>
-                    {getBadgeLabel()}
+                    {type?.toUpperCase() || "REPORT"}
                 </Badge>
             </div>
 
@@ -47,17 +56,17 @@ const ReportCard = ({ report }) => {
                 <div className="space-y-1">
                     <div className="flex items-center text-sm text-gray-500">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className="truncate">{location}</span>
+                        <span className="truncate">{locationName || "No location"}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
                         <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                        <span>{date}</span>
+                        <span>{dateHappened ? new Date(dateHappened).toLocaleDateString() : "No date"}</span>
                     </div>
                 </div>
             </CardContent>
 
             <CardFooter className="p-4 pt-0">
-                {status === "Matched" ? (
+                {(status === "Matched" || status === "MATCHED") ? (
                     <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                         View Outcome <CheckCircle2 className="ml-2 w-4 h-4" />
                     </Button>
@@ -73,3 +82,9 @@ const ReportCard = ({ report }) => {
 };
 
 export default ReportCard;
+
+
+
+
+
+
