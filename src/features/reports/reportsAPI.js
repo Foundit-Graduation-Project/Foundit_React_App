@@ -11,6 +11,23 @@ export const reportsAPI = {
     return response.data;
   },
   
+  getAllReports: async (params) => {
+    const response = await api.get('/reports', { params });
+    return response.data;
+  },
+  getMyReports: async (params) => {
+    const response = await api.get('/reports/my-reports', { params });
+    return response.data;
+  },
 
+getReportById: async (id) => {
+    const response = await api.get(`/reports/${id}`);
+    return response.data;
+  },
+
+  deleteReport: async (id) => {
+    const response = await api.delete(`/reports/${id}`);
+    return response.data;
+  }
   
 };

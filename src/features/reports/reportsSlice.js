@@ -16,6 +16,22 @@ export const createReport = createAsyncThunk(
   },
 );
 
+
+// Get My Reports
+export const fetchMyReports = createAsyncThunk(
+  "report/fetchMyReports",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await reportsAPI.getMyReports(params);
+      return response;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to fetch your reports",
+      );
+    }
+  },
+);
+
 export const reportsSlice = createSlice({
   name: "report",
   initialState: {
@@ -59,6 +75,8 @@ export const reportsSlice = createSlice({
   //
   extraReducers: (builder) => {
     builder
+   
+
       // CREATE REPORT
       .addCase(createReport.pending, (state) => {
         state.loading = true;
@@ -78,9 +96,24 @@ export const reportsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
 
-      }) 
+      })      
+      // Add this to your extraReducers in reportsSlice.js
+      .addCase(fetchMyReports.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchMyReports.fulfilled, (state, action) => {
+        state.loading = false;
+       const extractedReports = action.payload.data?.reports || [];
+  
+        state.reports = extractedReports;
+      })
+      .addCase(fetchMyReports.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        console.log("Reports in Slice:", state.reports);
+      })
       
-
+      
   },
 });
 
