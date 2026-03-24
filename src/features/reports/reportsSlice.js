@@ -32,6 +32,21 @@ export const fetchMyReports = createAsyncThunk(
   },
 );
 
+
+
+// Get Report using Id
+
+export const fetchReportById = createAsyncThunk(
+  "report/fetchReportById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await reportsAPI.getReportById(id); // تأكدي من وجودها في ملف API
+      return response.data.report; 
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Error fetching report");
+    }
+  }
+);
 export const reportsSlice = createSlice({
   name: "report",
   initialState: {
@@ -96,13 +111,16 @@ export const reportsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
 
-      })      
+      })   
+  
+      
       // Add this to your extraReducers in reportsSlice.js
       .addCase(fetchMyReports.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchMyReports.fulfilled, (state, action) => {
         state.loading = false;
+        // Backend returns {reports: [...], total: 1}
        const extractedReports = action.payload.data?.reports || [];
   
         state.reports = extractedReports;
@@ -111,9 +129,19 @@ export const reportsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         console.log("Reports in Slice:", state.reports);
-      })
-      
-      
+      }).addCase(fetchReportById.pending, (state) => {
+  state.loading = true;
+  state.error = null;
+})
+
+.addCase(fetchReportById.fulfilled, (state, action) => {
+  state.loading = false;
+  state.selectedReport = action.payload.data?.report || action.payload; 
+})
+.addCase(fetchReportById.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+});
   },
 });
 
