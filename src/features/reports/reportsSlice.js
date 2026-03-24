@@ -1,19 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { reportsAPI } from "./reportsAPI";
+
+
+
+// Create a new report
+
+export const createReport = createAsyncThunk(
+  "report/createReport",
+  async (data, { rejectWithValue }) => {
+    try {
+      return await reportsAPI.createReport(data);
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  },
+);
 
 export const reportsSlice = createSlice({
   name: "report",
   initialState: {
     formData: {
-      location: "",
       itemName: "",
-      category: "",
+      category: "", 
       subCategory: "",
-      date: "",
+      date: "", 
+      locationName: "", 
       description: "",
+      images: [],
     },
     progress: 0,
     selectedReport: null,
-
+    // Backend data + loading state
+    reports: [],
+    loading: false,
+    error: null,
   },
   reducers: {
     updateField: (state, action) => {
@@ -26,16 +46,44 @@ export const reportsSlice = createSlice({
         category: "",
         subCategory: "",
         date: "",
-        location: "",
+        locationName: "",
         description: "",
+        images: [],
       };
       state.progress = 0;
     },
     setSelectedReport: (state, action) => {
-    state.selectedReport = action.payload;
+      state.selectedReport = action.payload;
     },
+  },
+  //
+  extraReducers: (builder) => {
+    builder
+      // CREATE REPORT
+      .addCase(createReport.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createReport.fulfilled, (state, action) => {
+        state.loading = false;
+        // Add the new report returned from backend to the top of the list
+        const newReport = action.payload.data?.report || action.payload.report;
+       if (!Array.isArray(state.reports)) {
+    state.reports = [];
+  }
+        if (newReport) {
+          state.reports.unshift(newReport);
+        }
+      })
+      .addCase(createReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+
+      }) 
+      
+
   },
 });
 
-export const { updateField, resetForm,setSelectedReport } = reportsSlice.actions;
+export const { updateField, resetForm, setSelectedReport } =
+  reportsSlice.actions;
 export default reportsSlice.reducer;
