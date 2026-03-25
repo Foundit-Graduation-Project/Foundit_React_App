@@ -287,7 +287,54 @@ const CreateReport = () => {
                 />
               </div>
 
-       
+              <div className="w-full space-y-4 pt-4">
+                <label className="text-sm font-bold text-slate-800">
+                  Photos ({images.length}/5)
+                </label>
+                <div
+                  className={`grid gap-4 w-full ${images.length > 0 ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-5" : "grid-cols-1"}`}
+                >
+                  {images.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative aspect-square rounded-2xl overflow-hidden border-2 border-blue-100"
+                    >
+                      <img
+                        src={img.preview}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full shadow-lg"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+
+                  {images.length < 5 && (
+                    <label
+                      className={`flex flex-col items-center justify-center border-2 border-dashed border-blue-200 bg-blue-50/20 rounded-2xl cursor-pointer hover:bg-blue-50 transition-all ${images.length === 0 ? "w-full h-40" : "aspect-square"}`}
+                    >
+                      <Camera className="w-6 h-6 text-blue-600" />
+                      <span className="text-xs font-bold text-blue-600 mt-2">
+                        Add Photo
+                      </span>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          handleImageUpload(e);
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col lg:flex-row w-full lg:justify-between gap-4 pt-6">

@@ -1,6 +1,3 @@
-
-
-
 import { MapPin, Calendar, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Badge } from "../../components/ui/badge"; 
 import { Button } from "../../components/ui/button";
@@ -10,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedReport } from "../../features/reports/reportsSlice";
 
 const ReportCard = ({ report }) => {
-    const { id, title, locationName, dateHappened, images, type, status } = report;
+    const { _id, title, locationName, dateHappened, images, type, status } = report;
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,14 +16,14 @@ const ReportCard = ({ report }) => {
     const BASE_URL = "http://localhost:3000"; 
 
     const getImageUrl = (img) => {
-        if (!img) return "https://via.placeholder.com/400x300?text=No+Image";
+        if (!img) return "/src/assets/notFoundImage.jpg";
         if (img.startsWith('http')) return img; 
         return `${BASE_URL}/${img.replace(/\\/g, '/')}`;
     };
 
     const handleViewDetails = () => {
         dispatch(setSelectedReport(report));
-        navigate(`/report/${report._id}`);
+        navigate(`/report/${_id}`);
     };
 
     const getBadgeStyle = () => {
@@ -39,7 +36,7 @@ const ReportCard = ({ report }) => {
         <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={handleViewDetails}>
             <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                 <img
-                    src={getImageUrl(images?.[0])}
+                    src={getImageUrl(images[0])}
                     alt={title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                    
