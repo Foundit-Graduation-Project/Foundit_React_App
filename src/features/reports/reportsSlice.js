@@ -32,6 +32,18 @@ export const fetchMyReports = createAsyncThunk(
   },
 );
 
+// Fetch all reports from backend
+
+export const fetchReports = createAsyncThunk(
+  "report/fetchReports",
+  async (params, { rejectWithValue }) => {
+    try {
+      return await reportsAPI.getAllReports(params);
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to fetch reports");
+    }
+  },
+);
 
 
 // Get Report using Id
@@ -44,6 +56,20 @@ export const fetchReportById = createAsyncThunk(
       return response.data.report; 
     } catch (err) {
       return rejectWithValue(err.response?.data || "Error fetching report");
+    }
+  }
+);
+
+
+//Delete Report
+export const deleteReport = createAsyncThunk(
+  "report/deleteReport",
+  async (id, { rejectWithValue }) => {
+    try {
+      await reportsAPI.deleteReport(id);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to delete report");
     }
   }
 );
@@ -112,15 +138,26 @@ export const reportsSlice = createSlice({
         state.error = action.payload;
 
       })   
-  
-      
-      // Add this to your extraReducers in reportsSlice.js
-      .addCase(fetchMyReports.pending, (state) => {
+       // FETCH REPORTS
+       .addCase(fetchReports.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+})
+.addCase(fetchReports.fulfilled, (state, action) => {
+    state.loading = false;
+ 
+    const extracted = action.payload.data?.reports || action.payload.reports || [];
+    state.reports = extracted; 
+})
+.addCase(fetchReports.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+})
+  .addCase(fetchMyReports.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchMyReports.fulfilled, (state, action) => {
         state.loading = false;
-        // Backend returns {reports: [...], total: 1}
        const extractedReports = action.payload.data?.reports || [];
   
         state.reports = extractedReports;
@@ -141,7 +178,20 @@ export const reportsSlice = createSlice({
 .addCase(fetchReportById.rejected, (state, action) => {
   state.loading = false;
   state.error = action.payload;
-});
+})
+// Delete
+.addCase(deleteReport.pending, (state) => {
+    state.loading = true;
+  })
+  .addCase(deleteReport.fulfilled, (state, action) => {
+    state.loading = false;
+
+    state.reports = state.reports.filter((report) => report._id !== action.payload);
+  })
+  .addCase(deleteReport.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
   },
 });
 

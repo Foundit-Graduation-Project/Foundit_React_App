@@ -25,7 +25,7 @@ getReportById: async (id) => {
     return response.data;
   },
 
-  deleteReport: async (id) => {
+deleteReport: async (id) => {
     const response = await api.delete(`/reports/${id}`);
     return response.data;
   }
