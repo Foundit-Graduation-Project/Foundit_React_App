@@ -81,7 +81,7 @@ const MyReports = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredReports.length > 0 ? (
                 filteredReports.map((report) => (
-                  <ReportCard key={report._id} report={report} />
+                  <ReportCard key={report._id} report={report} showDelete={true}/>
                 ))
               ) : (
                 <div className="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
