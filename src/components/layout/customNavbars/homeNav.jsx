@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { selectUnreadCount } from "../../../features/notifications"; // Adjust path to your barrel file
 import { useState } from "react";
 
 // --- Integration Imports ---
@@ -20,6 +21,7 @@ import toast from "react-hot-toast";
 // Changed to Capital H (React requirement for components)
 const HomeNav = () => {
     const [isDark, setIsDark] = useState(false);
+    const unreadCount = useSelector(selectUnreadCount);
 
     // --- Hooks ---
     const location = useLocation();
@@ -113,10 +115,17 @@ const HomeNav = () => {
                     <>
                         <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
-                        <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors hidden sm:block">
+                        {/* Dynamic Notification Bell */}
+                        <Link to="/notifications" className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors hidden sm:block">
                             <Bell className="w-5 h-5" />
-                            <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                        </button>
+
+                            {/* Only show the badge if there are unread notifications */}
+                            {unreadCount > 0 && (
+                                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border-2 border-white dark:border-slate-950">
+                                    {unreadCount > 9 ? '9+' : unreadCount}
+                                </span>
+                            )}
+                        </Link>
                         <button
                             onClick={toggleTheme}
                             className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
