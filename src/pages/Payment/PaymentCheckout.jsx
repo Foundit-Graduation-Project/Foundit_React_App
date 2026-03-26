@@ -434,7 +434,7 @@ const PaymentCheckout = () => {
 
   const plans = [
     { id: 'Basic', name: 'Basic Plan', price: 100, credits: 3, desc: 'Perfect for testing our features.' },
-    { id: 'Premium', name: 'Premium Plan', price: 200, credits: 10, desc: 'Best value for frequent users.' },
+    { id: 'Premium', name: 'Premium Plan', price: 300, credits: 10, desc: 'Best value for frequent users.' },
   ];
 
   return (
