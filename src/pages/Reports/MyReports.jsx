@@ -7,25 +7,35 @@ import Nav from "../../components/layout/customNavbars/myReportsNav";
 import Footer from "../../components/layout/customFooters/myReportsFooter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyReports } from "../../features/reports/reportsSlice";
+import { fetchMyMatches } from "../../features/matches/matchesSlice";
 
 const MyReports = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("All Reports");
-  
+
   const { reports, loading, error } = useSelector((state) => state.report);
+  const { matches } = useSelector((state) => state.match);
 
   useEffect(() => {
     dispatch(fetchMyReports());
+    dispatch(fetchMyMatches());
   }, [dispatch]);
 
-  const filteredReports = Array.isArray(reports) 
+  const filteredReports = Array.isArray(reports)
     ? reports.filter((report) => {
-        if (activeTab === "All Reports") return true;
-        
-        if (activeTab === "Matched") return report.status?.toUpperCase() === "MATCHED";
-        
-        return report.type?.toUpperCase() === activeTab.toUpperCase();
-      })
+      if (activeTab === "All Reports") return true;
+
+      // Expand "Matched" filter to catch backwards-compatible native matches that may still be OPEN natively 
+      if (activeTab === "Matched") {
+        const hasActiveMatch = matches?.some(m =>
+          (m.lostReport?.report?._id === report._id || m.foundReport?.report?._id === report._id) &&
+          m.status !== 'REJECTED'
+        );
+        return report.status?.toUpperCase() === "MATCHED" || report.status?.toUpperCase() === "RESOLVED" || hasActiveMatch;
+      }
+
+      return report.type?.toUpperCase() === activeTab.toUpperCase();
+    })
     : [];
 
   return (
@@ -48,11 +58,10 @@ const MyReports = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                  activeTab === tab
-                    ? "bg-blue-50 text-blue-700 shadow-sm"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === tab
+                  ? "bg-blue-50 text-blue-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50"
+                  }`}
               >
                 {tab}
               </button>
@@ -81,7 +90,13 @@ const MyReports = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredReports.length > 0 ? (
                 filteredReports.map((report) => (
-                  <ReportCard key={report._id} report={report} showDelete={true}/>
+                  <ReportCard
+                    key={report._id}
+                    report={report}
+                    showDelete={true}
+                    matches={matches?.filter(m => (m.lostReport?.report?._id === report._id || m.foundReport?.report?._id === report._id) && m.status !== 'REJECTED')}
+                    isMyReportView={true}
+                  />
                 ))
               ) : (
                 <div className="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">

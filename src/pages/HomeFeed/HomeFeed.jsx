@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReports } from "../../features/reports/reportsSlice"; 
+import { fetchReports } from "../../features/reports/reportsSlice";
 import { Search, Loader2, Smartphone, PawPrint, Wallet, FileText, Users, ChevronLeft, ChevronRight, Key, Box } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import Nav from "../../components/layout/customNavbars/homeNav";
@@ -20,7 +20,7 @@ const HomeFeed = () => {
     const dispatch = useDispatch();
     const { reports, loading } = useSelector((state) => state.report);
 
-    const [type, setType] = useState(""); 
+    const [type, setType] = useState("");
     const [category, setCategory] = useState("");
     const [page, setPage] = useState(1);
 
@@ -28,7 +28,7 @@ const HomeFeed = () => {
         const params = {
             page,
             limit: 10,
-            ...(type && { type }), 
+            ...(type && { type }),
             ...(category && { category })
         };
         dispatch(fetchReports(params));
@@ -47,7 +47,7 @@ const HomeFeed = () => {
 
             <div className="w-full px-6 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-15 gap-8 items-start">
-                    
+
                     {/* SIDEBAR LEFT */}
                     <aside className="hidden lg:block lg:col-span-2 sticky top-24 space-y-6">
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Category</h3>
@@ -72,11 +72,11 @@ const HomeFeed = () => {
                             <div className="flex bg-gray-100 p-1 rounded-xl">
                                 {[
                                     { label: "All", value: "" },
-                                    { label: "Lost", value: "LOST" }, // تحويل لـ Uppercase لتطابق الـ Schema
-                                    { label: "Found", value: "FOUND" } // تحويل لـ Uppercase لتطابق الـ Schema
+                                    { label: "Lost", value: "LOST" },
+                                    { label: "Found", value: "FOUND" }
                                 ].map(tab => (
-                                    <button 
-                                        key={tab.label} 
+                                    <button
+                                        key={tab.label}
                                         onClick={() => handleFilterChange(setType, tab.value)}
                                         className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${type === tab.value ? "bg-white shadow-sm text-blue-600" : "text-gray-500"}`}
                                     >
@@ -94,7 +94,9 @@ const HomeFeed = () => {
                                 </div>
                             ) : Array.isArray(reports) && reports.length > 0 ? (
                                 reports.map((report) => (
-                                    <ReportCard key={report._id} report={report} />
+                                    <ReportCard key={report._id} report={report} isMyReportView={false}
+                                    />
+
                                 ))
                             ) : (
                                 <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-100">
@@ -120,7 +122,7 @@ const HomeFeed = () => {
                         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                             <h3 className="font-bold text-xs text-gray-400 uppercase mb-4">Live Updates</h3>
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-blue-50 rounded-xl text-blue-600"><Users size={20}/></div>
+                                <div className="p-3 bg-blue-50 rounded-xl text-blue-600"><Users size={20} /></div>
                                 <div>
                                     <p className="text-xl font-bold text-gray-900">{reports?.length || 0}</p>
                                     <p className="text-xs text-gray-500 font-medium">Visible Reports</p>
