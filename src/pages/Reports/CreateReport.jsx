@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Progress } from "@/components/ui/progress";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +46,75 @@ const CreateReport = () => {
     Pets: ["dogs", "cats", "reptile"],
   };
 
+  const updateSourceRef = useRef(null); // 'user' or 'map'
+
+  // --- Maps Synchronization Effect ---
+  // Scenario A: Input -> Map (Forward Geocoding)
+  useEffect(() => {
+    if (updateSourceRef.current !== "user") return;
+    if (!formData.location || formData.location.length < 3) return;
+
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
+            formData.location
+          )}`
+        );
+        const data = await response.json();
+        if (data && data.length > 0) {
+          const newLat = parseFloat(data[0].lat);
+          const newLng = parseFloat(data[0].lon);
+          // Set coordinates but keep source as "user" to prevent bounce-back
+          setFormData((prev) => ({
+            ...prev,
+            coordinates: [newLat, newLng],
+          }));
+        }
+      } catch (error) {
+        console.error("Geocoding fetch error:", error);
+      }
+    }, 1500); // 1.5s debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.location]);
+
+  // Scenario B: Map -> Input (Reverse Geocoding)
+  useEffect(() => {
+    if (updateSourceRef.current !== "map") return;
+
+    const fetchAddress = async () => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${formData.coordinates[0]}&lon=${formData.coordinates[1]}`
+        );
+        const data = await response.json();
+        if (data && data.display_name) {
+          const addressParts = data.display_name.split(",").map((p) => p.trim());
+          // Take the first 3 parts max to format cleanly (usually Neighborhood, District, City)
+          const conciseAddress = addressParts.slice(0, 3).join(", ");
+          
+          // Sanitize to strictly adhere to Backend Regex rules, converting Arabic comma (،) to English (,) for unified DB search
+          let sanitizedAddress = conciseAddress.replace(/[^\w\u0600-\u06FF\s,،]/g, ' ').replace(/،/g, ',').replace(/\s+/g, ' ').trim();
+          
+          // Force a comma if none exists to pass Backend Regex
+          if (!sanitizedAddress.includes(',')) {
+              sanitizedAddress += ', Egypt';
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            location: sanitizedAddress,
+          }));
+        }
+      } catch (error) {
+        console.error("Reverse geocoding fetch error:", error);
+      }
+    };
+
+    fetchAddress();
+  }, [formData.coordinates]);
+
   // --- حساب نسبة الإنجاز (Progress) ---
   const requiredFields = [
     "itemName",
@@ -65,7 +134,12 @@ const CreateReport = () => {
 
   // --- Handlers ---
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === "location") {
+        updateSourceRef.current = "user";
+        // Sanitize manually typed input, convert Arabic comma to English comma for uniform DB search
+        value = value.replace(/[^\w\u0600-\u06FF\s,،]/g, ' ').replace(/،/g, ',').replace(/\s+/g, ' ');
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -94,6 +168,13 @@ const CreateReport = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Enforce Backend locationName Regex Check before API Request
+    const locationRegex = /^[\w\u0600-\u06FF\s]+,\s*[\w\u0600-\u06FF\s]+(,\s*[\w\u0600-\u06FF\s]+)*$/;
+    if (!locationRegex.test(formData.location.trim())) {
+      alert('Location must follow a standard format separated by commas (e.g., "Nasr City, Cairo").\nPlease add a district and city separated by a comma.');
+      return;
+    }
+
     if (images.length === 0) {
       alert("Please upload at least one image");
       return;
@@ -104,6 +185,7 @@ const CreateReport = () => {
     data.append("title", formData.itemName);
     data.append("description", formData.description);
     data.append("category", formData.category);
+    if (formData.subCategory) data.append("subCategory", formData.subCategory);
     data.append("type", reportType.toUpperCase());
     data.append("dateHappened", formData.date);
     data.append("locationName", formData.location);
@@ -264,9 +346,10 @@ const CreateReport = () => {
                   <div className="h-[400px] w-full rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner">
                     <ReportMap
                       position={formData.coordinates}
-                      setPosition={(coords) =>
-                        setFormData((p) => ({ ...p, coordinates: coords }))
-                      }
+                      setPosition={(coords) => {
+                        updateSourceRef.current = "map";
+                        setFormData((p) => ({ ...p, coordinates: coords }));
+                      }}
                     />
                   </div>
                 </div>
