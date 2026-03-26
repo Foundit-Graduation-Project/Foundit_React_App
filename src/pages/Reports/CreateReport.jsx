@@ -210,9 +210,18 @@ const CreateReport = () => {
         dispatch(resetForm());
         setImages([]);
         navigate("/my-reports");
+      } else if (createReport.rejected.match(resultAction)) {
+        const errorMsg = resultAction.payload?.message || resultAction.payload;
+        if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes("insufficient credits")) {
+          alert("Insufficient credits. Redirecting to payment page...");
+          navigate("/payment/checkout");
+        } else {
+          alert(errorMsg || "Failed to create report. Please check your data.");
+        }
       }
     } catch (err) {
       console.error("Submit Error:", err);
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 
