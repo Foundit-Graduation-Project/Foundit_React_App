@@ -5,13 +5,15 @@ import chatReducer from '../features/chat/chatSlice';
 import settingsReducer from '../features/settings/settingSlice';
 import authReducer from "../features/auth";
 import notificationsReducer from "../features/notifications";
+import matchReducer from "../features/matches/matchesSlice";
 export const store = configureStore({
   reducer: {
     report: reportReducer,
     chat: chatReducer,
     settings: settingsReducer,
     auth: authReducer,
-    notifications: notificationsReducer
+    notifications: notificationsReducer,
+    match: matchReducer,
   },
 });
 
