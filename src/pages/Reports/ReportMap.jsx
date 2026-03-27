@@ -60,7 +60,7 @@ const ReportMap = ({ position, setPosition, isPicker = true }) => {
   }, [position]);
 
   return (
-    <div className="w-full h-full min-h-[300px] rounded-2xl overflow-hidden relative border border-gray-100 shadow-sm">
+    <div className="w-full h-full min-h-[300px] z-10 rounded-2xl overflow-hidden relative border border-gray-100 shadow-sm">
       <MapContainer
         center={center}
         zoom={13}
