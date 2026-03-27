@@ -36,14 +36,31 @@ const CreateReport = () => {
     date: "",
     location: "",
     description: "",
+    brand: "",
+    color: "",
     coordinates: CAIRO_DEFAULT,
   });
 
   const subCategories = {
-    Electronics: ["Mobile", "Tablet", "Laptop", "Camera", "others"],
-    Documents: ["ID Card", "Passport", "Driving License", "others"],
-    Wallets: ["Home Keys", "Car Keys", "Others"],
-    Pets: ["dogs", "cats", "reptile"],
+    Electronics: ["Smartphones", "Laptops & Computers", "Tablets & E-Readers", "Cameras & Photography", "Gaming Consoles"],
+    Accessories: ["Audio & Headphones", "Luxury & Casual Watches", "Smartwatches & Fitness Trackers", "Jewelry (High Value)", "Storage & Power", "Personal Items"],
+  };
+
+  const brandMappings = {
+    // Electronics
+    "Smartphones": ["Apple (iPhone)", "Samsung", "Google", "Xiaomi", "Huawei", "Oppo", "Realme", "Vivo", "others"],
+    "Laptops & Computers": ["Apple (MacBook)", "Dell", "HP", "Lenovo", "ASUS", "Acer", "Microsoft", "MSI", "others"],
+    "Tablets & E-Readers": ["Apple (iPad)", "Samsung (Galaxy Tab)", "Amazon (Kindle)", "Microsoft Surface", "Lenovo", "others"],
+    "Cameras & Photography": ["Canon", "Nikon", "Sony", "Fujifilm", "GoPro", "DJI (Drones)", "Panasonic", "others"],
+    "Gaming Consoles": ["Sony (PlayStation)", "Microsoft (Xbox)", "Nintendo", "Valve (Steam Deck)", "others"],
+
+    // Accessories 
+    "Audio & Headphones": ["Sony", "Bose", "Sennheiser", "JBL", "Beats", "Apple (AirPods)", "Jabra", "Anker (Soundcore)", "others"],
+    "Luxury & Casual Watches": ["Rolex", "Omega", "Casio", "Seiko", "Tissot", "Fossil", "Daniel Wellington", "Swatch", "Hublot", "Patek Philippe", "others"],
+    "Smartwatches & Fitness Trackers": ["Apple Watch", "Samsung Galaxy Watch", "Garmin", "Fitbit", "Huawei", "Amazfit", "Xiaomi (Mi Band)", "others"],
+    "Jewelry (High Value)": ["Cartier", "Tiffany & Co.", "Pandora", "Swarovski", "Bvlgari", "Van Cleef & Arpels", "others"],
+    "Storage & Power": ["SanDisk", "Western Digital", "Seagate", "Anker", "Belkin", "Samsung", "Baseus", "others"],
+    "Personal Items": ["Wallets", "Sunglasses", "Keys", "Ray-Ban", "Oakley", "Carrera", "Gucci", "Prada", "others"]
   };
 
   const updateSourceRef = useRef(null); // 'user' or 'map'
@@ -93,13 +110,13 @@ const CreateReport = () => {
           const addressParts = data.display_name.split(",").map((p) => p.trim());
           // Take the first 3 parts max to format cleanly (usually Neighborhood, District, City)
           const conciseAddress = addressParts.slice(0, 3).join(", ");
-          
+
           // Sanitize to strictly adhere to Backend Regex rules, converting Arabic comma (،) to English (,) for unified DB search
           let sanitizedAddress = conciseAddress.replace(/[^\w\u0600-\u06FF\s,،]/g, ' ').replace(/،/g, ',').replace(/\s+/g, ' ').trim();
-          
+
           // Force a comma if none exists to pass Backend Regex
           if (!sanitizedAddress.includes(',')) {
-              sanitizedAddress += ', Egypt';
+            sanitizedAddress += ', Egypt';
           }
 
           setFormData((prev) => ({
@@ -115,7 +132,7 @@ const CreateReport = () => {
     fetchAddress();
   }, [formData.coordinates]);
 
-  // --- حساب نسبة الإنجاز (Progress) ---
+  // --- (Progress) ---
   const requiredFields = [
     "itemName",
     "category",
@@ -136,11 +153,27 @@ const CreateReport = () => {
   const handleInputChange = (e) => {
     let { name, value } = e.target;
     if (name === "location") {
-        updateSourceRef.current = "user";
-        // Sanitize manually typed input, convert Arabic comma to English comma for uniform DB search
-        value = value.replace(/[^\w\u0600-\u06FF\s,،]/g, ' ').replace(/،/g, ',').replace(/\s+/g, ' ');
+      updateSourceRef.current = "user";
+      // Sanitize manually typed input, convert Arabic comma to English comma for uniform DB search
+      value = value.replace(/[^\w\u0600-\u06FF\s,،]/g, ' ').replace(/،/g, ',').replace(/\s+/g, ' ');
     }
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value };
+
+      // Reset subCategory and brand if category changes
+      if (name === "category") {
+        newData.subCategory = "";
+        newData.brand = "";
+      }
+
+      // Reset brand if subCategory changes
+      if (name === "subCategory") {
+        newData.brand = "";
+      }
+
+      return newData;
+    });
   };
 
   const handleImageUpload = (e) => {
@@ -199,6 +232,9 @@ const CreateReport = () => {
     };
     data.append("location", JSON.stringify(geoData));
 
+    if (formData.brand) data.append("brand", formData.brand);
+    if (formData.color) data.append("color", formData.color);
+
     images.forEach((img) => {
       data.append("images", img.file);
     });
@@ -230,7 +266,7 @@ const CreateReport = () => {
       <ReportHeader />
 
       {/* Mobile Header */}
-      <header className="w-full px-4 py-5 flex items-center bg-white sticky top-0 z-10 border-b border-slate-200 lg:hidden transition-all">
+      <header className="w-full px-4 py-5 flex items-center bg-white sticky top-0 z-[1001] border-b border-slate-200 lg:hidden transition-all">
         <button
           onClick={() => navigate(-1)}
           className="p-2 hover:bg-slate-100 rounded-full"
@@ -286,9 +322,7 @@ const CreateReport = () => {
                   >
                     <option value="">Select category</option>
                     <option value="Electronics">Electronics</option>
-                    <option value="Documents">Documents</option>
-                    <option value="Pets">Pets</option>
-                    <option value="Wallets">Wallets/Keys</option>
+                    <option value="Accessories">Accessories</option>
                   </select>
                 </div>
               </div>
@@ -313,6 +347,45 @@ const CreateReport = () => {
                   </select>
                 </div>
               )}
+
+              {formData.subCategory && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold text-slate-700">
+                    Brand / Manufacturer
+                  </label>
+                  {brandMappings[formData.subCategory] ? (
+                    <select
+                      name="brand"
+                      value={formData.brand}
+                      onChange={handleInputChange}
+                      className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    >
+                      <option value="">Select Brand</option>
+                      {brandMappings[formData.subCategory].map((b) => (
+                        <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <FormInput
+                      id="brand"
+                      name="brand"
+                      value={formData.brand}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Apple, Nike, Adidas"
+                    />
+                  )}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                <FormInput
+                  label="Color"
+                  id="color"
+                  value={formData.color}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Black, Silver, Blue"
+                />
+              </div>
 
               <div className="grid grid-cols-1 gap-6">
                 <FormInput
@@ -440,11 +513,10 @@ const CreateReport = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full lg:w-72 py-5 text-white font-bold text-lg rounded-2xl shadow-lg transition-all mb-10 flex items-center justify-center gap-2 ${
-                    loading
-                      ? "bg-blue-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                  }`}
+                  className={`w-full lg:w-72 py-5 text-white font-bold text-lg rounded-2xl shadow-lg transition-all mb-10 flex items-center justify-center gap-2 ${loading
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                    }`}
                 >
                   {loading && <Loader2 className="animate-spin w-5 h-5" />}
                   {loading ? "Submitting..." : "Submit Report"}
