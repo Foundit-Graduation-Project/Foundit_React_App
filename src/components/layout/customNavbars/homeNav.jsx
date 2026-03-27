@@ -147,7 +147,7 @@ const HomeNav = () => {
                             </div>
                             <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
                                 {/* Real User Avatar */}
-                                <AvatarImage src={currentUser.avatar.url} alt={currentUser.name} />
+                                <AvatarImage src={currentUser.avatar?.url} alt={currentUser.name} />
                                 <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
                                     {getInitials(currentUser.name)}
                                 </AvatarFallback>

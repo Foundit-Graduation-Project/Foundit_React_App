@@ -2,26 +2,21 @@ import TypeIt from "typeit-react";
 
 const HoldUpAnimated = () => {
   return (
-    <div className="text-2xl font-bold text-slate-800">
+    <div className="text-2xl font-bold text-slate-900 h-8">
       <TypeIt
         options={{
           waitUntilVisible: true,
-          speed: 50, // سرعة الكتابة
+          speed: 40, 
           cursor: true,
+          loop: false,
         }}
         getBeforeInit={(instance) => {
           instance
-            .type("Hold up!")
-            .pause(500) // توقف بسيط للجماليات
-            .exec(async () => {
-              // الانتظار لمدة ثانيتين (مثلاً لمحاكاة تحميل بيانات)
-              await new Promise((resolve) => {
-                setTimeout(() => {
-                  return resolve();
-                }, 2000);
-              });
-            })
-            .type(" OK, now go Verify your email.")
+            .type("Secure your account")
+            .pause(1000)
+            .delete(19)
+            .pause(500)
+            .type("Verify your email address")
             .pause(1000);
 
           return instance;
