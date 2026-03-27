@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { Progress } from "@/components/ui/progress";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -179,7 +180,7 @@ const CreateReport = () => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     if (images.length + files.length > 5) {
-      alert("Maximum 5 images allowed");
+      toast.error("Maximum 5 images allowed");
       e.target.value = null;
       return;
     }
@@ -204,12 +205,12 @@ const CreateReport = () => {
     // Enforce Backend locationName Regex Check before API Request
     const locationRegex = /^[\w\u0600-\u06FF\s]+,\s*[\w\u0600-\u06FF\s]+(,\s*[\w\u0600-\u06FF\s]+)*$/;
     if (!locationRegex.test(formData.location.trim())) {
-      alert('Location must follow a standard format separated by commas (e.g., "Nasr City, Cairo").\nPlease add a district and city separated by a comma.');
+      toast.error('Invalid location format. Use "District, City" (e.g., Nasr City, Cairo).');
       return;
     }
 
     if (images.length === 0) {
-      alert("Please upload at least one image");
+      toast.error("Please upload at least one image");
       return;
     }
 
@@ -242,22 +243,22 @@ const CreateReport = () => {
     try {
       const resultAction = await dispatch(createReport(data));
       if (createReport.fulfilled.match(resultAction)) {
-        alert("Report Created Successfully!");
+        toast.success("Report created successfully!");
         dispatch(resetForm());
         setImages([]);
         navigate("/my-reports");
       } else if (createReport.rejected.match(resultAction)) {
         const errorMsg = resultAction.payload?.message || resultAction.payload;
         if (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes("insufficient credits")) {
-          alert("Insufficient credits. Redirecting to payment page...");
+          toast.error("Insufficient credits. Redirecting to payment page...");
           navigate("/payment/checkout");
         } else {
-          alert(errorMsg || "Failed to create report. Please check your data.");
+          toast.error(errorMsg || "Failed to create report. Please check your data.");
         }
       }
     } catch (err) {
       console.error("Submit Error:", err);
-      alert("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
 
