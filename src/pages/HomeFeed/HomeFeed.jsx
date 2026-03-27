@@ -170,7 +170,8 @@ const HomeFeed = () => {
 
                             <div className="space-y-4">
                                 {matches && matches.length > 0 ? (
-                                    matches.slice(0, 3).map((match) => {
+                                    
+                                    [...matches].reverse().slice(0, 2).map((match) => {
                                         // Determine which side is the "other" person's report
                                         const isMyLostReport = match.lostReport?.report?.user === currentUserId;
                                         const displayReport = isMyLostReport ? match.foundReport?.report : match.lostReport?.report;

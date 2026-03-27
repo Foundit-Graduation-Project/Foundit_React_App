@@ -37,6 +37,7 @@ export default function ReportSidebar({ item, match }) {
     <>
       <div className="sticky top-20 space-y-6 font-sans">
         {/* CARD 0: Match Analysis (Only if Matched) */}
+
         {item.status === "MATCHED" && match && (
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-xl shadow-lg border border-blue-500 text-white animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="flex items-center justify-between mb-4">
@@ -45,19 +46,30 @@ export default function ReportSidebar({ item, match }) {
                 Match Analysis
               </h3>
               <span className="bg-white/20 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest">
-                {match.status}
+                {match?.status}
               </span>
             </div>
 
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center justify-between gap-2 mb-6 text-center">
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider mb-1">MATCH SCORE</p>
-                <p className="text-4xl font-black">{match.score}%</p>
+                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider mb-1">SCORE</p>
+                <p className="text-2xl font-black">{match?.score}%</p>
               </div>
-              <div className="h-12 w-[1px] bg-white/20"></div>
+
+              <div className="h-8 w-[1px] bg-white/20"></div>
+
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider mb-1">DISTANCE</p>
+                <p className="text-xl font-black">
+                  {match?.distance !== undefined ? `${match.distance.toFixed(1)} km` : "0 km"}
+                </p>
+              </div>
+
+              <div className="h-8 w-[1px] bg-white/20"></div>
+
               <div className="flex-1">
                 <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider mb-1">CONFIDENCE</p>
-                <p className="text-sm font-bold">{match.score > 80 ? "High" : "Moderate"}</p>
+                <p className="text-sm font-bold">{match?.score > 80 ? "High" : "Mid"}</p>
               </div>
             </div>
 
@@ -79,18 +91,16 @@ export default function ReportSidebar({ item, match }) {
                   <span className="font-bold text-white">Why this score?</span> Calculated based on category alignment, common keywords, geospatial proximity, and temporal overlap.
                 </p>
               </div>
-
               {matchedReportId && (
                 <Link to={`/report/${matchedReportId}`} className="block">
                   <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 h-12 rounded-lg text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                    {isMyMatchedReport ? "View My Matched Report" : "View Matched Report"}
+                    View Matched Report
                   </Button>
                 </Link>
               )}
             </div>
           </div>
         )}
-
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h3 className="text-xl font-bold text-slate-900 mb-1">
             {getSidebarTitle()}</h3>

@@ -63,14 +63,21 @@ const ReportMap = ({ position, setPosition, isPicker = true }) => {
     <div className="w-full h-full min-h-[300px] z-10 rounded-2xl overflow-hidden relative border border-gray-100 shadow-sm">
       <MapContainer
         center={center}
-        zoom={13}
+        zoom={10}
+        maxZoom={30}
+        // minZoom={5}
+        attributionControl={false}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
         zoomControl={true}
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={30}
+          maxNativeZoom={30}
+          minZoom={1}
+
         />
 
         {isPicker && <LocationPicker setPosition={setPosition} />}
