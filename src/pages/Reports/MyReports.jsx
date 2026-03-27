@@ -6,7 +6,7 @@ import ReportCard from "./reportCard";
 import Nav from "../../components/layout/customNavbars/myReportsNav";
 import Footer from "../../components/layout/customFooters/myReportsFooter";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMyReports } from "../../features/reports/reportsSlice";
+import { fetchMyReports, clearReportError } from "../../features/reports/reportsSlice";
 import { fetchMyMatches } from "../../features/matches/matchesSlice";
 
 const MyReports = () => {
@@ -17,7 +17,14 @@ const MyReports = () => {
   const { matches } = useSelector((state) => state.match);
 
   useEffect(() => {
-    dispatch(fetchMyReports());
+    dispatch(clearReportError());
+    // Handling error locally using unwrap() if needed
+    dispatch(fetchMyReports())
+      .unwrap()
+      .catch((err) => {
+        console.error("Local component error handling:", err);
+      });
+      
     dispatch(fetchMyMatches());
   }, [dispatch]);
 
@@ -27,11 +34,7 @@ const MyReports = () => {
 
       // Expand "Matched" filter to catch backwards-compatible native matches that may still be OPEN natively 
       if (activeTab === "Matched") {
-        const hasActiveMatch = matches?.some(m =>
-          (m.lostReport?.report?._id === report._id || m.foundReport?.report?._id === report._id) &&
-          m.status !== 'REJECTED'
-        );
-        return report.status?.toUpperCase() === "MATCHED" || report.status?.toUpperCase() === "RESOLVED" || hasActiveMatch;
+        return report.status?.toUpperCase() === "MATCHED" || report.status?.toUpperCase() === "RESOLVED";
       }
 
       return report.type?.toUpperCase() === activeTab.toUpperCase();
@@ -82,7 +85,9 @@ const MyReports = () => {
         ) : error ? (
           <div className="bg-red-50 text-red-600 p-6 rounded-2xl text-center border border-red-100">
             <p className="font-bold">Error loading reports</p>
-            <p className="text-sm">{error.message || "Please check your connection."}</p>
+            <p className="text-sm">
+                {typeof error === "string" ? error : (error.message || JSON.stringify(error) || "Please check your connection.")}
+            </p>
           </div>
         ) : (
           <>
