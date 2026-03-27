@@ -4,6 +4,8 @@ import reportReducer from "../features/reports/reportsSlice";
 import chatReducer from '../features/chat/chatSlice';
 import settingsReducer from '../features/settings/settingSlice';
 import authReducer from "../features/auth";
+import userReducer from "../features/user";
+import paymentReducer from "../features/payment/paymentSlice";
 import notificationsReducer from "../features/notifications";
 import matchReducer from "../features/matches/matchesSlice";
 export const store = configureStore({
@@ -14,6 +16,8 @@ export const store = configureStore({
     auth: authReducer,
     notifications: notificationsReducer,
     match: matchReducer,
-  },
+    user: userReducer,
+    payment: paymentReducer
+    },
 });
 

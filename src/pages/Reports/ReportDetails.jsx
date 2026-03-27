@@ -47,7 +47,7 @@ export default function ReportDetails() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between w-full">
         <Nav />
       </div>
 

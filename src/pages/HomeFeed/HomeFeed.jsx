@@ -56,7 +56,7 @@ const HomeFeed = () => {
 
     return (
         <div className="min-h-screen bg-gray-50/50 w-full font-sans">
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-40 h-18 px-6 flex items-center shadow-sm">
+            <div className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full h-18 px-6 flex items-center justify-between shadow-sm">
                 <Nav />
             </div>
 

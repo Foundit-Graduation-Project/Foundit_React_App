@@ -16,7 +16,9 @@ import { Separator } from "../../components/ui/separator";
 import SupportModel from "../Auth/SupportModel";
 import TermsOfServicePopup from "../../components/popups/TermsOfServicePopup";
 import PrivacyPolicyPopup from "../../components/popups/PrivacyPolicyPopup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createCheckoutSession, clearPaymentError, selectPaymentLoading, selectPaymentError, selectPaymentSessionUrl } from "../../features/payment";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +45,10 @@ const PaymentCheckout = () => {
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectPaymentLoading);
+  const error = useSelector(selectPaymentError);
+  const sessionUrl = useSelector(selectPaymentSessionUrl);
 
   const {
     register,
@@ -52,9 +58,20 @@ const PaymentCheckout = () => {
     resolver: zodResolver(checkoutSchema),
   });
 
+  useEffect(() => {
+    if (sessionUrl) {
+      window.location.href = sessionUrl; // Redirect to Stripe Checkout
+    }
+  }, [sessionUrl]);
+
   const onSubmit = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    navigate("/payment/success");
+    dispatch(clearPaymentError());
+    try {
+      await dispatch(createCheckoutSession({ plan: 'Custom', amount: 20 })).unwrap();
+    } catch (err) {
+      console.error("Payment error:", err);
+      alert(err || "An error occurred while initializing payment.");
+    }
   };
 
   return (
@@ -232,10 +249,10 @@ const PaymentCheckout = () => {
                 <div className="pl-11 pt-4">
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isLoading}
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200"
                   >
-                    {isSubmitting ? "Processing..." : (
+                    {isSubmitting || isLoading ? "Processing..." : (
                       <span className="flex items-center gap-2">
                         <ShieldCheck className="w-5 h-5" /> Complete Secure Purchase
                       </span>

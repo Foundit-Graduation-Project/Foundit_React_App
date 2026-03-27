@@ -1,8 +1,18 @@
-import { ShieldCheck, Handshake, Mail, Share2, Flag, CheckCircle2 } from "lucide-react";
+import {
+  ShieldCheck,
+  Handshake,
+  Mail,
+  Share2,
+  Flag,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SupportModel from "../Auth/SupportModel";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createConversationAPI } from "../../features/chat/chatSlice";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 export default function ReportSidebar({ item, match }) {
