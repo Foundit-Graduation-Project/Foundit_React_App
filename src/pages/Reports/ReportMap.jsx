@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { 
-  MapContainer, 
-  TileLayer, 
-  Marker, 
-  useMapEvents, 
-  useMap 
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -23,12 +23,20 @@ const MapController = ({ center }) => {
   const map = useMap();
 
   useEffect(() => {
-    setTimeout(() => {
-      map.invalidateSize(true);
-      if (center) {
-        map.setView(center, map.getZoom(), { animate: true });
+    if (!map) return;
+
+    const timer = setTimeout(() => {
+      try {
+        map.invalidateSize(true);
+        if (center && map) {
+          map.setView(center, map.getZoom(), { animate: true });
+        }
+      } catch (err) {
+        console.warn("Leaflet map update failed:", err);
       }
-    }, 500); 
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [map, center]);
 
   return null;
@@ -46,8 +54,8 @@ const LocationPicker = ({ setPosition }) => {
 
 const ReportMap = ({ position, setPosition, isPicker = true }) => {
   const center = useMemo(() => {
-    return position && position[0] && position[1] 
-      ? [position[0], position[1]] 
+    return position && position[0] && position[1]
+      ? [position[0], position[1]]
       : [30.0444, 31.2357];
   }, [position]);
 
@@ -57,7 +65,7 @@ const ReportMap = ({ position, setPosition, isPicker = true }) => {
         center={center}
         zoom={13}
         scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%" }} 
+        style={{ height: "100%", width: "100%" }}
         zoomControl={true}
       >
         <TileLayer
@@ -66,7 +74,7 @@ const ReportMap = ({ position, setPosition, isPicker = true }) => {
         />
 
         {isPicker && <LocationPicker setPosition={setPosition} />}
-        
+
         {/* Control in size and ceterize*/}
         <MapController center={center} />
 
