@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedReport, deleteReport } from "../../features/reports/reportsSlice";
 import { resolveMatchProposal, rejectMatchProposal } from "../../features/matches/matchesSlice";
 
-const ReportCard = ({ report, showDelete = false, matches = [] }) => {
+const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = false }) => {
     const {
         _id,
         title,
@@ -83,7 +83,7 @@ const ReportCard = ({ report, showDelete = false, matches = [] }) => {
     const handleChat = (e) => {
         e.stopPropagation();
         // Use standard chat route and pass report context
-        navigate(`/messages`);
+        navigate(`/chat`);
     };
 
     const handleResolveMatch = (e) => {
@@ -135,9 +135,11 @@ const ReportCard = ({ report, showDelete = false, matches = [] }) => {
                 />
 
                 {/* Status Badge */}
-                <Badge className={`absolute top-3 right-3 px-3 py-1 text-xs font-bold border-0 shadow-sm ${getBadgeStyle()}`}>
-                    {isResolvedStatus ? "RESOLVED" : isMatchedStatus ? "MATCHED" : type?.toUpperCase() || "REPORT"}
-                </Badge>
+                {(!(hideTypeBadge && !isResolvedStatus && !isMatchedStatus)) && (
+                    <Badge className={`absolute top-3 right-3 px-3 py-1 text-xs font-bold border-0 shadow-sm ${getBadgeStyle()}`}>
+                        {isResolvedStatus ? "RESOLVED" : isMatchedStatus ? "MATCHED" : type?.toUpperCase() || "REPORT"}
+                    </Badge>
+                )}
 
                 {/* Match Score Badge */}
                 {isMatchedStatus && matchScore && (
