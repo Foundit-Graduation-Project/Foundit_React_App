@@ -5,11 +5,6 @@ import { io } from 'socket.io-client';
 // because Socket.io needs to connect to the root server (http://localhost:3000)
 const SOCKET_URL = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
 
-export const socket = io(SOCKET_URL, {
-    autoConnect: false, // We only connect manually when the user logs in
-    withCredentials: true,
-});
-
 let Socket = null;
  
 export const connectSocket = (token) => {
