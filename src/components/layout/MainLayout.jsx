@@ -14,6 +14,10 @@ export default function MainLayout() {
     // 1. Only connect if we have a logged-in user
     if (user && user._id) {
 
+      const token = localStorage.getItem("accessToken");
+      socket.auth = { token };
+      socket.io.opts.transports = ['websocket'];
+      
       // Connect to the backend
       socket.connect();
 

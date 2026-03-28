@@ -40,9 +40,9 @@ const MyReports = () => {
       page,
       limit: PAGE_LIMIT,
       sort: sortConfig.value,
-      ...(activeTab === "Lost" && { type: "Lost" }),
-      ...(activeTab === "Found" && { type: "Found" }),
-      ...(activeTab === "Matched" && { status: "Matched" })
+      ...(activeTab === "Lost" && { type: "LOST" }),
+      ...(activeTab === "Found" && { type: "FOUND" }),
+      ...(activeTab === "Matched" && { status: "MATCHED" })
     };
 
     dispatch(fetchMyReports(params))
