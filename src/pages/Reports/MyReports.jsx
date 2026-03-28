@@ -42,7 +42,8 @@ const MyReports = () => {
       sort: sortConfig.value,
       ...(activeTab === "Lost" && { type: "LOST" }),
       ...(activeTab === "Found" && { type: "FOUND" }),
-      ...(activeTab === "Matched" && { status: "MATCHED" })
+      ...(activeTab === "Matched" && { status: "MATCHED" }),
+      ...(activeTab === "Resolved" && { status: "RESOLVED" })
     };
 
     dispatch(fetchMyReports(params))
