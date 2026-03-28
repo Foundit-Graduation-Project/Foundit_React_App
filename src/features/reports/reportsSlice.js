@@ -78,11 +78,13 @@ export const reportsSlice = createSlice({
   initialState: {
     formData: {
       itemName: "",
-      category: "", 
+      category: "",
       subCategory: "",
-      date: "", 
-      locationName: "", 
+      date: "",
+      location: "",
       description: "",
+      brand: "",
+      color: "",
       images: [],
     },
     progress: 0,
@@ -97,104 +99,101 @@ export const reportsSlice = createSlice({
       const { name, value } = action.payload;
       state.formData[name] = value;
     },
+    setSelectedReport: (state, action) => {
+      state.selectedReport = action.payload;
+    },
     resetForm: (state) => {
       state.formData = {
         itemName: "",
         category: "",
         subCategory: "",
         date: "",
-        locationName: "",
+        location: "",
         description: "",
+        brand: "",
+        color: "",
         images: [],
       };
+      state.error = null;
       state.progress = 0;
     },
-    setSelectedReport: (state, action) => {
-      state.selectedReport = action.payload;
+    clearReportError: (state) => {
+      state.error = null;
     },
   },
-  //
   extraReducers: (builder) => {
     builder
-   
-
       // CREATE REPORT
       .addCase(createReport.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(createReport.fulfilled, (state, action) => {
         state.loading = false;
-        // Add the new report returned from backend to the top of the list
         const newReport = action.payload.data?.report || action.payload.report;
-       if (!Array.isArray(state.reports)) {
-    state.reports = [];
-  }
         if (newReport) {
+          if (!Array.isArray(state.reports)) state.reports = [];
           state.reports.unshift(newReport);
         }
       })
       .addCase(createReport.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-
-      })   
-       // FETCH REPORTS
-       .addCase(fetchReports.pending, (state) => {
-    state.loading = true;
-    state.error = null;
-})
-.addCase(fetchReports.fulfilled, (state, action) => {
-    state.loading = false;
- 
-    const extracted = action.payload.data?.reports || action.payload.reports || [];
-    state.reports = extracted; 
-})
-.addCase(fetchReports.rejected, (state, action) => {
-    state.loading = false;
-    state.error = action.payload;
-})
-  .addCase(fetchMyReports.pending, (state) => {
+      })
+      // FETCH ALL REPORTS (Home Feed)
+      .addCase(fetchReports.pending, (state) => {
         state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchReports.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reports = action.payload.data?.reports || action.payload.reports || [];
+      })
+      .addCase(fetchReports.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // FETCH MY REPORTS
+      .addCase(fetchMyReports.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(fetchMyReports.fulfilled, (state, action) => {
         state.loading = false;
-       const extractedReports = action.payload.data?.reports || [];
-  
-        state.reports = extractedReports;
+        state.reports = action.payload.data?.reports || [];
       })
       .addCase(fetchMyReports.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        console.log("Reports in Slice:", state.reports);
-      }).addCase(fetchReportById.pending, (state) => {
-  state.loading = true;
-  state.error = null;
-})
-
-.addCase(fetchReportById.fulfilled, (state, action) => {
-  state.loading = false;
-  state.selectedReport = action.payload.data?.report || action.payload; 
-})
-.addCase(fetchReportById.rejected, (state, action) => {
-  state.loading = false;
-  state.error = action.payload;
-})
-// Delete
-.addCase(deleteReport.pending, (state) => {
-    state.loading = true;
-  })
-  .addCase(deleteReport.fulfilled, (state, action) => {
-    state.loading = false;
-
-    state.reports = state.reports.filter((report) => report._id !== action.payload);
-  })
-  .addCase(deleteReport.rejected, (state, action) => {
-    state.loading = false;
-    state.error = action.payload;
-  });
+      })
+      // FETCH BY ID
+      .addCase(fetchReportById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchReportById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedReport = action.payload.data?.report || action.payload;
+      })
+      .addCase(fetchReportById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // DELETE
+      .addCase(deleteReport.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reports = state.reports.filter((r) => r._id !== action.payload);
+      })
+      .addCase(deleteReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const { updateField, resetForm, setSelectedReport } =
+export const { updateField, resetForm, setSelectedReport, clearReportError } =
   reportsSlice.actions;
 export default reportsSlice.reducer;
