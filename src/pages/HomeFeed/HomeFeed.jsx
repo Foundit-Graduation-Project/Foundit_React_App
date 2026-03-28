@@ -40,8 +40,10 @@ const HomeFeed = () => {
             ...(category && { category })
         };
         dispatch(fetchReports(params));
-        dispatch(fetchMyMatches());
-    }, [dispatch, type, category, page]);
+        if (user) {
+            dispatch(fetchMyMatches());
+        }
+    }, [dispatch, type, category, page, user]);
 
     useEffect(() => {
         reportsAPI.getStats().then(data => {
@@ -130,7 +132,7 @@ const HomeFeed = () => {
                                     <div className="p-3 bg-green-50 rounded-xl text-green-600 transition-colors group-hover:bg-green-100"><CheckCircle size={20} /></div>
                                     <div>
                                         <p className="text-xl font-bold text-gray-900">
-                                            {stats ? stats.resolvedReports.toLocaleString() : '—'}
+                                            {stats ? stats.resolvedReports.toLocaleString()/2 : '—'}
                                         </p>
                                         <p className="text-[10px] text-gray-500 font-semibold uppercase">Items Returned</p>
                                     </div>
@@ -212,8 +214,8 @@ const HomeFeed = () => {
                                                     </p>
 
                                                     <div className="flex items-center gap-1.5 mt-1">
-                                                        <span className={`w-1.5 h-1.5 rounded-full ${match.status === 'resolved' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
-                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">{match.status}</span>
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${match.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
+                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">{match.status === 'VERIFIED' ? 'Resolved' : match.status}</span>
                                                     </div>
                                                 </div>
                                             </div>

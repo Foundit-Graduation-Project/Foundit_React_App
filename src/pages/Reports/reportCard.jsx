@@ -12,17 +12,19 @@ import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { setSelectedReport, deleteReport } from "../../features/reports/reportsSlice";
 import { resolveMatchProposal, rejectMatchProposal } from "../../features/matches/matchesSlice";
 
-const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = false }) => {
+const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = false, isMyReportView = false }) => {
     const {
         _id,
         title,
         locationName,
         dateHappened,
-        images,
+        images = [],
         type,
         status,
     } = report;
@@ -34,10 +36,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
 
     // --- Match Integration Logic ---
     const activeMatch = matches[0]; // Take the first relevant match from MyReports filter
-    const hasChat = activeMatch?.hasChat;
+    const hasChat = activeMatch?.hasChat || activeMatch?.status === "ACCEPTED" || activeMatch?.status === "VERIFIED";
     const matchScore = activeMatch?.score;
-    const isMatchedStatus = status?.toUpperCase() === "MATCHED";
-    const isResolvedStatus = status?.toUpperCase() === "RESOLVED";
+    const isMatchedStatus = status?.toUpperCase() === "MATCHED" || activeMatch?.status === "VERIFIED";
+    const isResolvedStatus = status?.toUpperCase() === "RESOLVED" || activeMatch?.status === "VERIFIED";
 
     // Identify the "other" report in the match for smart navigation
     const otherReport = activeMatch ? (
@@ -73,29 +75,68 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         }
     };
 
-    const handleDelete = (e) => {
+    const handleDelete = async (e) => {
         e.stopPropagation();
-        if (window.confirm("Are you sure you want to delete this report?")) {
+        const result = await Swal.fire({
+            title: 'Delete Report?',
+            text: 'Are you sure you want to delete this report? This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+            customClass: { popup: 'rounded-xl' }
+        });
+        if (result.isConfirmed) {
             dispatch(deleteReport(_id));
         }
     };
 
     const handleChat = (e) => {
         e.stopPropagation();
+        toast.success("Opening chat...");
         // Use standard chat route and pass report context
         navigate(`/chat`);
     };
 
-    const handleResolveMatch = (e) => {
+    const handleResolveMatch = async (e) => {
         e.stopPropagation();
-        if (activeMatch && window.confirm("Marking as Resolved will close this report officially. Proceed?")) {
-            dispatch(resolveMatchProposal(activeMatch._id));
+        if (!activeMatch) return;
+        const result = await Swal.fire({
+            title: 'Resolve Match?',
+            text: 'Marking as Resolved will close this report officially. Proceed?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, resolve it',
+            cancelButtonText: 'Cancel',
+            customClass: { popup: 'rounded-xl' }
+        });
+        if (result.isConfirmed) {
+            dispatch(resolveMatchProposal(activeMatch._id))
+                .unwrap()
+                .then(() => toast.success("Match resolved successfully!"))
+                .catch((err) => toast.error(err.message || "Cannot resolve match"));
         }
     };
 
-    const handleRejectMatch = (e) => {
+    const handleRejectMatch = async (e) => {
         e.stopPropagation();
-        if (activeMatch && window.confirm("Reject this match suggestion accurately?")) {
+        if (!activeMatch) return;
+        const result = await Swal.fire({
+            title: 'Reject Match?',
+            text: 'Are you sure you want to reject this match suggestion?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f97316',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, reject it',
+            cancelButtonText: 'Cancel',
+            customClass: { popup: 'rounded-xl' }
+        });
+        if (result.isConfirmed) {
             dispatch(rejectMatchProposal(activeMatch._id));
         }
     };
@@ -115,7 +156,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                         <Trash2 size={16} />
                     </button>
                 )}
-                {isMatchedStatus && (
+                {isMatchedStatus && !isResolvedStatus && activeMatch?.status !== "REJECTED" && (
                     <button
                         onClick={handleRejectMatch}
                         className="p-2 bg-white/90 hover:bg-orange-500 hover:text-white text-orange-500 rounded-full shadow-md border border-orange-100 transition-all duration-200"
@@ -156,6 +197,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                         {title}
                     </h3>
                 </div>
+                {isMyReportView && (
                 <div className="space-y-1">
                     <div className="flex items-center text-sm text-gray-500">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
@@ -166,6 +208,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                         <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
                     </div>
                 </div>
+                )}
             </CardContent>
 
             {/* --- Footer (Actions) --- */}
@@ -177,8 +220,8 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 ) : isMatchedStatus ? (
                     <div className="flex w-full gap-2">
                         <Button
-                            className={`flex-1 font-bold text-sm h-11 transition-all ${hasChat ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
-                            disabled={!hasChat}
+                            className={`flex-1 font-bold text-sm h-11 transition-all ${(hasChat || activeMatch?.status === 'ACCEPTED') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                            disabled={!hasChat && activeMatch?.status !== 'ACCEPTED'}
                             onClick={handleResolveMatch}
                         >
                             {"Resolve"}
