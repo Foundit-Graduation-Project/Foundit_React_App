@@ -23,3 +23,9 @@ export const updateAvatarAPI = async (file) => {
 
     return res.data?.data?.user || res.data?.user || res.data;
 };
+
+export const changePasswordAPI = async (passwordsData) => {
+    // passwordsData = { currentPassword, newPassword, confirmNewPassword }
+    const res = await api.patch("/users/change-password", passwordsData);
+    return res.data; // Returning the whole JSend response to grab the message
+};
