@@ -3,11 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchReports } from "../../features/reports/reportsSlice";
 import { reportsAPI } from "../../features/reports/reportsAPI";
-import { Search, Loader2, Smartphone, PawPrint, Wallet, FileText, Users, ChevronLeft, ChevronRight, Key, Box, Heart, CheckCircle } from "lucide-react";
+import { Search, Loader2, Smartphone, PawPrint, Wallet, FileText, Users, ChevronLeft, ChevronRight, Key, Box, Heart, CheckCircle, ChevronDown } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import Nav from "../../components/layout/customNavbars/homeNav";
 import ReportCard from "../Reports/reportCard";
 import { fetchMyMatches } from "@/features/matches/matchesSlice";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "../../components/ui/dropdown-menu";
+import { SortAsc } from "lucide-react";
+
 
 const CATEGORIES = [
     { name: "All Items", value: "" },
@@ -32,10 +40,16 @@ const HomeFeed = () => {
     const [page, setPage] = useState(1);
     const [stats, setStats] = useState(null);
 
+    // State for sorting: stores both label for UI and value for API
+    const [sortConfig, setSortConfig] = useState({
+        label: "Newest First",
+        value: "-createdAt"
+    });
     useEffect(() => {
         const params = {
             page,
             limit: PAGE_LIMIT,
+            sort: sortConfig.value,
             ...(type && { type }),
             ...(category && { category })
         };
@@ -43,7 +57,8 @@ const HomeFeed = () => {
         if (user) {
             dispatch(fetchMyMatches());
         }
-    }, [dispatch, type, category, page, user]);
+        console.log(sortConfig);
+    }, [dispatch, type, category, page, user, sortConfig.value]);
 
     useEffect(() => {
         reportsAPI.getStats().then(data => {
@@ -55,7 +70,11 @@ const HomeFeed = () => {
         setter(value);
         setPage(1);
     };
-
+    // Update sort configuration and reset to first page
+    const handleSortChange = (label, value) => {
+        setSortConfig({ label, value });
+        setPage(1);
+    };
     return (
         <div className="min-h-screen bg-gray-50/50 w-full font-sans">
             <div className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full h-18 px-6 flex items-center justify-between shadow-sm">
@@ -86,6 +105,36 @@ const HomeFeed = () => {
                     <main className="lg:col-span-10 space-y-6">
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-900">Recent Reports</h1>
+                            {/* Sort Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="text-gray-600 border-gray-200 bg-white rounded-xl shadow-sm hover:bg-gray-50">
+                                        <SortAsc className="w-4 h-4 mr-2 opacity-70" />
+                                        Sort by: {sortConfig.label}
+                                        <ChevronDown className="w-4 h-4 ml-2 opacity-50" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="bg-white rounded-xl border-gray-100 shadow-xl min-w-[160px]">
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Newest First", "-createdAt")}
+                                    >
+                                        Newest First
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Oldest First", "createdAt")}
+                                    >
+                                        Oldest First
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Name (A-Z)", "title")}
+                                    >
+                                        Name (A-Z)
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -109,6 +158,7 @@ const HomeFeed = () => {
                                     <h3 className="text-lg font-bold text-gray-400">No {type} Reports found</h3>
                                 </div>
                             )}
+
                         </div>
 
                         {/* Pagination */}
@@ -132,7 +182,7 @@ const HomeFeed = () => {
                                     <div className="p-3 bg-green-50 rounded-xl text-green-600 transition-colors group-hover:bg-green-100"><CheckCircle size={20} /></div>
                                     <div>
                                         <p className="text-xl font-bold text-gray-900">
-                                            {stats ? stats.resolvedReports.toLocaleString()/2 : '—'}
+                                            {stats ? stats.resolvedReports.toLocaleString() / 2 : '—'}
                                         </p>
                                         <p className="text-[10px] text-gray-500 font-semibold uppercase">Items Returned</p>
                                     </div>
@@ -172,7 +222,7 @@ const HomeFeed = () => {
 
                             <div className="space-y-4">
                                 {matches && matches.length > 0 ? (
-                                    
+
                                     [...matches].reverse().slice(0, 2).map((match) => {
                                         // Determine which side is the "other" person's report
                                         const isMyLostReport = match.lostReport?.report?.user === currentUserId;
