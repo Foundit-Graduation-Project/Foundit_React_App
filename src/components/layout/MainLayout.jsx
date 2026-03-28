@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 export default function MainLayout() {
   const user = useSelector(selectCurrentUser);
+  const activeChatId = useSelector((state) => state.chat.activeChatId);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,10 +28,18 @@ export default function MainLayout() {
         currentSocket.on('new_notification', (newNotif) => {
           console.log('🔔 New Notification Received via Socket:', newNotif);
 
-          // Show a Toast Popup
-          toast.success(newNotif.title, { icon: '🔔', duration: 4000 });
+          // 🛑 SUPPRESSION LOGIC: 
+          // If this is a message notification and the user is ALREADY in that chat,
+          // we don't show the toast popup.
+          const isSameChat = newNotif.category === 'MESSAGE' && 
+                             newNotif.data?.conversationId === activeChatId;
 
-          // Update Redux state instantly
+          if (!isSameChat) {
+            // Show a Toast Popup
+            toast.success(newNotif.title, { icon: '🔔', duration: 4000 });
+          }
+
+          // Update Redux state instantly (Always update state so the Bell Icon count is correct)
           dispatch(addRealtimeNotification(newNotif));
         });
       }
@@ -44,7 +53,7 @@ export default function MainLayout() {
         console.log('🔴 Socket.io Disconnected');
       }
     };
-  }, [user, dispatch]);
+  }, [user, dispatch, activeChatId]);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
