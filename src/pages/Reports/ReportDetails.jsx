@@ -11,6 +11,8 @@ import ReportSidebar from "./ReportSidebar";
 import ReportFooter from "./ReportFooter";
 import NotFound from './../NotFound/NotFound';
 
+import { fetchMyMatches } from "../../features/matches/matchesSlice";
+
 export default function ReportDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -27,13 +29,16 @@ export default function ReportDetails() {
   useEffect(() => {
     if (id) {
       dispatch(fetchReportById(id));
+      if (currentUser) {
+        dispatch(fetchMyMatches());
+      }
     }
-  }, [id, dispatch]);
+  }, [id, dispatch, currentUser]);
 
   const isOwner = currentUser?._id === item?.user?._id || currentUser?._id === item?.user;
 
   // Use report status instead of fetching /my-matches
-  const isMatched = item?.status === 'MATCHED';
+  const isMatched = item?.status === 'MATCHED' || item?.status === 'RESOLVED';
 
   if (loading) {
     return (
@@ -59,18 +64,30 @@ export default function ReportDetails() {
               {item.type} Item
             </span> */}
             {isOwner && (
-              <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-100">
-                MY REPORT
-              </span>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-100">
+                  MY REPORT
+                </span>
+                {item.status === 'RESOLVED' && (
+                  <span className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-100">
+                    RESOLVED
+                  </span>
+                )}
+              </div>
             )}
             {!isOwner && isMatched && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
                   {item.type} Item
                 </span>
                 <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-indigo-100">
                   MATCHED ITEM
                 </span>
+                {item.status === 'RESOLVED' && (
+                  <span className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-100">
+                    RESOLVED
+                  </span>
+                )}
               </div>
             )}
             <span className="flex items-center gap-1 text-xs text-slate-400">

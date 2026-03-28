@@ -5,6 +5,7 @@ import {
   Share2,
   Flag,
   CheckCircle2,
+  Newspaper,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,16 +14,14 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createConversationAPI } from "../../features/chat/chatSlice";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { acceptMatchProposal } from "../../features/matches/matchesSlice";
 
 export default function ReportSidebar({ item, match }) {
   const [supportOpen, setSupportOpen] = useState(false);
-  console.log(match);
   const matchedReportId = match?.lostReport?.report?._id === item._id
     ? match?.foundReport?.report?._id
     : match?.lostReport?.report?._id;
 
-  console.log(matchedReportId);
   const { user: currentUser } = useSelector((state) => state.auth);
 
   const matchedReport = match?.lostReport?.report?._id === item._id
@@ -34,13 +33,34 @@ export default function ReportSidebar({ item, match }) {
   const isOwner = currentUser?._id === item?.user?._id || currentUser?._id === item?.user;
 
   const getSidebarTitle = () => {
+    if (item.status === "RESOLVED") return "Case Resolved!";
     if (item.status === "MATCHED") return "Match Found!";
+    if (isOwner) return "Your Report is Active";
     return "Recognize this?";
   };
 
   const getSidebarDesc = () => {
+    if (item.status === "RESOLVED") return "This report has been successfully resolved.";
     if (item.status === "MATCHED") return "A potential match has been identified for this item.";
+    if (isOwner) return "Your report is live and being matched against other reports. You can submit another report in the meantime.";
     return "Click below to start the verification process if you lost this item or found its owner.";
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleContactOwner = async () => {
+    if (match && match.status !== "ACCEPTED") {
+      try {
+        await dispatch(acceptMatchProposal(match._id)).unwrap();
+        toast.success("Match accepted! Redirecting to chat...");
+        navigate("/chat");
+      } catch (error) {
+        toast.error(error || "Something went wrong.");
+      }
+    } else {
+      navigate("/chat");
+    }
   };
 
   return (
@@ -48,7 +68,7 @@ export default function ReportSidebar({ item, match }) {
       <div className="sticky top-20 space-y-6 font-sans">
         {/* CARD 0: Match Analysis (Only if Matched) */}
 
-        {item.status === "MATCHED" && match && (
+        {(item.status === "MATCHED" || item.status === "RESOLVED") && match && (
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-xl shadow-lg border border-blue-500 text-white animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black tracking-tight flex items-center gap-2">
@@ -117,19 +137,17 @@ export default function ReportSidebar({ item, match }) {
           <p className="text-sm text-slate-500 mb-6">{getSidebarDesc()}</p>
 
           <div className="space-y-3 mb-6">
-            {item.status !== "MATCHED" && (
+            {(item.status !== "MATCHED" && item.status !== "RESOLVED") && (
               <Link to={`/create-report`} className="block">
                 <Button className="w-full bg-[#1d61f2] hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
-                  <Handshake size={20} /> {(item.status !== "MATCHED") && "Start Verification"}
+                 {isOwner ? <><Newspaper size={20} /> Create Another Report</> : <><Handshake size={20} /> Start Verification</>}
                 </Button>
               </Link>
             )}
-            {item.status === "MATCHED" && (
-              <Link to={`/chat`} className="block">
-                <Button variant="ghost" className="w-full bg-[#1d61f2] text-white hover:text-white hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
-                  <Mail size={20} /> {isOwner ? "View Messages" : "Contact Owner"}
-                </Button>
-              </Link>
+            {(item.status === "MATCHED" || item.status === "RESOLVED") && (
+              <Button onClick={handleContactOwner} variant="ghost" className="w-full bg-[#1d61f2] text-white hover:text-white hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
+                <Mail size={20} /> {isOwner ? "View Messages" : "Contact Owner"}
+              </Button>
             )}
           </div>
 
