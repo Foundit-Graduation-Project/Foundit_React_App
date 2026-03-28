@@ -8,7 +8,7 @@ function ReportHeader() {
 
   return (
     <div className="hidden lg:block">
-      <div className="header">
+      <div className="header z-[1001]">
         {/* <nav className="">
           <ul className="flex">
             <Button variant="defualt">
