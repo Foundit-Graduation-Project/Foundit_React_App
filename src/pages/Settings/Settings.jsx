@@ -6,7 +6,7 @@ import ProfilePhotoSection from "../../components/settings/SettingsPhoto";
 import SettingsProfile from "../../components/settings/SettingsProfile";
 import PasswordSection from "../../components/settings/SettingsPassword";
 import PersonalizationSection from "../../components/settings/SettingsAppearance";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getMe } from "../../features/user";
 
 export default function SettingsPage() {
@@ -20,8 +20,6 @@ export default function SettingsPage() {
   }, []);
 
   const dispatch = useDispatch();
-  const { user, loading } = useSelector((state) => state.user);
-
   useEffect(() => {
     dispatch(getMe());
   }, [dispatch]);
