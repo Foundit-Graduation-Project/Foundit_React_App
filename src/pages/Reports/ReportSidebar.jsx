@@ -121,10 +121,11 @@ export default function ReportSidebar({ item, match }) {
                   <span className="font-bold text-white">Why this score?</span> Calculated based on category alignment, common keywords, geospatial proximity, and temporal overlap.
                 </p>
               </div>
+
               {matchedReportId && (
                 <Link to={`/report/${matchedReportId}`} className="block">
                   <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 h-12 rounded-lg text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                    View Matched Report
+                    {isOwner ? "View Matched Report" : "View My Report"}
                   </Button>
                 </Link>
               )}
@@ -140,7 +141,7 @@ export default function ReportSidebar({ item, match }) {
             {(item.status !== "MATCHED" && item.status !== "RESOLVED") && (
               <Link to={`/create-report`} className="block">
                 <Button className="w-full bg-[#1d61f2] hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
-                 {isOwner ? <><Newspaper size={20} /> Create Another Report</> : <><Handshake size={20} /> Start Verification</>}
+                  {isOwner ? <><Newspaper size={20} /> Create Another Report</> : <><Handshake size={20} /> Start Verification</>}
                 </Button>
               </Link>
             )}

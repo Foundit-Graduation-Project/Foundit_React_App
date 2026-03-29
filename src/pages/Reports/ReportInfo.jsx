@@ -2,7 +2,7 @@
 import { FileText } from "lucide-react";
 import ReportWhenAndWhere from "./ReportWhenAndWhere";
 
-export default function ReportInfo({ item }) {
+export default function ReportInfo({ item, isOwner }) {
   // Mapping the specs to match the visual hierarchy in the photo
   const specs = [
     { label: "BRAND", val: item.brand || "N/A" },
@@ -43,7 +43,7 @@ export default function ReportInfo({ item }) {
       </section>
 
       {/* When & Where Section */}
-      {item.status === "MATCHED" && <ReportWhenAndWhere item={item} />}
+      {(item.status === "MATCHED" || item.status === "RESOLVED" || isOwner) && <ReportWhenAndWhere item={item} />}
     </div>
   );
 }
