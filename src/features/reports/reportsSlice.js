@@ -148,7 +148,21 @@ export const reportsSlice = createSlice({
       })
       .addCase(fetchReports.fulfilled, (state, action) => {
         state.loading = false;
-        state.reports = action.payload.data?.reports || action.payload.reports || action.payload ||[];
+      state.reports = action.payload.data?.reports || action.payload.reports || action.payload ||[];
+        // 1. Isolate the 'data' part of the JSend response
+        const responseData = action.payload?.data;
+
+        // 2. Smart Extraction
+        if (Array.isArray(responseData)) {
+          // Scenario A: Redis Cache (data is directly the array)
+          state.reports = responseData;
+        } else if (responseData && Array.isArray(responseData.reports)) {
+          // Scenario B: MongoDB (data is an object containing { reports:[] })
+          state.reports = responseData.reports;
+        } else {
+          // Fallback just in case
+          state.reports = [];
+        }
       })
       .addCase(fetchReports.rejected, (state, action) => {
         state.loading = false;
