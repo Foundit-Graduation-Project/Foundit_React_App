@@ -3,11 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchReports } from "../../features/reports/reportsSlice";
 import { reportsAPI } from "../../features/reports/reportsAPI";
-import { Search, Loader2, Smartphone, PawPrint, Wallet, FileText, Users, ChevronLeft, ChevronRight, Key, Box, Heart, CheckCircle } from "lucide-react";
+import { Search, Loader2, Smartphone, PawPrint, Wallet, FileText, Users, ChevronLeft, ChevronRight, Key, Box, Heart, CheckCircle, ChevronDown } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import Nav from "../../components/layout/customNavbars/homeNav";
 import ReportCard from "../Reports/reportCard";
 import { fetchMyMatches } from "@/features/matches/matchesSlice";
+import { useSearchParams } from "react-router-dom";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "../../components/ui/dropdown-menu";
+import { SortAsc } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+
 
 const CATEGORIES = [
     { name: "All Items", value: "" },
@@ -31,19 +41,33 @@ const HomeFeed = () => {
     const [category, setCategory] = useState("");
     const [page, setPage] = useState(1);
     const [stats, setStats] = useState(null);
+    const [dateRange, setDateRange] = useState("anytime");
 
+    // Search from URL
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchTerm = searchParams.get("search") || "";
+
+    // State for sorting: stores both label for UI and value for API
+    const [sortConfig, setSortConfig] = useState({
+        label: "Newest First",
+        value: "-createdAt"
+    });
     useEffect(() => {
         const params = {
             page,
             limit: PAGE_LIMIT,
+            sort: sortConfig.value,
+            keyword: searchTerm,
             ...(type && { type }),
-            ...(category && { category })
+            ...(category && { category }),
+            ...(dateRange !== "anytime" && { dateRange })
         };
         dispatch(fetchReports(params));
         if (user) {
             dispatch(fetchMyMatches());
         }
-    }, [dispatch, type, category, page, user]);
+        console.log(sortConfig);
+    }, [dispatch, type, category, page, user, sortConfig.value, dateRange, searchTerm]);
 
     useEffect(() => {
         reportsAPI.getStats().then(data => {
@@ -55,7 +79,19 @@ const HomeFeed = () => {
         setter(value);
         setPage(1);
     };
-
+    // Update sort configuration and reset to first page
+    const handleSortChange = (label, value) => {
+        setSortConfig({ label, value });
+        setPage(1);
+    };
+    // Clear filters
+    const handleClearFilters = () => {
+        setType("");
+        setCategory("");
+        setDateRange("anytime");
+        setSearchParams({});
+        setPage(1);
+    };
     return (
         <div className="min-h-screen bg-gray-50/50 w-full font-sans">
             <div className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full h-18 px-6 flex items-center justify-between shadow-sm">
@@ -79,6 +115,38 @@ const HomeFeed = () => {
                                     {cat.name}
                                 </button>
                             ))}
+                            <div className="pt-4 border-t border-gray-100">
+                                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Date Posted</h3>
+                                <div className="space-y-4">
+                                    {[
+                                        { label: "Anytime", value: "anytime" },
+                                        { label: "Last 24 hours", value: "today" },
+                                        { label: "Last 7 days", value: "week" },
+                                        { label: "Last 30 days", value: "month" }
+                                    ].map((option) => (
+                                        <label key={option.value} className="flex items-center gap-3 cursor-pointer group">
+                                            <input
+                                                type="radio"
+                                                name="dateFilter"
+                                                checked={dateRange === option.value}
+                                                onChange={() => handleFilterChange(setDateRange, option.value)}
+                                                className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                            />
+                                            <span className={`text-sm ${dateRange === option.value ? "text-blue-700 font-medium" : "text-gray-600 group-hover:text-gray-900"}`}>
+                                                {option.label}
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                onClick={handleClearFilters}
+                                className="w-full py-6 mt-4 border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-bold text-sm"
+                            >
+                                Clear All Filters
+                            </Button>
                         </div>
                     </aside>
 
@@ -86,6 +154,36 @@ const HomeFeed = () => {
                     <main className="lg:col-span-10 space-y-6">
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-900">Recent Reports</h1>
+                            {/* Sort Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="text-gray-600 border-gray-200 bg-white rounded-xl shadow-sm hover:bg-gray-50">
+                                        <SortAsc className="w-4 h-4 mr-2 opacity-70" />
+                                        Sort by: {sortConfig.label}
+                                        <ChevronDown className="w-4 h-4 ml-2 opacity-50" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="bg-white rounded-xl border-gray-100 shadow-xl min-w-[160px]">
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Newest First", "-createdAt")}
+                                    >
+                                        Newest First
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Oldest First", "createdAt")}
+                                    >
+                                        Oldest First
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                                        onClick={() => handleSortChange("Name (A-Z)", "title")}
+                                    >
+                                        Name (A-Z)
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -109,6 +207,7 @@ const HomeFeed = () => {
                                     <h3 className="text-lg font-bold text-gray-400">No {type} Reports found</h3>
                                 </div>
                             )}
+
                         </div>
 
                         {/* Pagination */}
@@ -132,7 +231,7 @@ const HomeFeed = () => {
                                     <div className="p-3 bg-green-50 rounded-xl text-green-600 transition-colors group-hover:bg-green-100"><CheckCircle size={20} /></div>
                                     <div>
                                         <p className="text-xl font-bold text-gray-900">
-                                            {stats ? stats.resolvedReports.toLocaleString()/2 : '—'}
+                                            {stats ? stats.resolvedReports.toLocaleString() / 2 : '—'}
                                         </p>
                                         <p className="text-[10px] text-gray-500 font-semibold uppercase">Items Returned</p>
                                     </div>
@@ -171,18 +270,34 @@ const HomeFeed = () => {
                             </div>
 
                             <div className="space-y-4">
-                                {matches && matches.length > 0 ? (
-                                    
-                                    [...matches].reverse().slice(0, 2).map((match) => {
+                                {(() => {
+                                    // Identify active matches (exclude resolved/verified and rejected)
+                                    const activeMatches = matches?.filter(m =>
+                                        m.status !== 'VERIFIED' && m.status !== 'REJECTED'
+                                    ) || [];
+
+                                    if (activeMatches.length === 0) {
+                                        return (
+                                            /* Empty State */
+                                            <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
+                                                <p className="text-[11px] text-gray-400 font-medium px-4">
+                                                    No matching items discovered yet. We'll notify you!
+                                                </p>
+                                            </div>
+                                        );
+                                    }
+
+                                    // Render active matches
+                                    return [...activeMatches].reverse().slice(0, 2).map((match) => {
                                         // Determine which side is the "other" person's report
                                         const isMyLostReport = match.lostReport?.report?.user === currentUserId;
                                         const displayReport = isMyLostReport ? match.foundReport?.report : match.lostReport?.report;
 
-                                        // Logic: If my report is lost, show "Found". If mine is found, show "Lost".
-                                        const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
+                                        if (!displayReport) return null;
 
+                                        const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
                                         const itemTitle = displayReport?.title || "Item";
-                                        const itemImage = displayReport?.images?.[0] || 'https://placehold.jp/100x100.png';
+                                        const itemImage = displayReport?.images?.[0]?.url || 'https://placehold.jp/100x100.png';
                                         const location = displayReport?.locationName || "Nearby Location";
 
                                         return (
@@ -206,29 +321,26 @@ const HomeFeed = () => {
                                                 {/* Content Container */}
                                                 <div className="min-w-0 flex-1 flex flex-col justify-center">
                                                     <p className="text-[11px] font-bold text-gray-800 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
-                                                        {/* Preserved your exact font and spacing, just updated the logic */}
                                                         {itemTitle} {oppositeTypeLabel}
                                                     </p>
                                                     <p className="text-[9px] text-gray-400 truncate mt-0.5">
                                                         near {location.slice(0, 20)} ...
                                                     </p>
+                                                    <span className="text-[9px] text-gray-400 mt-1">
+                                                        {formatDistanceToNow(new Date(match.createdAt), { addSuffix: true })}
+                                                    </span>
 
                                                     <div className="flex items-center gap-1.5 mt-1">
                                                         <span className={`w-1.5 h-1.5 rounded-full ${match.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
-                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">{match.status === 'VERIFIED' ? 'Resolved' : match.status}</span>
+                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">
+                                                            {match.status === 'MATCHED' ? 'Pending' : match.status}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         );
-                                    })
-                                ) : (
-                                    /* Empty State */
-                                    <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
-                                        <p className="text-[11px] text-gray-400 font-medium px-4">
-                                            No matching items discovered yet. We'll notify you!
-                                        </p>
-                                    </div>
-                                )}
+                                    });
+                                })()}
                             </div>
                         </div>
                         {/* Post Report CTA */}

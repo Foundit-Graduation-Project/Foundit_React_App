@@ -1,4 +1,4 @@
-import { Input } from "../../ui/input";
+import SearchBar from "../../../components/common/SearchBar";
 import { Search, Plus, Database, User, Settings as SettingsIcon, Bell, LogOut } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Link } from "react-router-dom";
@@ -44,9 +44,8 @@ const myReportsNav = () => {
             </div>
 
             <div className="flex items-center gap-3">
-                <div className="relative hidden md:block w-64">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <Input placeholder="Search reports..." className="pl-9 bg-gray-50 border-gray-200" />
+                <div className="hidden md:block w-64 mr-2">
+                    <SearchBar placeholder="Search reports..." className="w-full" />
                 </div>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                     <Link to="/create-report" className="flex items-center">

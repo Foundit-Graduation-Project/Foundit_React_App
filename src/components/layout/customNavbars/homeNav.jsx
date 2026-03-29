@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { selectUnreadCount } from "../../../features/notifications"; // Adjust path to your barrel file
 import { useState } from "react";
+import SearchBar from "../../../components/common/SearchBar";
 
 // --- Integration Imports ---
 import { useDispatch, useSelector } from "react-redux";
@@ -88,15 +89,8 @@ const HomeNav = () => {
 
             {/* 2. CENTER: Search Bar */}
             {location.pathname === "/home" && (
-                <div className="hidden md:flex flex-1 max-w-2xl relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                        <Search className="h-5 w-5" />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Search for lost keys, pets, or wallets..."
-                        className="w-full h-11 pl-12 pr-4 bg-gray-100/80 border-transparent rounded-lg text-sm text-gray-900 placeholder:text-gray-500 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 outline-none"
-                    />
+                <div className="hidden md:flex flex-1 max-w-2xl px-4">
+                    <SearchBar placeholder="Search for reports..." className="w-full" />
                 </div>
             )}
 

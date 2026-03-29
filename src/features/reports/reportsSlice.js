@@ -52,8 +52,8 @@ export const fetchReportById = createAsyncThunk(
   "report/fetchReportById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await reportsAPI.getReportById(id); // تأكدي من وجودها في ملف API
-      return response.data.report;
+      const response = await reportsAPI.getReportById(id); 
+      return response.data.report; 
     } catch (err) {
       return rejectWithValue(err.response?.data || "Error fetching report");
     }
@@ -61,13 +61,13 @@ export const fetchReportById = createAsyncThunk(
 );
 
 
-//Delete Report
 export const deleteReport = createAsyncThunk(
   "report/deleteReport",
   async (id, { rejectWithValue }) => {
     try {
-      await reportsAPI.deleteReport(id);
-      return id;
+      const response = await reportsAPI.deleteReport(id);
+      // The backend now returns { status: 'success', data: { reports, total } }
+      return response.data?.reports || []; 
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to delete report");
     }
@@ -93,6 +93,7 @@ export const reportsSlice = createSlice({
     reports: [],
     loading: false,
     error: null,
+    deleteLoading: false,
   },
   reducers: {
     updateField: (state, action) => {
@@ -147,7 +148,7 @@ export const reportsSlice = createSlice({
       })
       .addCase(fetchReports.fulfilled, (state, action) => {
         state.loading = false;
-
+      state.reports = action.payload.data?.reports || action.payload.reports || action.payload ||[];
         // 1. Isolate the 'data' part of the JSend response
         const responseData = action.payload?.data;
 
@@ -195,15 +196,16 @@ export const reportsSlice = createSlice({
       })
       // DELETE
       .addCase(deleteReport.pending, (state) => {
-        state.loading = true;
+        state.deleteLoading = true;
       })
       .addCase(deleteReport.fulfilled, (state, action) => {
-        state.loading = false;
-        state.reports = state.reports.filter((r) => r._id !== action.payload);
+        state.deleteLoading = false;
+        // state.reports = state.reports.filter((r) => r._id !== action.payload);
+        state.reports = action.payload;
       })
       .addCase(deleteReport.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        state.deleteLoading = false;
+        // state.error = action.payload;
       });
   },
 });
