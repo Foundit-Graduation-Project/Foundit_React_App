@@ -53,7 +53,7 @@ export const fetchReportById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await reportsAPI.getReportById(id); // تأكدي من وجودها في ملف API
-      return response.data.report; 
+      return response.data.report;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Error fetching report");
     }
@@ -147,7 +147,21 @@ export const reportsSlice = createSlice({
       })
       .addCase(fetchReports.fulfilled, (state, action) => {
         state.loading = false;
-        state.reports = action.payload.data?.reports || action.payload.reports || [];
+
+        // 1. Isolate the 'data' part of the JSend response
+        const responseData = action.payload?.data;
+
+        // 2. Smart Extraction
+        if (Array.isArray(responseData)) {
+          // Scenario A: Redis Cache (data is directly the array)
+          state.reports = responseData;
+        } else if (responseData && Array.isArray(responseData.reports)) {
+          // Scenario B: MongoDB (data is an object containing { reports:[] })
+          state.reports = responseData.reports;
+        } else {
+          // Fallback just in case
+          state.reports = [];
+        }
       })
       .addCase(fetchReports.rejected, (state, action) => {
         state.loading = false;
