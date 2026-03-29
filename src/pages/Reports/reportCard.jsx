@@ -38,7 +38,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     const activeMatch = matches[0]; // Take the first relevant match from MyReports filter
     const hasChat = activeMatch?.hasChat || activeMatch?.status === "ACCEPTED" || activeMatch?.status === "VERIFIED";
     const matchScore = activeMatch?.score;
-    const isMatchedStatus = status?.toUpperCase() === "MATCHED" || activeMatch?.status === "VERIFIED";
+    const isMatchedStatus = (status?.toUpperCase() === "MATCHED" && activeMatch?.status !== "REJECTED") || activeMatch?.status === "VERIFIED";
     const isResolvedStatus = status?.toUpperCase() === "RESOLVED" || activeMatch?.status === "VERIFIED";
 
     // Identify the "other" report in the match for smart navigation
@@ -66,10 +66,11 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     const handleViewDetails = (e) => {
         if (e) e.stopPropagation();
 
-        // Smart Navigation: Go to the "other" report if matched
+        // Smart Navigation: If matched, go to the other person's report.
         if (isMatchedStatus && otherReport) {
             navigate(`/report/${otherReport._id}`);
         } else {
+            // Otherwise, go to own report details (showing "All Data" via ReportDetails logic)
             dispatch(setSelectedReport(report));
             navigate(`/report/${_id}`);
         }
@@ -198,16 +199,16 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                     </h3>
                 </div>
                 {isMyReportView && (
-                <div className="space-y-1">
-                    <div className="flex items-center text-sm text-gray-500">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
-                        <span className="truncate text-xs font-medium">{locationName || "Location unavailable"}</span>
+                    <div className="space-y-1">
+                        <div className="flex items-center text-sm text-gray-500">
+                            <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                            <span className="truncate text-xs font-medium">{locationName || "Location unavailable"}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                            <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                        <Calendar className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
-                        <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
-                    </div>
-                </div>
                 )}
             </CardContent>
 
@@ -220,7 +221,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 ) : isMatchedStatus ? (
                     <div className="flex w-full gap-2">
                         <Button
-                            className={`flex-1 font-bold text-sm h-11 transition-all ${(hasChat || activeMatch?.status === 'ACCEPTED') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                            className={`flex-1 font-bold text-sm h-11 transition-all ${(hasChat || activeMatch?.status === 'ACCEPTED' && activeMatch?.status !== 'REJECTED') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
                             disabled={!hasChat && activeMatch?.status !== 'ACCEPTED'}
                             onClick={handleResolveMatch}
                         >
