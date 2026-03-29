@@ -16,6 +16,7 @@ import {
     DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
 import { SortAsc } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 
 const CATEGORIES = [
@@ -116,7 +117,7 @@ const HomeFeed = () => {
                             ))}
                             <div className="pt-4 border-t border-gray-100">
                                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Date Posted</h3>
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {[
                                         { label: "Anytime", value: "anytime" },
                                         { label: "Last 24 hours", value: "today" },
@@ -142,7 +143,7 @@ const HomeFeed = () => {
                             <Button
                                 variant="outline"
                                 onClick={handleClearFilters}
-                                className="w-full py-6 border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-xl font-bold text-sm"
+                                className="w-full py-6 mt-4 border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg font-bold text-sm"
                             >
                                 Clear All Filters
                             </Button>
@@ -269,18 +270,34 @@ const HomeFeed = () => {
                             </div>
 
                             <div className="space-y-4">
-                                {matches && matches.length > 0 ? (
+                                {(() => {
+                                    // Identify active matches (exclude resolved/verified and rejected)
+                                    const activeMatches = matches?.filter(m =>
+                                        m.status !== 'VERIFIED' && m.status !== 'REJECTED'
+                                    ) || [];
 
-                                    [...matches].reverse().slice(0, 2).map((match) => {
+                                    if (activeMatches.length === 0) {
+                                        return (
+                                            /* Empty State */
+                                            <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
+                                                <p className="text-[11px] text-gray-400 font-medium px-4">
+                                                    No matching items discovered yet. We'll notify you!
+                                                </p>
+                                            </div>
+                                        );
+                                    }
+
+                                    // Render active matches
+                                    return [...activeMatches].reverse().slice(0, 2).map((match) => {
                                         // Determine which side is the "other" person's report
                                         const isMyLostReport = match.lostReport?.report?.user === currentUserId;
                                         const displayReport = isMyLostReport ? match.foundReport?.report : match.lostReport?.report;
 
-                                        // Logic: If my report is lost, show "Found". If mine is found, show "Lost".
-                                        const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
+                                        if (!displayReport) return null;
 
+                                        const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
                                         const itemTitle = displayReport?.title || "Item";
-                                        const itemImage = displayReport?.images?.[0] || 'https://placehold.jp/100x100.png';
+                                        const itemImage = displayReport?.images?.[0]?.url || 'https://placehold.jp/100x100.png';
                                         const location = displayReport?.locationName || "Nearby Location";
 
                                         return (
@@ -304,29 +321,26 @@ const HomeFeed = () => {
                                                 {/* Content Container */}
                                                 <div className="min-w-0 flex-1 flex flex-col justify-center">
                                                     <p className="text-[11px] font-bold text-gray-800 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
-                                                        {/* Preserved your exact font and spacing, just updated the logic */}
                                                         {itemTitle} {oppositeTypeLabel}
                                                     </p>
                                                     <p className="text-[9px] text-gray-400 truncate mt-0.5">
                                                         near {location.slice(0, 20)} ...
                                                     </p>
+                                                    <span className="text-[9px] text-gray-400 mt-1">
+                                                        {formatDistanceToNow(new Date(match.createdAt), { addSuffix: true })}
+                                                    </span>
 
                                                     <div className="flex items-center gap-1.5 mt-1">
                                                         <span className={`w-1.5 h-1.5 rounded-full ${match.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
-                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">{match.status === 'VERIFIED' ? 'Resolved' : match.status}</span>
+                                                        <span className="text-[9px] font-medium text-gray-500 capitalize">
+                                                            {match.status === 'MATCHED' ? 'Pending' : match.status}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         );
-                                    })
-                                ) : (
-                                    /* Empty State */
-                                    <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
-                                        <p className="text-[11px] text-gray-400 font-medium px-4">
-                                            No matching items discovered yet. We'll notify you!
-                                        </p>
-                                    </div>
-                                )}
+                                    });
+                                })()}
                             </div>
                         </div>
                         {/* Post Report CTA */}
