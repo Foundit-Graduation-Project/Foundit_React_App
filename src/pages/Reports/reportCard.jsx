@@ -51,8 +51,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     // --- Helpers ---
     const getImageUrl = (img) => {
         if (!img) return "/src/assets/notFoundImage.jpg";
-        if (img.url.startsWith('http')) return img.url; 
-        return `${BASE_URL}/${img.url.replace(/\\/g, '/')}`;
+        const imageUrl = typeof img === 'string' ? img : img.url;
+        if (!imageUrl) return "/src/assets/notFoundImage.jpg";
+        if (imageUrl.startsWith('http')) return imageUrl; 
+        return `${BASE_URL}/${imageUrl.replace(/\\/g, '/')}`;
     };
 
     const getBadgeStyle = () => {
