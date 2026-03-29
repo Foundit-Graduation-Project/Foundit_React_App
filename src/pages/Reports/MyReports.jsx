@@ -89,7 +89,7 @@ const MyReports = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           {/* Category Tabs */}
           <div className="bg-white p-1 rounded-xl border border-gray-200 flex gap-1 shadow-sm">
-            {["All Reports", "Lost", "Found", "Matched"].map((tab) => (
+            {["All Reports", "Lost", "Found", "Matched", "Resolved"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleFilterChange(tab)}
