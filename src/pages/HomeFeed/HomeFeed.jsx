@@ -8,6 +8,7 @@ import { Button } from "../../components/ui/button";
 import Nav from "../../components/layout/customNavbars/homeNav";
 import ReportCard from "../Reports/reportCard";
 import { fetchMyMatches } from "@/features/matches/matchesSlice";
+import { useSearchParams } from "react-router-dom";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -41,6 +42,10 @@ const HomeFeed = () => {
     const [stats, setStats] = useState(null);
     const [dateRange, setDateRange] = useState("anytime");
 
+    // Search from URL
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchTerm = searchParams.get("search") || "";
+
     // State for sorting: stores both label for UI and value for API
     const [sortConfig, setSortConfig] = useState({
         label: "Newest First",
@@ -51,6 +56,7 @@ const HomeFeed = () => {
             page,
             limit: PAGE_LIMIT,
             sort: sortConfig.value,
+            keyword: searchTerm,
             ...(type && { type }),
             ...(category && { category }),
             ...(dateRange !== "anytime" && { dateRange })
@@ -60,7 +66,7 @@ const HomeFeed = () => {
             dispatch(fetchMyMatches());
         }
         console.log(sortConfig);
-    }, [dispatch, type, category, page, user, sortConfig.value, dateRange]);
+    }, [dispatch, type, category, page, user, sortConfig.value, dateRange, searchTerm]);
 
     useEffect(() => {
         reportsAPI.getStats().then(data => {
@@ -82,6 +88,7 @@ const HomeFeed = () => {
         setType("");
         setCategory("");
         setDateRange("anytime");
+        setSearchParams({});
         setPage(1);
     };
     return (

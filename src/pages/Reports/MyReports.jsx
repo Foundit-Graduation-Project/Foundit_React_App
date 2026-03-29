@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search, ArrowUpDown, SortAsc } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { useSearchParams } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,8 @@ const PAGE_LIMIT = 9;
 
 const MyReports = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("search") || "";
 
   // Local state for pagination, filtering, and sorting
   const [activeTab, setActiveTab] = useState("All Reports");
@@ -40,6 +43,7 @@ const MyReports = () => {
       page,
       limit: PAGE_LIMIT,
       sort: sortConfig.value,
+      keyword: searchTerm,
       ...(activeTab === "Lost" && { type: "LOST" }),
       ...(activeTab === "Found" && { type: "FOUND" }),
       ...(activeTab === "Matched" && { status: "MATCHED" }),
@@ -53,7 +57,7 @@ const MyReports = () => {
       });
 
     dispatch(fetchMyMatches());
-  }, [dispatch, page, activeTab, sortConfig]);
+  }, [dispatch, page, activeTab, sortConfig, searchTerm]);
 
   // Reset to first page when filters change
   const handleFilterChange = (tab) => {
