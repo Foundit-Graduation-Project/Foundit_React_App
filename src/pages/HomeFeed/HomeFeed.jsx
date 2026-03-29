@@ -39,6 +39,7 @@ const HomeFeed = () => {
     const [category, setCategory] = useState("");
     const [page, setPage] = useState(1);
     const [stats, setStats] = useState(null);
+    const [dateRange, setDateRange] = useState("anytime");
 
     // State for sorting: stores both label for UI and value for API
     const [sortConfig, setSortConfig] = useState({
@@ -51,14 +52,15 @@ const HomeFeed = () => {
             limit: PAGE_LIMIT,
             sort: sortConfig.value,
             ...(type && { type }),
-            ...(category && { category })
+            ...(category && { category }),
+            ...(dateRange !== "anytime" && { dateRange })
         };
         dispatch(fetchReports(params));
         if (user) {
             dispatch(fetchMyMatches());
         }
         console.log(sortConfig);
-    }, [dispatch, type, category, page, user, sortConfig.value]);
+    }, [dispatch, type, category, page, user, sortConfig.value, dateRange]);
 
     useEffect(() => {
         reportsAPI.getStats().then(data => {
@@ -73,6 +75,13 @@ const HomeFeed = () => {
     // Update sort configuration and reset to first page
     const handleSortChange = (label, value) => {
         setSortConfig({ label, value });
+        setPage(1);
+    };
+    // Clear filters
+    const handleClearFilters = () => {
+        setType("");
+        setCategory("");
+        setDateRange("anytime");
         setPage(1);
     };
     return (
@@ -98,6 +107,38 @@ const HomeFeed = () => {
                                     {cat.name}
                                 </button>
                             ))}
+                            <div className="pt-4 border-t border-gray-100">
+                                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Date Posted</h3>
+                                <div className="space-y-3">
+                                    {[
+                                        { label: "Anytime", value: "anytime" },
+                                        { label: "Last 24 hours", value: "today" },
+                                        { label: "Last 7 days", value: "week" },
+                                        { label: "Last 30 days", value: "month" }
+                                    ].map((option) => (
+                                        <label key={option.value} className="flex items-center gap-3 cursor-pointer group">
+                                            <input
+                                                type="radio"
+                                                name="dateFilter"
+                                                checked={dateRange === option.value}
+                                                onChange={() => handleFilterChange(setDateRange, option.value)}
+                                                className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                            />
+                                            <span className={`text-sm ${dateRange === option.value ? "text-blue-700 font-medium" : "text-gray-600 group-hover:text-gray-900"}`}>
+                                                {option.label}
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                onClick={handleClearFilters}
+                                className="w-full py-6 border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-xl font-bold text-sm"
+                            >
+                                Clear All Filters
+                            </Button>
                         </div>
                     </aside>
 
