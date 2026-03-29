@@ -5,3 +5,5 @@ export const createCheckoutSessionAPI = async (data) => {
     const response = await api.post('/payments/checkout-session', data);
     return response.data?.data ? response.data.data : response.data;
 };
+
+
