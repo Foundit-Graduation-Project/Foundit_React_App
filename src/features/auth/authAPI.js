@@ -10,8 +10,6 @@ export const registerAPI = async (userData) => {
     return response.data.data;
 };
 
-// --- NEW ADDITIONS ---
-
 export const logoutAPI = async () => {
     const response = await api.post('/auth/logout');
     return response.data.data;
@@ -23,12 +21,24 @@ export const forgotPasswordAPI = async (email) => {
 };
 
 export const resetPasswordAPI = async (token, passwords) => {
-    // passwords = { newPassword, confirmNewPassword }
     const response = await api.patch(`/auth/reset-password/${token}`, passwords);
     return response.data.data;
 };
 
 export const googleLoginAPI = async (googleAccessToken) => {
     const response = await api.post('/auth/google', { access_token: googleAccessToken });
+    return response.data.data;
+};
+
+// --- NEW OTP ADDITIONS ---
+
+export const verifyOtpAPI = async (data) => {
+    // data = { email: '...', otp: '123456' }
+    const response = await api.post('/auth/verify-otp', data);
+    return response.data.data;
+};
+
+export const resendOtpAPI = async (email) => {
+    const response = await api.post('/auth/resend-otp', { email });
     return response.data.data;
 };

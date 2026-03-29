@@ -2,7 +2,7 @@ import { Input } from "../../ui/input";
 import { Search, Plus, Database, User, Settings as SettingsIcon, Bell, LogOut } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Link } from "react-router-dom";
-import { currentUser } from "../../chat/mockData";
+import { selectCurrentUser } from "../../../features/auth";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,9 +13,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
+import { useSelector } from "react-redux";
 
 
 const myReportsNav = () => {
+    const currentUser = useSelector(selectCurrentUser) || {};
     return (
         <>
             <div className="flex items-center gap-8">
@@ -60,7 +62,7 @@ const myReportsNav = () => {
                                 <span className="text-xs text-slate-500">{currentUser.role}</span>
                             </div>
                             <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
-                                <AvatarImage src={currentUser?.avatarUrl} alt={currentUser.name} />
+                                <AvatarImage src={currentUser.avatar?.url} alt={currentUser.name} />
                                 <AvatarFallback className={`font-medium ${currentUser.color}`}>
                                     {currentUser.initials}
                                 </AvatarFallback>

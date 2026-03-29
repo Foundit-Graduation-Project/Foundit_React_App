@@ -98,7 +98,7 @@ export default function RegisterForm() {
 
     if (registerUser.fulfilled.match(resultAction)) {
       toast.success("Account created! Please check your email to verify.");
-      navigate('/login');
+      navigate('/verify-account');
     } else {
       toast.error(resultAction.payload || "Registration failed. Please try again.");
     }

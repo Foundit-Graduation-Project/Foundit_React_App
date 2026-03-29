@@ -11,17 +11,34 @@ import ReportSidebar from "./ReportSidebar";
 import ReportFooter from "./ReportFooter";
 import NotFound from './../NotFound/NotFound';
 
+import { fetchMyMatches } from "../../features/matches/matchesSlice";
+
 export default function ReportDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  
+
   const { selectedReport: item, loading, error } = useSelector((state) => state.report);
+  const { matches } = useSelector((state) => state.match);
+
+  const actualMatchData = matches?.find(m =>
+    m.lostReport?.report?._id === item?._id ||
+    m.foundReport?.report?._id === item?._id
+  );
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (id) {
       dispatch(fetchReportById(id));
+      if (currentUser) {
+        dispatch(fetchMyMatches());
+      }
     }
-  }, [id, dispatch]);
+  }, [id, dispatch, currentUser]);
+
+  const isOwner = currentUser?._id === item?.user?._id || currentUser?._id === item?.user;
+
+  // Use report status instead of fetching /my-matches
+  const isMatched = item?.status === 'MATCHED' || item?.status === 'RESOLVED';
 
   if (loading) {
     return (
@@ -35,7 +52,7 @@ export default function ReportDetails() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between w-full">
         <Nav />
       </div>
 
@@ -43,16 +60,43 @@ export default function ReportDetails() {
         {/* Title Section */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+            {/* <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
               {item.type} Item
-            </span>
+            </span> */}
+            {isOwner && (
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-100">
+                  MY REPORT
+                </span>
+                {item.status === 'RESOLVED' && (
+                  <span className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-100">
+                    RESOLVED
+                  </span>
+                )}
+              </div>
+            )}
+            {!isOwner && isMatched && (
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                  {item.type} Item
+                </span>
+                <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-indigo-100">
+                  MATCHED ITEM
+                </span>
+                {item.status === 'RESOLVED' && (
+                  <span className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-100">
+                    RESOLVED
+                  </span>
+                )}
+              </div>
+            )}
             <span className="flex items-center gap-1 text-xs text-slate-400">
               <Clock size={12} /> Posted {new Date(item.createdAt).toLocaleDateString()}
             </span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 mb-2">{item.title}</h1>
           <p className="text-blue-600 font-semibold flex items-center gap-1.5">
-            <MapPin size={18} /> {item.locationName || "Location not specified"}
+            <MapPin size={18} /> {isMatched ? item.locationName : item.locationName?.split(',').pop().trim()}
           </p>
         </div>
 
@@ -62,7 +106,7 @@ export default function ReportDetails() {
             <ReportInfo item={item} />
           </div>
           <div className="lg:col-span-1">
-            <ReportSidebar item={item} />
+            <ReportSidebar item={item} match={actualMatchData} />
           </div>
         </div>
       </main>
