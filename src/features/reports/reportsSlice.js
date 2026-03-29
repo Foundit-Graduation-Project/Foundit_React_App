@@ -147,7 +147,7 @@ export const reportsSlice = createSlice({
       })
       .addCase(fetchReports.fulfilled, (state, action) => {
         state.loading = false;
-        state.reports = action.payload.data?.reports || action.payload.reports || [];
+        state.reports = action.payload.data?.reports || action.payload.reports || action.payload ||[];
       })
       .addCase(fetchReports.rejected, (state, action) => {
         state.loading = false;
