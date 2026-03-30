@@ -113,6 +113,7 @@ const mapMessage = (msg, myUserId) => ({
   sender: (msg.sender?._id?.toString() === myUserId || msg.sender?.toString() === myUserId)
     ? 'me'
     : 'other',
+  attachments: msg.attachments || [],
   senderName: msg.sender?.name || '',
   time: msg.createdAt
     ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -165,7 +166,7 @@ const chatSlice = createSlice({
         // Update sidebar last message preview
         const chat = state.chats.find(c => c.id === message.chatId);
         if (chat) {
-          chat.lastMessage = message.text;
+          chat.lastMessage = message.text || (message.attachments.length > 0 ? '📷 Photo' : '');
           chat.time = 'Just now';
           // Mark unread only if the message is from someone else and that chat isn't open
           if (message.sender !== 'me' && state.activeChatId !== message.chatId) {

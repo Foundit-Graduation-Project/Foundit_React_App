@@ -25,8 +25,16 @@ export const chatApi = {
   },
 
   // Send a new message — HTTP creates it, socket delivers it in real-time
-  // body: { conversationId, content }
-  sendMessage: async ({ conversationId, content }) => {
+  // payload: { conversationId, content, attachments }
+  sendMessage: async ({ conversationId, content, attachments }) => {
+    if (attachments && attachments.length > 0) {
+      const formData = new FormData();
+      formData.append('conversationId', conversationId);
+      if (content) formData.append('content', content);
+      attachments.forEach(file => formData.append('attachments', file));
+      
+      return await api.post('/chat/messages', formData);
+    }
     return await api.post('/chat/messages', { conversationId, content });
   },
 
