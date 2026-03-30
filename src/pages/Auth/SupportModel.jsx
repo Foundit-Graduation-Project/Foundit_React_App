@@ -1,4 +1,7 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +12,72 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Clock } from "lucide-react";
+import { Send, Clock, Loader2 } from "lucide-react";
+import { supportApi } from "../../services/support.api";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveChat, fetchConversations } from "../../features/chat/chatSlice";
+
+const supportSchema = z.object({
+  subject: z.string().min(1, "Please select a subject"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
 function SupportModel({ isOpen, setIsOpen }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(supportSchema),
+    defaultValues: {
+      subject: "Profile Issues",
+      email: "",
+      message: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await supportApi.openSupportTicket(data.message, data.subject, data.email);
+      const newConvoId = res?.data?.conversationId || res?.conversationId;
+      
+      reset();
+      setIsOpen(false);
+
+      if (user) {
+        // If logged in, navigate directly to the chat
+        if (newConvoId) {
+            dispatch(setActiveChat(newConvoId));
+            dispatch(fetchConversations()); // Refresh sidebar
+        }
+        navigate("/chat");
+      } else {
+        // If guest, show popup
+        Swal.fire({
+          icon: "success",
+          title: "Message Sent!",
+          text: "Our team will respond to you within 24 hours.",
+          confirmButtonColor: "#1d63ed",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: typeof error === "string" ? error : "An unexpected error occurred. Please try again later.",
+        confirmButtonColor: "#EF4444",
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-[500px] rounded-[24px] p-8 gap-6 border-none shadow-2xl">
@@ -23,15 +90,27 @@ function SupportModel({ isOpen, setIsOpen }) {
           </DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-800">Subject</label>
-            <select className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
-              <option>Select an option</option>
-              <option>Profile Issues</option>
-              <option>Account Access</option>
-              <option>Other</option>
-            </select>
+            <div className="relative">
+              <select
+                {...register("subject")}
+                className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm focus:ring-2 focus:ring-blue-500 outline-none appearance-none"
+              >
+                <option value="Profile Issues">Profile Issues</option>
+                <option value="Account Access">Account Access</option>
+                <option value="Other">Other</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <Send className="h-4 w-4 rotate-90" />
+              </div>
+            </div>
+            {errors.subject && (
+              <p className="text-[10px] text-red-500 font-medium px-1">
+                {errors.subject.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -39,9 +118,15 @@ function SupportModel({ isOpen, setIsOpen }) {
               Your Email Address
             </label>
             <Input
+              {...register("email")}
               placeholder="email@example.com"
               className="h-12 rounded-xl border-slate-200 bg-slate-50/50"
             />
+            {errors.email && (
+              <p className="text-[10px] text-red-500 font-medium px-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -49,9 +134,15 @@ function SupportModel({ isOpen, setIsOpen }) {
               Message Details
             </label>
             <Textarea
+              {...register("message")}
               placeholder="Describe your issue or question in detail..."
               className="min-h-[120px] rounded-xl border-slate-200 bg-slate-50/50 "
             />
+            {errors.message && (
+              <p className="text-[10px] text-red-500 font-medium px-1">
+                {errors.message.message}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-2 text-slate-400 text-xs">
@@ -60,13 +151,23 @@ function SupportModel({ isOpen, setIsOpen }) {
           </div>
 
           <div className="space-y-3 pt-2">
-            <Button className="w-full h-12 bg-[#1d63ed] hover:bg-blue-700 text-white font-bold rounded-xl flex items-center justify-center gap-2">
-              <Send className="h-4 w-4" /> Send Message
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-12 bg-[#1d63ed] hover:bg-blue-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95"
+            >
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Send className="h-4 w-4" /> Send Message
+                </>
+              )}
             </Button>
             <Button
               type="button"
               variant="ghost"
-              className="w-full text-slate-500 font-medium hover:bg-transparent"
+              className="w-full text-slate-500 font-medium hover:bg-transparent hover:text-slate-700"
               onClick={() => setIsOpen(false)}
             >
               Cancel
