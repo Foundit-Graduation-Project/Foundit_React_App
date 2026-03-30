@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Search } from "lucide-react";
+import { Search, BadgeCheck } from "lucide-react";
 import { setActiveChat, setSearchQuery } from "../../features/chat/chatSlice";
 import { Skeleton } from "./Skeleton";
 
@@ -62,8 +62,8 @@ export function ChatSidebar({ isHiddenOnMobile }) {
             >
               {/* Avatar fallback: show first letter of name */}
               <div className="relative shrink-0">
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-sm font-bold text-blue-600 border border-blue-200">
-                  {chat.name?.charAt(0)?.toUpperCase() || "?"}
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold border ${chat.otherUserId === 'support_admin' ? 'bg-[#1d63ed] text-white border-blue-600' : 'bg-blue-100 text-blue-600 border-blue-200'}`}>
+                  {chat.otherUserId === 'support_admin' ? "HQ" : chat.name?.charAt(0)?.toUpperCase() || "?"}
                 </div>
                 {/* Online Indicator Badge */}
                 {onlineUsers?.includes(chat.otherUserId) && (
@@ -73,9 +73,9 @@ export function ChatSidebar({ isHiddenOnMobile }) {
 
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start mb-0.5">
-                  {/* chat.name comes from otherUser.name in backend response */}
-                  <h3 className="text-sm font-bold text-slate-900 truncate pr-2">
+                  <h3 className={`text-sm font-bold truncate pr-2 flex items-center gap-1 ${chat.otherUserId === 'support_admin' ? 'text-blue-600' : 'text-slate-900'}`}>
                     {chat.name}
+                    {chat.otherUserId === 'support_admin' && <BadgeCheck className="w-3.5 h-3.5 text-blue-500" />}
                   </h3>
                   <span
                     className={`text-xs whitespace-nowrap ${chat.unread ? "text-blue-600 font-bold" : "text-slate-400"}`}

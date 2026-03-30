@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, BadgeCheck, ShieldAlert } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Skeleton } from "./Skeleton";
 
@@ -33,13 +33,14 @@ export function ChatHeader({
         ) : (
           <>
             <div className="relative shrink-0 hidden sm:block">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-lg font-bold text-blue-600 border border-blue-200">
-                {activeChat?.name?.charAt(0)?.toUpperCase() || "?"}
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold border ${activeChat?.otherUserId === 'support_admin' ? 'bg-[#1d63ed] text-white border-blue-600' : 'bg-blue-100 text-blue-600 border-blue-200'}`}>
+                {activeChat?.otherUserId === 'support_admin' ? <ShieldAlert className="w-6 h-6" /> : activeChat?.name?.charAt(0)?.toUpperCase() || "?"}
               </div>
             </div>
             <div>
-              <h2 className="text-[17px] font-bold text-slate-900 leading-tight">
+              <h2 className={`text-[17px] font-bold leading-tight flex items-center gap-1.5 ${activeChat?.otherUserId === 'support_admin' ? 'text-[#1d63ed]' : 'text-slate-900'}`}>
                 {activeChat?.name || "User"}
+                {activeChat?.otherUserId === 'support_admin' && <BadgeCheck className="w-4 h-4 text-[#1d63ed]" />}
               </h2>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div
