@@ -65,9 +65,10 @@ export const deleteReport = createAsyncThunk(
   "report/deleteReport",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await reportsAPI.deleteReport(id);
+      await reportsAPI.deleteReport(id);
       // The backend now returns { status: 'success', data: { reports, total } }
-      return response.data?.reports || []; 
+      // return response.data?.reports || []; 
+      return id;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to delete report");
     }
@@ -200,8 +201,11 @@ export const reportsSlice = createSlice({
       })
       .addCase(deleteReport.fulfilled, (state, action) => {
         state.deleteLoading = false;
-        // state.reports = state.reports.filter((r) => r._id !== action.payload);
-        state.reports = action.payload;
+        state.reports = state.reports.filter((r) => r._id !== action.payload);
+        if(state.pagination){
+          state.pagination.total = state.pagination.total - 1;
+        }
+        // state.reports = action.payload;
       })
       .addCase(deleteReport.rejected, (state, action) => {
         state.deleteLoading = false;
