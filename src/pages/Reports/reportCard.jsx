@@ -53,7 +53,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         if (!img) return "/src/assets/notFoundImage.jpg";
         const imageUrl = typeof img === 'string' ? img : img.url;
         if (!imageUrl) return "/src/assets/notFoundImage.jpg";
-        if (imageUrl.startsWith('http')) return imageUrl; 
+        if (imageUrl.startsWith('http')) return imageUrl;
         return `${BASE_URL}/${imageUrl.replace(/\\/g, '/')}`;
     };
 
@@ -92,7 +92,9 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
             customClass: { popup: 'rounded-xl' }
         });
         if (result.isConfirmed) {
-            dispatch(deleteReport(_id));
+            dispatch(deleteReport(_id)).unwrap().catch((err) => {
+                console.error("API Error:", err);
+            });
         }
     };
 
