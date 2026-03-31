@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search, ArrowUpDown, SortAsc } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +21,10 @@ const MyReports = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("search") || "";
+  const location = useLocation();
 
   // Local state for pagination, filtering, and sorting
-  const [activeTab, setActiveTab] = useState("All Reports");
+  const [activeTab, setActiveTab] = useState(location.state?.activeFilter || "All Reports");
   const [page, setPage] = useState(1);
 
   // State for sorting: stores both label for UI and value for API

@@ -163,7 +163,7 @@ const Profile = () => {
         </div>
 
         {/* --- Top Row: Stats Cards --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
@@ -173,6 +173,20 @@ const Profile = () => {
                 <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">Trust Score</p>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {user?.trustScore ?? 100}
+                </h3>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
+                <Award className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">Activity Score</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {user?.activityScore ?? 0}
                 </h3>
               </div>
             </CardContent>
@@ -273,6 +287,38 @@ const Profile = () => {
                     Refill Credits
                   </Button>
                 </Link>
+              </div>
+            </Card>
+
+            {/* --- BADGES CARD --- */}
+            <Card className="border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors mt-8">
+              <div className="p-6 border-b border-gray-100 dark:border-slate-800">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
+                  <Award className="w-5 h-5 text-yellow-500" />
+                  Achievement Badges
+                </h3>
+              </div>
+              <div className="p-6">
+                {user?.badges && user.badges.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {user.badges.map((badge, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                      >
+                        <Award className="w-4 h-4" />
+                        {badge}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Award className="w-12 h-12 text-gray-300 dark:text-slate-600 mx-auto mb-3" />
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      No badges earned yet. Keep participating to unlock achievements!
+                    </p>
+                  </div>
+                )}
               </div>
             </Card>
 

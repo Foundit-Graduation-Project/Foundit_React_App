@@ -54,7 +54,7 @@ function Navbar({ onMenuClick, dir = "ltr" }) {
 
         {/* Logo */}
         <div className="me-4 hidden md:flex">
-          <Link to="/" className="me-6 flex items-center space-x-2">
+          <Link to="/home" className="me-6 flex items-center space-x-2">
             <span className="text-xl font-bold">FoundIt</span>
           </Link>
         </div>

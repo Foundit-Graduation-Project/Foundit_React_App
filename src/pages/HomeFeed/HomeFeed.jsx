@@ -231,7 +231,7 @@ const HomeFeed = () => {
                                     <div className="p-3 bg-green-50 rounded-xl text-green-600 transition-colors group-hover:bg-green-100"><CheckCircle size={20} /></div>
                                     <div>
                                         <p className="text-xl font-bold text-gray-900">
-                                            {stats ? stats.resolvedReports.toLocaleString() / 2 : '—'}
+                                            {stats ? Math.floor((stats.resolvedReports.toLocaleString() / 2)) : '—'}
                                         </p>
                                         <p className="text-[10px] text-gray-500 font-semibold uppercase">Items Returned</p>
                                     </div>
@@ -262,7 +262,7 @@ const HomeFeed = () => {
                             <div className="flex justify-between items-center mb-5">
                                 <h3 className="font-bold text-xs text-gray-400 uppercase tracking-wider">Latest Matches</h3>
                                 <button
-                                    onClick={() => navigate('/my-reports', { state: { activeFilter: 'MATCHED' } })}
+                                    onClick={() => navigate('/my-reports', { state: { activeFilter: 'Matched' } })}
                                     className="text-[10px] bg-blue-50 text-blue-600 px-4 py-1 rounded-lg font-semibold hover:bg-blue-100 transition-colors"
                                 >
                                     All
