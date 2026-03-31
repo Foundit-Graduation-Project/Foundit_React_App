@@ -14,6 +14,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Switch } from "../../components/ui/switch";
 import { Progress } from "../../components/ui/progress";
 import { AppSidebar } from "../../components/notifications/SideBar";
+import { TopNav } from "../../components/layout/TopNav";
 
 // --- Redux Imports ---
 import { useSelector, useDispatch } from "react-redux";
@@ -27,7 +28,6 @@ const Profile = () => {
   const isLoading = useSelector(selectUserLoading);
   const notifications = useSelector(selectAllNotifications) || [];
 
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,7 +72,7 @@ const Profile = () => {
     if (notifications.length === 0) {
       dispatch(fetchNotifications(1));
     }
-  }, [dispatch]);
+  }, [dispatch, notifications.length]);
 
   useEffect(() => {
     const handler = () => {
@@ -139,18 +139,27 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="flex h-screen w-full bg-background overflow-hidden transition-colors duration-300">
+      
+      <AppSidebar
+        collapsed={false}
+        isMobile={isMobile}
+        mobileOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
 
-      <div className="sticky top-0 h-screen w-64 shrink-0 dark:border-slate-800 dark:bg-slate-950 z-10 transition-colors duration-300">
-        <AppSidebar
-          collapsed={collapsed}
-          isMobile={isMobile}
-          mobileOpen={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-        />
-      </div>
+      <main className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden bg-background">
+        
+        {isMobile && (
+          <TopNav 
+            onToggleSidebar={() => setMobileOpen(true)} 
+            isMobile={isMobile} 
+            title="Profile Overview" 
+          />
+        )}
 
-      <main className="flex-1 p-8 transition-colors duration-300 w-full max-w-7xl mx-auto">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-10 custom-scrollbar">
+          <div className="max-w-7xl mx-auto">
 
         {/* Header */}
         <div className="mb-8">
@@ -417,6 +426,8 @@ const Profile = () => {
             </Card>
           </div>
 
+        </div>
+          </div>
         </div>
       </main>
     </div>
