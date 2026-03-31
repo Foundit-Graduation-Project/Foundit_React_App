@@ -29,6 +29,14 @@ const CATEGORIES = [
 const PAGE_LIMIT = 9;
 
 const HomeFeed = () => {
+    // Helper to resolve backend image URLs
+    const getImageUrl = (url) => {
+        if (!url) return 'https://placehold.jp/100x100.png';
+        if (url.startsWith('http')) return url;
+        const BASE_URL = 'http://localhost:3001';
+        return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
+
     const dispatch = useDispatch();
     const { reports, loading } = useSelector((state) => state.report);
     // 1. Get current user to compare IDs
@@ -166,25 +174,25 @@ const HomeFeed = () => {
                                             <ChevronDown className="w-4 h-4 ml-2 opacity-50" />
                                         </Button>
                                     </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 rounded-xl border-gray-100 dark:border-gray-800 shadow-xl min-w-[160px]">
-                                    <DropdownMenuItem
-                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
-                                        onClick={() => handleSortChange("Newest First", "-createdAt")}
-                                    >
-                                        Newest First
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
-                                        onClick={() => handleSortChange("Oldest First", "createdAt")}
-                                    >
-                                        Oldest First
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
-                                        onClick={() => handleSortChange("Name (A-Z)", "title")}
-                                    >
-                                        Name (A-Z)
-                                    </DropdownMenuItem>
+                                    <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 rounded-xl border-gray-100 dark:border-gray-800 shadow-xl min-w-[160px]">
+                                        <DropdownMenuItem
+                                            className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
+                                            onClick={() => handleSortChange("Newest First", "-createdAt")}
+                                        >
+                                            Newest First
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
+                                            onClick={() => handleSortChange("Oldest First", "createdAt")}
+                                        >
+                                            Oldest First
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
+                                            onClick={() => handleSortChange("Name (A-Z)", "title")}
+                                        >
+                                            Name (A-Z)
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>
@@ -216,17 +224,17 @@ const HomeFeed = () => {
 
                         {/* Pagination */}
                         <div className="flex justify-center gap-4 mt-8 pb-10">
-                            <Button 
-                                variant="outline" 
-                                disabled={page === 1} 
+                            <Button
+                                variant="outline"
+                                disabled={page === 1}
                                 onClick={() => setPage(p => p - 1)}
                                 className="text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium h-11 px-6"
                             >
                                 <ChevronLeft className="w-4 h-4 mr-2" /> Previous
                             </Button>
-                            <Button 
-                                variant="outline" 
-                                disabled={!reports || reports.length < PAGE_LIMIT} 
+                            <Button
+                                variant="outline"
+                                disabled={!reports || reports.length < PAGE_LIMIT}
                                 onClick={() => setPage(p => p + 1)}
                                 className="text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium h-11 px-6"
                             >
@@ -285,7 +293,6 @@ const HomeFeed = () => {
 
                             <div className="space-y-4">
                                 {(() => {
-                                    // Identify active matches (exclude resolved/verified and rejected)
                                     const activeMatches = matches?.filter(m =>
                                         m.status !== 'VERIFIED' && m.status !== 'REJECTED'
                                     ) || [];
@@ -301,81 +308,87 @@ const HomeFeed = () => {
                                         );
                                     }
 
-                                    // Render active matches
-                                    return [...activeMatches].reverse().slice(0, 2).map((match) => {
-                                        // Determine which side is the "other" person's report
-                                        const isMyLostReport = match.lostReport?.report?.user === currentUserId;
-                                        const displayReport = isMyLostReport ? match.foundReport?.report : match.lostReport?.report;
+                                    // Render only the LATEST singular match as requested ("اخر match")
+                                    const latestMatch = [...activeMatches]
+                                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
-                                        if (!displayReport) return null;
+                                    if (!latestMatch) return null;
 
-                                        const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
-                                        const itemTitle = displayReport?.title || "Item";
-                                        const itemImage = displayReport?.images?.[0]?.url || 'https://placehold.jp/100x100.png';
-                                        const location = displayReport?.locationName || "Nearby Location";
+                                    // Handle both populated user object and raw user ID string
+                                    const lostOwnerId = latestMatch.lostReport?.report?.user?._id || latestMatch.lostReport?.report?.user;
+                                    const isMyLostReport = lostOwnerId?.toString() === currentUserId?.toString();
 
-                                        return (
-                                            <div
-                                                key={match._id}
-                                                className="flex gap-3 group cursor-pointer p-2 -mx-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all border-b border-gray-50 dark:border-gray-800 last:border-0"
-                                                onClick={() => navigate(`/report/${displayReport?._id}`)}
-                                            >
-                                                {/* Image Container */}
-                                                <div className="relative w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0 border border-gray-100 dark:border-gray-700">
-                                                    <img
-                                                        src={itemImage}
-                                                        alt="match thumbnail"
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                                    />
-                                                    <div className="absolute bottom-0 right-0 bg-blue-600 text-[8px] text-white px-1 font-bold rounded-tl-md">
-                                                        {match.score}%
+                                    const displayReport = isMyLostReport ? latestMatch.foundReport?.report : latestMatch.lostReport?.report;
+
+                                    if (!displayReport) return null;
+
+                                    const oppositeTypeLabel = isMyLostReport ? "FOUND" : "LOST";
+                                    const itemTitle = displayReport?.title || "Item";
+                                    const itemImage = getImageUrl(displayReport?.images?.[0]?.url);
+                                    const location = displayReport?.locationName || "Nearby Location";
+
+                                    return (
+                                        <div
+                                            key={latestMatch._id}
+                                            className="flex gap-3 group cursor-pointer p-2 -mx-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all border-b border-gray-50 dark:border-gray-800 last:border-0"
+                                            onClick={() => navigate(`/report/${displayReport?._id}`)}
+                                        >
+                                            {/* Image Container */}
+                                            <div className="relative w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0 border border-gray-100 dark:border-gray-700">
+                                                <img
+                                                    src={itemImage}
+                                                    alt="match thumbnail"
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                                />
+                                                <div className="absolute bottom-0 right-0 bg-blue-600 text-[8px] text-white px-1 font-bold rounded-tl-md">
+                                                    {latestMatch.score}%
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                {/* Content Container */}
-                                                <div className="min-w-0 flex-1 flex flex-col justify-center">
-                                                    <p className="text-[11px] font-bold text-gray-800 dark:text-gray-200 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
-                                                        {itemTitle} {oppositeTypeLabel}
-                                                    </p>
-                                                    <p className="text-[9px] text-gray-400 dark:text-gray-500 truncate mt-0.5">
-                                                        near {location.slice(0, 20)} ...
-                                                    </p>
-                                                    <span className="text-[9px] text-gray-400 dark:text-gray-500 mt-1">
-                                                        {formatDistanceToNow(new Date(match.createdAt), { addSuffix: true })}
-                                                    </span>
-
-                                                    <div className="flex items-center gap-1.5 mt-1">
-                                                        <span className={`w-1.5 h-1.5 rounded-full ${match.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
-                                                        <span className="text-[9px] font-medium text-gray-500 dark:text-gray-400 capitalize">
-                                                            {match.status === 'MATCHED' ? 'Pending' : match.status}
+                                                    {/* Content Container */}
+                                                    <div className="min-w-0 flex-1 flex flex-col justify-center">
+                                                        <p className="text-[11px] font-bold text-gray-800 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
+                                                            {itemTitle} {oppositeTypeLabel}
+                                                        </p>
+                                                        <p className="text-[9px] text-gray-400 truncate mt-0.5">
+                                                            near {location.slice(0, 20)} ...
+                                                        </p>
+                                                        <span className="text-[9px] text-gray-400 mt-1">
+                                                            {formatDistanceToNow(new Date(latestMatch.createdAt), { addSuffix: true })}
                                                         </span>
+
+                                                        <div className="flex items-center gap-1.5 mt-1">
+                                                            <span className={`w-1.5 h-1.5 rounded-full ${latestMatch.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
+                                                            <span className="text-[9px] font-medium text-gray-500 capitalize">
+                                                                {latestMatch.status === 'MATCHED' ? 'Pending' : latestMatch.status}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    });
+                                                );
                                 })()}
-                            </div>
-                        </div>
-                        {/* Post Report CTA */}
-                        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl shadow-lg shadow-blue-200 relative overflow-hidden group">
-                            <div className="absolute -right-4 -bottom-4 bg-white/10 w-24 h-24 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
-                            <div className="relative z-10">
-                                <h3 className="text-white font-bold text-lg mb-2 leading-tight">Found something?</h3>
-                                <p className="text-blue-100 text-xs mb-4 leading-relaxed">Help someone today by reporting items you've discovered.</p>
-                                <Button
-                                    className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold border-0 h-10 rounded-xl shadow-sm"
-                                    onClick={() => navigate('/create-report')}
-                                >
-                                    Start Reporting
-                                </Button>
-                            </div>
-                        </div>
+                                            </div>
+                                        </div>
+
+                        {/* Post Report CTA */ }
+                                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl shadow-lg shadow-blue-200 relative overflow-hidden group">
+                                        <div className="absolute -right-4 -bottom-4 bg-white/10 w-24 h-24 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+                                        <div className="relative z-10">
+                                            <h3 className="text-white font-bold text-lg mb-2 leading-tight">Found something?</h3>
+                                            <p className="text-blue-100 text-xs mb-4 leading-relaxed">Help someone today by reporting items you've discovered.</p>
+                                            <Button
+                                                className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold border-0 h-10 rounded-xl shadow-sm"
+                                                onClick={() => navigate('/create-report')}
+                                            >
+                                                Start Reporting
+                                            </Button>
+                                        </div>
+                                    </div>
                     </aside>
+                        </div>
                 </div>
             </div>
-        </div>
-    );
+            );
 };
 
-export default HomeFeed;
+            export default HomeFeed;
