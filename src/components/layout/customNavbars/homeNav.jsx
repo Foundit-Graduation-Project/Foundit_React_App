@@ -61,7 +61,7 @@ const HomeNav = () => {
             {/* 1. LEFT: Logo */}
             <div className="flex items-center gap-2.5 shrink-0">
                 {/* Logo Icon */}
-                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-md shadow-blue-200 dark:shadow-none transition-shadow">
                     <Search className="w-5 h-5" />
                 </div>
 
@@ -132,14 +132,18 @@ const HomeNav = () => {
                 {/* User Avatar */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-3 hover:bg-slate-50 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                        <button className="flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                             <div className="hidden sm:flex flex-col items-end">
                                 {/* Real User Name */}
-                                <span className="text-sm font-semibold leading-tight text-slate-900">{currentUser.name?.split(' ')[0] || "User"}</span>
+                                <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-white transition-colors">
+                                    {currentUser.name?.split(' ')[0] || "User"}
+                                </span>
                                 {/* Real User Role */}
-                                <span className="text-xs text-slate-500 capitalize">{currentUser.role?.replace('_', ' ') || "Member"}</span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400 capitalize transition-colors">
+                                    {currentUser.role?.replace('_', ' ') || "Member"}
+                                </span>
                             </div>
-                            <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
+                            <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                                 {/* Real User Avatar */}
                                 <AvatarImage src={currentUser.avatar?.url} alt={currentUser.name} />
                                 <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
@@ -152,7 +156,7 @@ const HomeNav = () => {
                     <DropdownMenuContent className="w-56" align="end" forceMount>
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none text-slate-900">{currentUser.name}</p>
+                                <p className="text-sm font-medium leading-none text-slate-900 dark:text-white transition-colors">{currentUser.name}</p>
                                 <p className="text-xs leading-none text-slate-500">{currentUser.email}</p>
                             </div>
                         </DropdownMenuLabel>

@@ -9,9 +9,9 @@ const PostingGuidelines = () => {
   ];
 
   return (
-    <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-6 space-y-4">
+    <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-6 space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-2 text-blue-600">
+      <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
         <Info className="w-5 h-5" />
         <h3 className="font-bold text-lg">Posting Guidelines</h3>
       </div>
@@ -21,7 +21,7 @@ const PostingGuidelines = () => {
         {guidelines.map((text, index) => (
           <li key={index} className="flex gap-3 items-start group">
             <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5 transition-transform group-hover:scale-110" />
-            <span className="text-slate-600 text-sm leading-relaxed font-medium">
+            <span className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
               {text}
             </span>
           </li>

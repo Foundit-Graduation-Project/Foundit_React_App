@@ -263,38 +263,38 @@ const CreateReport = () => {
   };
 
   return (
-    <article className="w-full mx-auto bg-slate-50 min-h-screen flex flex-col">
+    <article className="w-full mx-auto bg-slate-50 dark:bg-slate-950 min-h-screen flex flex-col transition-colors">
       <ReportHeader />
 
       {/* Mobile Header */}
-      <header className="w-full px-4 py-5 flex items-center bg-white sticky top-0 z-[1001] border-b border-slate-200 lg:hidden transition-all">
+      <header className="w-full px-4 py-5 flex items-center bg-white dark:bg-slate-900 sticky top-0 z-[1001] border-b border-slate-200 dark:border-slate-800 lg:hidden transition-all">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-slate-100 rounded-full"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
         >
-          <ChevronLeft className="w-6 h-6 text-slate-800" />
+          <ChevronLeft className="w-6 h-6 text-slate-800 dark:text-white" />
         </button>
-        <h1 className="flex-1 text-center text-lg font-bold text-slate-900 pr-10">
+        <h1 className="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white pr-10">
           Report an Item
         </h1>
       </header>
 
       <main className="flex-1 p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div className="lg:col-span-9">
-          <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-2xl">
+          <div className="bg-white dark:bg-slate-900 p-6 shadow-sm border border-slate-200 dark:border-slate-800 rounded-2xl transition-colors">
             {/* Type Switcher */}
-            <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-8 max-w-xl mx-auto transition-all">
+            <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8 max-w-xl mx-auto transition-all">
               <button
                 type="button"
                 onClick={() => setReportType("lost")}
-                className={`${reportType === "lost" ? "bg-blue-600 text-white shadow-md" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
+                className={`${reportType === "lost" ? "bg-blue-600 text-white shadow-md" : "text-slate-500 dark:text-slate-400"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
               >
                 I Lost Something
               </button>
               <button
                 type="button"
                 onClick={() => setReportType("found")}
-                className={`${reportType === "found" ? "bg-blue-600 text-white shadow-md" : "text-slate-500"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
+                className={`${reportType === "found" ? "bg-blue-600 text-white shadow-md" : "text-slate-500 dark:text-slate-400"} flex-1 py-4 text-sm font-bold rounded-xl transition-all`}
               >
                 I Found Something
               </button>
@@ -311,14 +311,14 @@ const CreateReport = () => {
                   required
                 />
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
                     Category
                   </label>
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     required
                   >
                     <option value="">Select category</option>
@@ -330,14 +330,14 @@ const CreateReport = () => {
 
               {formData.category && subCategories[formData.category] && (
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
                     Specific Type
                   </label>
                   <select
                     name="subCategory"
                     value={formData.subCategory}
                     onChange={handleInputChange}
-                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   >
                     <option value="">Select type</option>
                     {subCategories[formData.category].map((sub) => (
@@ -351,7 +351,7 @@ const CreateReport = () => {
 
               {formData.subCategory && (
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
                     Brand / Manufacturer
                   </label>
                   {brandMappings[formData.subCategory] ? (
@@ -359,7 +359,7 @@ const CreateReport = () => {
                       name="brand"
                       value={formData.brand}
                       onChange={handleInputChange}
-                      className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                      className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     >
                       <option value="">Select Brand</option>
                       {brandMappings[formData.subCategory].map((b) => (
@@ -410,7 +410,7 @@ const CreateReport = () => {
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-500 font-medium">
+                    <span className="text-sm text-slate-500 dark:text-slate-400 font-medium transition-colors">
                       Pin Exact Location
                     </span>
                     <button
@@ -421,12 +421,12 @@ const CreateReport = () => {
                           coordinates: CAIRO_DEFAULT,
                         }))
                       }
-                      className="flex items-center gap-1 text-[11px] bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200"
+                      className="flex items-center gap-1 text-[11px] bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-colors"
                     >
                       <RefreshCw size={12} /> Reset Map
                     </button>
                   </div>
-                  <div className="h-[400px] w-full rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner">
+                  <div className="h-[400px] w-full rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-slate-800 shadow-inner">
                     <ReportMap
                       position={formData.coordinates}
                       setPosition={(coords) => {
@@ -439,7 +439,7 @@ const CreateReport = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-700">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
                   Description
                 </label>
                 <textarea
@@ -447,14 +447,14 @@ const CreateReport = () => {
                   rows="4"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all"
+                  className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all placeholder-slate-400 dark:placeholder-slate-600"
                   placeholder="Provide color, unique marks, or serial numbers..."
                   required
                 />
               </div>
 
               <div className="w-full space-y-4 pt-4">
-                <label className="text-sm font-bold text-slate-800">
+                <label className="text-sm font-bold text-slate-800 dark:text-white transition-colors">
                   Photos ({images.length}/5)
                 </label>
                 <div
@@ -463,7 +463,7 @@ const CreateReport = () => {
                   {images.map((img, index) => (
                     <div
                       key={index}
-                      className="relative aspect-square rounded-2xl overflow-hidden border-2 border-blue-100"
+                      className="relative aspect-square rounded-2xl overflow-hidden border-2 border-blue-100 dark:border-blue-900/30 shadow-sm"
                     >
                       <img
                         src={img.preview}
@@ -482,10 +482,10 @@ const CreateReport = () => {
 
                   {images.length < 5 && (
                     <label
-                      className={`flex flex-col items-center justify-center border-2 border-dashed border-blue-200 bg-blue-50/20 rounded-2xl cursor-pointer hover:bg-blue-50 transition-all ${images.length === 0 ? "w-full h-40" : "aspect-square"}`}
+                      className={`flex flex-col items-center justify-center border-2 border-dashed border-blue-200 dark:border-blue-900/30 bg-blue-50/20 dark:bg-blue-950/10 rounded-2xl cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all ${images.length === 0 ? "w-full h-40" : "aspect-square"}`}
                     >
-                      <Camera className="w-6 h-6 text-blue-600" />
-                      <span className="text-xs font-bold text-blue-600 mt-2">
+                      <Camera className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400 mt-2">
                         Add Photo
                       </span>
                       <input
@@ -528,18 +528,18 @@ const CreateReport = () => {
         </div>
 
         <aside className="lg:col-span-3 hidden lg:block">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 sticky top-10 shadow-sm mb-5 transition-all">
-            <h3 className="text-sm font-bold text-slate-700 mb-4 tracking-tight">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 sticky top-10 shadow-sm mb-5 transition-all">
+            <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4 tracking-tight transition-colors">
               Report Completion
             </h3>
             <Progress
               value={currentProgress}
-              className="h-2 bg-slate-100 [&>div]:bg-blue-600"
+              className="h-2 bg-slate-100 dark:bg-slate-800 [&>div]:bg-blue-600"
             />
-            <p className="text-[13px] font-bold text-blue-600 mt-3 text-center">
+            <p className="text-[13px] font-bold text-blue-600 dark:text-blue-400 mt-3 text-center transition-colors">
               {currentProgress}% Done
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 text-center">
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 text-center transition-colors">
               Complete {totalSteps - (filledFieldsCount + imageBonus)} more
               steps to post
             </p>
