@@ -31,11 +31,10 @@ export default function ReportSidebar({ item, match }) {
       : match?.lostReport?.report;
 
   const isMyMatchedReport =
-    matchedReport?.user === currentUser?._id ||
-    matchedReport?.user?._id === currentUser?._id;
+    (matchedReport?.user?._id || matchedReport?.user)?.toString() === currentUser?._id?.toString();
 
   const isOwner =
-    currentUser?._id === item?.user?._id || currentUser?._id === item?.user;
+    (item?.user?._id || item?.user)?.toString() === currentUser?._id?.toString();
 
   const getSidebarTitle = () => {
     if (item.status === "RESOLVED") return "Case Resolved!";

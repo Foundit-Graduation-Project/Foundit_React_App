@@ -61,11 +61,7 @@ const HomeNav = () => {
             {/* 1. LEFT: Logo */}
             <div className="flex items-center gap-2.5 shrink-0">
                 {/* Logo Icon */}
-<<<<<<< HEAD
-                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-md shadow-blue-200 dark:shadow-none transition-shadow">
-=======
                 <Link to="/home" className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md hover:bg-blue-700 transition-colors">
->>>>>>> cadd08c3fb6343dd6f55c657f412375acb92ef78
                     <Search className="w-5 h-5" />
                 </Link>
 
@@ -157,13 +153,6 @@ const HomeNav = () => {
                         </button>
                     </DropdownMenuTrigger>
 
-<<<<<<< HEAD
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                        <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none text-slate-900 dark:text-white transition-colors">{currentUser.name}</p>
-                                <p className="text-xs leading-none text-slate-500">{currentUser.email}</p>
-=======
                     <DropdownMenuContent 
                         className="w-64 p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200 z-50" 
                         align="end" 
@@ -174,7 +163,6 @@ const HomeNav = () => {
                             <div className="flex flex-col gap-1">
                                 <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">{currentUser.name}</p>
                                 <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">{currentUser.email}</p>
->>>>>>> cadd08c3fb6343dd6f55c657f412375acb92ef78
                             </div>
                         </DropdownMenuLabel>
                         

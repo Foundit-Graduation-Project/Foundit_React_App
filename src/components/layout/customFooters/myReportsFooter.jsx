@@ -16,13 +16,8 @@ const myReportsFooter = () => {
 
                 {/* 1. Left: Logo */}
                 <div className="flex items-center gap-3">
-<<<<<<< HEAD
-                    <div className="h-9 w-9 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors">
-                        <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-=======
                     <div className="h-9 w-9 bg-blue-100 rounded-lg flex items-center justify-center">
                         <Search className="h-5 w-5 text-blue-600" />
->>>>>>> cadd08c3fb6343dd6f55c657f412375acb92ef78
                     </div>
                     <span className="font-bold text-lg text-gray-900 dark:text-white tracking-tight transition-colors">
                         FoundIt
