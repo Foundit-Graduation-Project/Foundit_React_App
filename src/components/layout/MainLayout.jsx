@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser } from '../../features/auth';
 import { addRealtimeNotification } from '../../features/notifications';
@@ -11,49 +11,56 @@ export default function MainLayout() {
   const user = useSelector(selectCurrentUser);
   const activeChatId = useSelector((state) => state.chat.activeChatId);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
     let currentSocket = null;
 
-    // 2. Only connect if we have a logged-in user
     if (user && user._id) {
-      // 3. Grab the token from local storage
       const token = localStorage.getItem('accessToken');
       
       if (token) {
-        // 4. Securely connect using the teammate's function!
         currentSocket = connectSocket(token);
 
-        // 5. The Global Listener for New Notifications
         currentSocket.on('new_notification', (newNotif) => {
-          console.log('🔔 New Notification Received via Socket:', newNotif);
+          console.log('🔔 Notification:', newNotif);
 
-          // 🛑 SUPPRESSION LOGIC: 
-          // If this is a message notification and the user is ALREADY in that chat,
-          // we don't show the toast popup.
-          const isSameChat = newNotif.category === 'MESSAGE' && 
-                             newNotif.data?.conversationId === activeChatId;
+          // Suppression Logic:
+          // Don't show toast if it's a message/support notification AND user is currently on the chat page with this specific chat open.
+          const isMessageOrSupport = newNotif.category === 'MESSAGE' || newNotif.category === 'SUPPORT';
+          const notificationConvId = newNotif.data?.conversationId;
+          
+          const isViewingThisChat = location.pathname === '/chat' && notificationConvId === activeChatId;
 
-          if (!isSameChat) {
-            // Show a Toast Popup
-            toast.success(newNotif.title, { icon: '🔔', duration: 4000 });
+          if (isMessageOrSupport && isViewingThisChat) {
+            console.log('🛑 Toast suppressed: User is viewing this chat.');
+          } else {
+            // Show Toast
+            toast.success(
+              <div>
+                <div className="font-bold">{newNotif.title}</div>
+                {newNotif.message && <div className="text-xs opacity-90">{newNotif.message}</div>}
+              </div>,
+              { icon: '🔔', duration: 4000 }
+            );
           }
 
-          // Update Redux state instantly (Always update state so the Bell Icon count is correct)
+          // Always update Redux state
           dispatch(addRealtimeNotification(newNotif));
         });
       }
     }
 
-    // 6. Cleanup: Disconnect when user logs out or leaves
     return () => {
       if (currentSocket) {
         currentSocket.off('new_notification');
+        // Note: We don't call disconnectSocket() here if we want the socket 
+        // to stay alive across layout re-renders, but since MainLayout wraps 
+        // all protected routes, it only unmounts on logout or hard refresh.
         disconnectSocket();
-        console.log('🔴 Socket.io Disconnected');
       }
     };
-  }, [user, dispatch, activeChatId]);
+  }, [user, dispatch, activeChatId, location.pathname]);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -62,4 +69,4 @@ export default function MainLayout() {
       </main>
     </div>
   );
-}
+}
