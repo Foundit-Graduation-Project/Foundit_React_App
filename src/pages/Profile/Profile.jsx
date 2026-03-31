@@ -4,7 +4,9 @@ import {
   Settings, CreditCard, Sun, Moon, ChevronDown, Globe, Loader2, Info, AlertCircle, Search, Megaphone, MessageSquare
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import api from "../../services/axios";
 
 // UI Components
 import { Button } from "../../components/ui/button";
@@ -28,12 +30,42 @@ const Profile = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [settings, setSettings] = useState({
     notifications: true,
     darkMode: document.documentElement.classList.contains("dark"),
     language: "en",
   });
+
+  // Verify Stripe Session if present in URL
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    console.log("[Stripe] Detected session_id in URL:", sessionId);
+    
+    if (sessionId) {
+      const verifyPayment = async () => {
+        try {
+          console.log("[Stripe] Starting manual verification for session:", sessionId);
+          const response = await api.get(`/payments/confirm-payment?session_id=${sessionId}`);
+          console.log("[Stripe] Verification response from server:", response.data);
+          
+          if (response.data?.status === 'success' || response.data?.message?.includes('verified')) {
+            toast.success("Payment verified! Your credits have been updated.");
+            dispatch(getMe()); 
+          }
+        } catch (error) {
+          console.error("[Stripe] Payment verification failed error:", error);
+          toast.error("Could not verify payment automatically. Please check your balance in a moment.");
+        } finally {
+          const newParams = new URLSearchParams(searchParams);
+          newParams.delete('session_id');
+          setSearchParams(newParams, { replace: true });
+        }
+      };
+      verifyPayment();
+    }
+  }, [searchParams, dispatch, setSearchParams]);
 
   useEffect(() => {
     dispatch(getMe());

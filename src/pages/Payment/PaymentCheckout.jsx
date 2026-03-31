@@ -61,8 +61,8 @@ const PaymentCheckout = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      fullName: currentUser.name,
-      email: "user@example.com" // Replace with actual user email from your Auth state
+      fullName: "",
+      email: ""
     }
   });
 
@@ -76,10 +76,12 @@ const PaymentCheckout = () => {
   const onSubmit = async (data) => {
     dispatch(clearPaymentError());
     try {
-      // Sends plan and amount to your createCheckoutSessionService
+      // Sends plan, amount, and billing info to your createCheckoutSessionService
       await dispatch(createCheckoutSession({
         plan: selectedPlan.id,
-        amount: selectedPlan.price
+        amount: selectedPlan.price,
+        fullName: data.fullName,
+        email: data.email
       })).unwrap();
     } catch (err) {
       console.error("Checkout Error:", err);
@@ -170,7 +172,7 @@ const PaymentCheckout = () => {
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700 block">Full Name</label>
                       <input
-
+                        {...register("fullName")}
                         placeholder="ismail ibrahim"
                         className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none ${errors.fullName ? 'border-red-500' : 'border-gray-200'}`}
                       />
@@ -179,10 +181,11 @@ const PaymentCheckout = () => {
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700 block">Email Address</label>
                       <input
-                        defaultValue="example@gmail.com"
-                        className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-allowed"
-
+                        {...register("email")}
+                        placeholder="example@gmail.com"
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none ${errors.email ? 'border-red-500' : 'border-gray-200'}`}
                       />
+                      {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                     </div>
                   </div>
                 </div>
