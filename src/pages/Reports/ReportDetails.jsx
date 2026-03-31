@@ -9,6 +9,7 @@ import ReportGallery from "./ReportGallery";
 import ReportInfo from "./ReportInfo";
 import ReportSidebar from "./ReportSidebar";
 import ReportFooter from "./ReportFooter";
+import Footer from "../../components/layout/customFooters/myReportsFooter";
 import NotFound from './../NotFound/NotFound';
 
 import { fetchMyMatches } from "../../features/matches/matchesSlice";
@@ -117,7 +118,7 @@ export default function ReportDetails() {
           </div>
         </div>
       </main>
-      <ReportFooter />
+      <Footer />
     </div>
   );
 }
