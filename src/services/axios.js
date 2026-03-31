@@ -66,12 +66,21 @@ api.interceptors.response.use(
                 }
             }
 
-        // 🔥 THE FIX: Force logout if the user is banned (403 Forbidden)
+        // 🔥 THE FIX: Handle 403 Forbidden (Banned or Unverified)
         if (error.response?.status === 403) {
+            const forbiddenMessage = error.response?.data?.message || "";
+            
+            // If it's a verification issue, DON'T redirect to login. 
+            // Let the UI handle the navigation to /verify-account.
+            if (forbiddenMessage.toLowerCase().includes("verify your email")) {
+                return Promise.reject(forbiddenMessage);
+            }
+
+            // For actual bans, force logout as before
             localStorage.removeItem("accessToken");
             localStorage.removeItem("user");
             window.location.href = "/login";
-            return Promise.reject("Your account has been banned. Please contact support.");
+            return Promise.reject(forbiddenMessage || "Your account has been banned. Please contact support.");
         }
 
         // --- SMART ERROR EXTRACTION ---
