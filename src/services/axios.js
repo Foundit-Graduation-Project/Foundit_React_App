@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 1. Create Base Instance
 const api = axios.create({
-    baseURL: "http://localhost:3001/api/v1", // Ensure this matches your backend PORT
+    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api/v1", // Ensure this matches your backend PORT
     withCredentials: true, // 🔥 CRITICAL: Allows frontend to send/receive the refreshToken cookie
 });
 
