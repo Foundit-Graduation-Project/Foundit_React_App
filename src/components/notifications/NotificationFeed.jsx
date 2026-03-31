@@ -3,7 +3,7 @@ import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TopBar } from "./TopBar";
+import { TopNav } from "../layout/TopNav";
 import { NotificationCard } from "./NotificationCard";
 
 // --- Redux Imports ---
@@ -94,7 +94,7 @@ export function NotificationFeed({ onToggleSidebar, isMobile }) {
 
   return (
     <div className="flex flex-col flex-1 min-w-0 bg-background overflow-hidden w-full">
-      {/* <TopBar onToggleSidebar={onToggleSidebar} isMobile={isMobile} /> */}
+      {isMobile && <TopNav onToggleSidebar={onToggleSidebar} isMobile={isMobile} title="Notifications" />}
 
       <div className="flex-1 overflow-y-auto px-4 py-8 md:px-12 w-full custom-scrollbar">
         <div className="max-w-4xl w-full mx-auto">

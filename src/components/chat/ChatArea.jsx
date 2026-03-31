@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { MessageSquare } from "lucide-react";
 import {
   setActiveChat,
   sendMessageAPI,
@@ -15,8 +16,8 @@ export function ChatArea({ isHiddenOnMobile }) {
   );
 
   const activeChat = chats.find((c) => c.id === activeChatId);
-  const activeMessages = messages.filter((m) => m.chatId === activeChatId);
-  const isOtherUserTyping = typingUsers[activeChatId];
+  // (We don't need activeMessages here since ChatMessageList handles it, 
+  // but we keep consistent with original logic if needed)
 
   // === HTTP REQUEST: SEND MESSAGE ===
   const handleSendMessage = async (text, files) => {
@@ -27,11 +28,7 @@ export function ChatArea({ isHiddenOnMobile }) {
     };
 
     try {
-      // Send HTTP request to backend
       await dispatch(sendMessageAPI(msgData)).unwrap();
-
-      // Backend saves it and emits socket event.
-      // The socket listener in Chat.jsx will receive it and update the UI.
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -39,47 +36,52 @@ export function ChatArea({ isHiddenOnMobile }) {
 
   // === HTTP REQUEST: PAGINATION ===
   const handleFetchMore = (firstMessageId) => {
-    if (!hasMoreMessages) return; // Stop when all history is loaded
+    if (!hasMoreMessages) return; 
     dispatch(
       fetchMessages({ conversationId: activeChatId, before: firstMessageId }),
     );
   };
 
-  if (!activeChat && !isLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50/30">
-        Select a conversation
-      </div>
-    );
-  }
-
   return (
-    <section
-      className={`flex-1 flex flex-col bg-slate-50/30 ${isHiddenOnMobile ? "hidden md:flex" : "flex"}`}
+    <div
+      className={`flex-1 flex flex-col min-w-0 bg-background transition-all duration-300 ${isHiddenOnMobile ? "hidden md:flex" : "flex"}`}
     >
-      <ChatHeader
-        activeChat={activeChat}
-        isLoading={isLoading}
-        isOtherUserTyping={isOtherUserTyping}
-        onBack={() => dispatch(setActiveChat(null))}
-      />
-
-      {/* we don't need is loading or active chat or is other user typing you can get them from slice */}
-      <ChatMessageList
-        isLoading={isLoading}
-        activeMessages={activeMessages}
-        activeChat={activeChat}
-        isOtherUserTyping={isOtherUserTyping}
-        onFetchMore={handleFetchMore}
-        hasMoreMessages={hasMoreMessages}
-      />
-
-      <ChatInputArea
-        isLoading={isLoading}
-        activeChatId={activeChatId}
-        otherUserId={activeChat?.otherUserId}
-        onSendMessage={handleSendMessage}
-      />
-    </section>
+      {activeChatId ? (
+        <>
+          <ChatHeader 
+            activeChat={activeChat} 
+            isLoading={isLoading} 
+            isOtherUserTyping={!!typingUsers[activeChatId]} 
+            onBack={() => dispatch(setActiveChat(null))} 
+          />
+          <ChatMessageList 
+             isLoading={isLoading}
+             activeMessages={messages.filter((m) => m.chatId === activeChatId)}
+             activeChat={activeChat}
+             isOtherUserTyping={!!typingUsers[activeChatId]}
+             onFetchMore={handleFetchMore}
+             hasMoreMessages={hasMoreMessages}
+          />
+          <ChatInputArea 
+             isLoading={isLoading}
+             activeChatId={activeChatId}
+             otherUserId={activeChat?.otherUserId}
+             onSendMessage={handleSendMessage}
+          />
+        </>
+      ) : (
+        <div className="flex-1 flex items-center justify-center p-8 bg-background transition-colors duration-300">
+          <div className="max-w-sm text-center">
+            <div className="w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400 shadow-sm border border-border">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">Select a conversation</h3>
+            <p className="text-muted-foreground">
+              Choose someone from the menu on the left to start chatting and searching for your lost items together.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
