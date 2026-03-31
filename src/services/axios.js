@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 1. Create Base Instance
 const api = axios.create({
-    baseURL: "http://localhost:3000/api/v1", // Ensure this matches your backend PORT
+    baseURL: "http://localhost:3001/api/v1", // Ensure this matches your backend PORT
     withCredentials: true, // 🔥 CRITICAL: Allows frontend to send/receive the refreshToken cookie
 });
 
@@ -65,6 +65,14 @@ api.interceptors.response.use(
                     return Promise.reject(refreshError);
                 }
             }
+
+        // 🔥 THE FIX: Force logout if the user is banned (403 Forbidden)
+        if (error.response?.status === 403) {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("user");
+            window.location.href = "/login";
+            return Promise.reject("Your account has been banned. Please contact support.");
+        }
 
         // --- SMART ERROR EXTRACTION ---
         const resData = error.response?.data;

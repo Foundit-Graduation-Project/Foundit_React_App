@@ -68,14 +68,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     const handleViewDetails = (e) => {
         if (e) e.stopPropagation();
 
-        // Smart Navigation: If matched, go to the other person's report.
-        if (isMatchedStatus && otherReport) {
-            navigate(`/report/${otherReport._id}`);
-        } else {
-            // Otherwise, go to own report details (showing "All Data" via ReportDetails logic)
-            dispatch(setSelectedReport(report));
-            navigate(`/report/${_id}`);
-        }
+        // Always navigate to own report details to avoid "another account" confusion.
+        // The user can find match details within their own report page.
+        dispatch(setSelectedReport(report));
+        navigate(`/report/${_id}`);
     };
 
     const handleDelete = async (e) => {
@@ -153,7 +149,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         >
             {/* --- Action Buttons (Top Left) --- */}
             <div className="absolute top-3 left-3 z-50 flex flex-col gap-2">
-                {showDelete && !isResolvedStatus && !isMatchedStatus && (
+                {showDelete && !isMatchedStatus && (
                     <button
                         onClick={handleDelete}
                         className="p-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 transition-all duration-200"
