@@ -36,7 +36,15 @@ import toast from "react-hot-toast";
 
 // Changed to Capital H (React requirement for components)
 const HomeNav = () => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem("foundit-theme");
+    if (saved === "dark") {
+      document.documentElement.classList.add("dark");
+      return true;
+    }
+    document.documentElement.classList.remove("dark");
+    return false;
+  });
   const unreadCount = useSelector(selectUnreadCount);
 
   // --- Hooks ---
@@ -48,9 +56,16 @@ const HomeNav = () => {
   const currentUser = useSelector(selectCurrentUser) || {};
 
   const toggleTheme = () => {
+    const newIsDark = !isDark;
     const root = document.documentElement;
-    root.classList.toggle("dark");
-    setIsDark(!isDark);
+    if (newIsDark) {
+      root.classList.add("dark");
+      localStorage.setItem("foundit-theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("foundit-theme", "light");
+    }
+    setIsDark(newIsDark);
   };
 
   // --- Logout Handler ---
@@ -83,10 +98,10 @@ const HomeNav = () => {
           <Search className="w-5 h-5" />
         </Link>
 
-        {/* Brand Name */}
+        {/* Brand Name - Hidden on mobile/tablet to save space */}
         <Link
           to="/home"
-          className="font-bold text-xl text-blue-600 tracking-tight dark:text-blue-400 mr-4 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+          className="font-bold text-lg sm:text-xl text-blue-600 tracking-tight dark:text-blue-400 mr-2 sm:mr-4 hover:text-blue-700 dark:hover:text-blue-300 transition-colors hidden md:block"
         >
           FoundIt
         </Link>
@@ -116,26 +131,27 @@ const HomeNav = () => {
       )}
 
       {/* 3. RIGHT: Actions */}
-      <div className="flex items-center gap-5 shrink-0">
-        {/* Post Button */}
+      <div className="flex items-center gap-2 sm:gap-5 shrink-0">
+        {/* Post Button - Shortened on mobile to prevent overflow */}
         {location.pathname === "/home" && (
           <Link
             to="/create-report"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold h-10 px-5 rounded-lg shadow-md shadow-blue-600/20 transition-transform active:scale-95 flex items-center justify-center"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold h-10 px-3 sm:px-4 rounded-lg shadow-md shadow-blue-600/20 transition-transform active:scale-95 flex items-center justify-center shrink-0"
           >
-            <Plus className="w-4 h-4 mr-2 stroke-[3px]" /> Post a Report
+            <Plus className="w-4 h-4 sm:mr-2 stroke-[3px]" /> 
+            <span className="hidden sm:inline">Post<span className="hidden md:inline"> a Report</span></span>
           </Link>
         )}
 
         {/* Vertical Separator & Icons */}
         {location.pathname === "/home" && (
           <>
-            <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
+            <div className="h-8 w-px bg-gray-200 hidden md:block"></div>
 
             {/* Dynamic Notification Bell */}
             <Link
               to="/notifications"
-              className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors hidden sm:block"
+              className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
             >
               <Bell className="w-5 h-5" />
 
@@ -148,7 +164,7 @@ const HomeNav = () => {
             </Link>
             <button
               onClick={toggleTheme}
-              className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors shrink-0"
             >
               {isDark ? (
                 <Sun className="w-4 h-4" />
@@ -162,8 +178,8 @@ const HomeNav = () => {
         {/* User Avatar */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-              <div className="hidden sm:flex flex-col items-end">
+            <button className="flex items-center gap-2 sm:gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 p-1 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+              <div className="hidden lg:flex flex-col items-end">
                 {/* Real User Name */}
                 <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-white transition-colors">
                   {currentUser.name?.split(" ")[0] || "User"}
@@ -173,13 +189,13 @@ const HomeNav = () => {
                   {currentUser.role?.replace("_", " ") || "Member"}
                 </span>
               </div>
-              <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
+              <Avatar className="w-8 h-8 sm:w-9 sm:h-9 border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                 {/* Real User Avatar */}
                 <AvatarImage
                   src={currentUser.avatar?.url}
                   alt={currentUser.name}
                 />
-                <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
+                <AvatarFallback className="bg-blue-100 text-blue-600 font-bold text-xs">
                   {getInitials(currentUser.name)}
                 </AvatarFallback>
               </Avatar>

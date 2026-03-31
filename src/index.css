@@ -146,3 +146,18 @@
   --shadow-glass: 0 20px 50px rgba(0, 0, 0, 0.05);
   --shadow-blue-glow: 0 15px 30px -10px rgba(37, 99, 235, 0.4);
 }
+
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+  }
+}

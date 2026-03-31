@@ -44,7 +44,7 @@ const SearchBar = ({
                 value={searchTerm}
                 onChange={handleSearch}
                 placeholder={placeholder}
-                className="w-full h-10 pl-11 pr-4 bg-gray-50 border border-gray-100 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-50/50 transition-all duration-200 outline-none shadow-sm"
+                className="w-full h-10 pl-11 pr-4 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:bg-white dark:focus:bg-gray-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-50/50 dark:focus:ring-blue-900/20 transition-all duration-200 outline-none shadow-sm"
             />
         </div>
     );
