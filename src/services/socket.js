@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 // We take your API URL (http://localhost:3000/api/v1) and remove the /api/v1 
 // because Socket.io needs to connect to the root server (http://localhost:3000)
-const SOCKET_URL = "http://localhost:3000";
+const SOCKET_URL = "http://localhost:3001";
 
 let Socket = null;
  
