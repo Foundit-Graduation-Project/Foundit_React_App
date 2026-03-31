@@ -95,7 +95,7 @@ export function NotificationCard({ notif }) {
         {notif.category === "MATCH" && (
           <div className="flex gap-2">
             {/* If we have data.matchId, we can link directly to it! */}
-            <Link to={notif.data?.matchId ? `/matches/${notif.data.matchId}` : "#"}>
+            <Link to={`/report/${notif.data?.reportId}`}>
               <Button size="sm" className="h-7 text-[12.5px] px-3 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleMarkAsRead}>
                 View Match
               </Button>

@@ -1,4 +1,4 @@
-import { Database } from "lucide-react";
+import { Database, Search } from "lucide-react";
 import TermsOfServicePopup from "../../popups/TermsOfServicePopup";
 import PrivacyPolicyPopup from "../../popups/PrivacyPolicyPopup";
 import { useState } from "react";
@@ -17,7 +17,7 @@ const myReportsFooter = () => {
                 {/* 1. Left: Logo */}
                 <div className="flex items-center gap-3">
                     <div className="h-9 w-9 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Database className="h-5 w-5 text-blue-600" />
+                        <Search className="h-5 w-5 text-blue-600" />
                     </div>
                     <span className="font-bold text-lg text-gray-900 tracking-tight">FoundIt</span>
                 </div>

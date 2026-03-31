@@ -94,7 +94,7 @@ export function NotificationFeed({ onToggleSidebar, isMobile }) {
 
   return (
     <div className="flex flex-col flex-1 min-w-0 bg-background overflow-hidden w-full">
-      <TopBar onToggleSidebar={onToggleSidebar} isMobile={isMobile} />
+      {/* <TopBar onToggleSidebar={onToggleSidebar} isMobile={isMobile} /> */}
 
       <div className="flex-1 overflow-y-auto px-4 py-8 md:px-12 w-full custom-scrollbar">
         <div className="max-w-4xl w-full mx-auto">

@@ -1,6 +1,6 @@
 import { BookOpen, User, FileText, Mail, Bell, Settings, Home, Search, CircleUserRound, PlusCircleIcon, MessageCircleMoreIcon, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Ensure AvatarImage is imported
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // --- Redux Integration ---
@@ -51,11 +51,13 @@ export function AppSidebar({ collapsed, isMobile, mobileOpen, onClose }) {
     <>
       {/* Header / Logo Area */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-5 overflow-hidden shrink-0">
-        <div className="bg-blue-600 w-9 h-9 min-w-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+        <Link to="/home" className="bg-blue-600 w-9 h-9 min-w-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md hover:bg-blue-700 transition-colors">
           <Search className="w-5 h-5" />
-        </div>
+        </Link>
         <div className={`overflow-hidden whitespace-nowrap transition-all duration-220 ${collapsed && !isMobile ? "opacity-0 w-0" : "opacity-100"}`}>
-          <h2 className="text-[15px] font-bold tracking-tight leading-tight dark:text-white">FoundIt</h2>
+          <Link to="/home" className="text-[15px] font-bold tracking-tight leading-tight dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            FoundIt
+          </Link>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Search, Plus, User, Bell, Settings as SettingsIcon, LogOut, Sun, Moon } from "lucide-react";
+import { Search, Plus, User, Bell, Settings as SettingsIcon, LogOut, Sun, Moon, MessageSquare, FileText } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../../../components/ui/avatar"; // Adjust path if needed
 import { Link, useLocation, useNavigate } from "react-router-dom"; // Added useLocation & useNavigate
 import {
@@ -61,14 +61,14 @@ const HomeNav = () => {
             {/* 1. LEFT: Logo */}
             <div className="flex items-center gap-2.5 shrink-0">
                 {/* Logo Icon */}
-                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                <Link to="/home" className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md hover:bg-blue-700 transition-colors">
                     <Search className="w-5 h-5" />
-                </div>
+                </Link>
 
                 {/* Brand Name */}
-                <span className="font-bold text-xl text-blue-600 tracking-tight dark:text-blue-400 mr-4">
+                <Link to="/home" className="font-bold text-xl text-blue-600 tracking-tight dark:text-blue-400 mr-4 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
                     FoundIt
-                </span>
+                </Link>
 
                 {/* Conditional Home Text Link */}
                 {location.pathname === "/create-report" && (
@@ -149,44 +149,97 @@ const HomeNav = () => {
                         </button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                        <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none text-slate-900">{currentUser.name}</p>
-                                <p className="text-xs leading-none text-slate-500">{currentUser.email}</p>
+                    <DropdownMenuContent 
+                        className="w-64 p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200 z-50" 
+                        align="end" 
+                        sideOffset={10}
+                        forceMount
+                    >
+                        <DropdownMenuLabel className="p-3 mb-1">
+                            <div className="flex flex-col gap-1">
+                                <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">{currentUser.name}</p>
+                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">{currentUser.email}</p>
                             </div>
                         </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem className="cursor-pointer" asChild>
-                                <Link to="/profile" className="flex items-center w-full">
-                                    <User className="mr-2 h-4 w-4" />
-                                    <span>Profile</span>
+                        
+                        <DropdownMenuSeparator className="bg-slate-100 dark:bg-slate-800/50" />
+                        
+                        <DropdownMenuGroup className="space-y-1">
+                            <DropdownMenuItem className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group" asChild>
+                                <Link to="/profile">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <User className="w-4 h-4" />
+                                    </div>
+                                    <span className="font-medium text-slate-700 dark:text-slate-300">Profile</span>
                                 </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer" asChild>
-                                <Link to="/settings" className="flex items-center w-full">
-                                    <SettingsIcon className="mr-2 h-4 w-4" />
-                                    <span>Settings</span>
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer" asChild>
-                                <Link to="/notifications" className="flex items-center w-full">
-                                    <Bell className="mr-2 h-4 w-4" />
-                                    <span>Notifications</span>
+
+                            {/* Messages and Notifications - Show on Home and Create Report */}
+                            {(location.pathname === "/home" || location.pathname === "/create-report") && (
+                                <>
+                                    <DropdownMenuItem className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group" asChild>
+                                        <Link to="/chat">
+                                            <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-100 dark:group-hover:bg-green-900/50 transition-colors">
+                                                <MessageSquare className="w-4 h-4" />
+                                            </div>
+                                            <span className="font-medium text-slate-700 dark:text-slate-300">Messages</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    
+                                    <DropdownMenuItem className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group" asChild>
+                                        <Link to="/notifications">
+                                            <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/50 transition-colors relative">
+                                                <Bell className="w-4 h-4" />
+                                                {unreadCount > 0 && (
+                                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900" />
+                                                )}
+                                            </div>
+                                            <div className="flex flex-1 items-center justify-between">
+                                                <span className="font-medium text-slate-700 dark:text-slate-300">Notifications</span>
+                                                {unreadCount > 0 && (
+                                                    <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-bold dark:bg-red-900/50 dark:text-red-400">
+                                                        {unreadCount > 9 ? '9+' : unreadCount}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                </>
+                            )}
+
+                            {/* My Reports - Show only on Home */}
+                            {location.pathname === "/home" && (
+                                <DropdownMenuItem className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group" asChild>
+                                    <Link to="/my-reports">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/50 transition-colors">
+                                            <FileText className="w-4 h-4" />
+                                        </div>
+                                        <span className="font-medium text-slate-700 dark:text-slate-300">My Reports</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            )}
+
+                            <DropdownMenuItem className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group" asChild>
+                                <Link to="/settings">
+                                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+                                        <SettingsIcon className="w-4 h-4" />
+                                    </div>
+                                    <span className="font-medium text-slate-700 dark:text-slate-300">Settings</span>
                                 </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuSeparator className="bg-slate-100 dark:bg-slate-800/50 my-1" />
 
-                        {/* LOGOUT BUTTON ACTION ADDED HERE */}
                         <DropdownMenuItem
                             onClick={handleLogout}
-                            className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                            className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all group"
                         >
-                            <LogOut className="mr-2 h-4 w-4" /><span>Log out</span>
+                            <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 group-hover:bg-red-100 dark:group-hover:bg-red-900/50 transition-colors">
+                                <LogOut className="w-4 h-4" />
+                            </div>
+                            <span className="font-semibold">Log out</span>
                         </DropdownMenuItem>
-
                     </DropdownMenuContent>
                 </DropdownMenu>
 
