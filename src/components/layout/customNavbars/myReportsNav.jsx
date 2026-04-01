@@ -51,7 +51,7 @@ const myReportsNav = () => {
                     <Link to="/home" className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md hover:bg-blue-700 transition-colors">
                         <Search className="w-5 h-5" />
                     </Link>
-                    <Link to="/home" className="font-bold text-lg text-gray-900 dark:text-blue-400 tracking-tight hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
+                    <Link to="/home" className="font-bold text-lg text-gray-900 dark:text-white tracking-tight hover:text-blue-600 transition-colors">
                         FoundIt
                     </Link>
                 </div>
@@ -77,18 +77,19 @@ const myReportsNav = () => {
                         <SearchBar placeholder="Search reports..." className="w-full" />
                     </div>
                 )}
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    <Link to="/create-report" className="flex items-center">
-                        <Plus className="w-4 h-4 mr-2" /> New Report
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4">
+                    <Link to="/create-report" className="flex items-center justify-center">
+                        <Plus className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">New Report</span>
                     </Link>
                 </Button>
                 {/* User Avatar */}
                 <DropdownMenu dropDownClassName="dark:bg-slate-900 dark:border-slate-800">
                     <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                            <div className="hidden sm:flex flex-col items-end leading-tight">
-                                <span className="text-sm font-semibold text-slate-900 dark:text-white transition-colors">{currentUser.name}</span>
-                                <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{currentUser.role}</span>
+                        <button className="flex items-center gap-3 hover:bg-slate-50 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                            <div className="hidden sm:flex flex-col items-end">
+                                <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-white">{currentUser.name}</span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400">{currentUser.role}</span>
                             </div>
                             <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                                 <AvatarImage src={currentUser.avatar?.url} alt={currentUser.name} />

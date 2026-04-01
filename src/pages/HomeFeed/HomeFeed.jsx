@@ -347,19 +347,19 @@ const HomeFeed = () => {
 
                                                     {/* Content Container */}
                                                     <div className="min-w-0 flex-1 flex flex-col justify-center">
-                                                        <p className="text-[11px] font-bold text-gray-800 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
+                                                        <p className="text-[11px] font-bold text-gray-800 dark:text-gray-200 line-clamp-1 leading-tight group-hover:text-blue-600 transition-colors">
                                                             {itemTitle} {oppositeTypeLabel}
                                                         </p>
-                                                        <p className="text-[9px] text-gray-400 truncate mt-0.5">
+                                                        <p className="text-[9px] text-gray-400 dark:text-gray-500 truncate mt-0.5">
                                                             near {location.slice(0, 20)} ...
                                                         </p>
-                                                        <span className="text-[9px] text-gray-400 mt-1">
+                                                        <span className="text-[9px] text-gray-400 dark:text-gray-500 mt-1">
                                                             {formatDistanceToNow(new Date(latestMatch.createdAt), { addSuffix: true })}
                                                         </span>
 
                                                         <div className="flex items-center gap-1.5 mt-1">
                                                             <span className={`w-1.5 h-1.5 rounded-full ${latestMatch.status === 'VERIFIED' ? 'bg-green-500' : 'bg-orange-400 animate-pulse'}`}></span>
-                                                            <span className="text-[9px] font-medium text-gray-500 capitalize">
+                                                            <span className="text-[9px] font-medium text-gray-500 dark:text-gray-400 capitalize">
                                                                 {latestMatch.status === 'MATCHED' ? 'Pending' : latestMatch.status}
                                                             </span>
                                                         </div>

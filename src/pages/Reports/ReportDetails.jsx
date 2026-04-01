@@ -43,7 +43,7 @@ export default function ReportDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
         <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
       </div>
     );
@@ -52,8 +52,8 @@ export default function ReportDetails() {
   if (error || !item) return <NotFound />;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between w-full">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex flex-col font-sans">
+      <div className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between w-full">
         <Nav />
       </div>
 
@@ -98,11 +98,11 @@ export default function ReportDetails() {
                 )}
               </div>
             )}
-            <span className="flex items-center gap-1 text-xs text-slate-400">
+            <span className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
               <Clock size={12} /> Posted {new Date(item.createdAt).toLocaleDateString()}
             </span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2">{item.title}</h1>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2">{item.title}</h1>
           <p className="text-blue-600 font-semibold flex items-center gap-1.5">
             <MapPin size={18} /> {(isMatched || isOwner) ? item.locationName : item.locationName?.split(',').pop().trim()}
           </p>
