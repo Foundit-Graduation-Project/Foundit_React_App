@@ -25,7 +25,7 @@ export default function ReportGallery({ images, title, id }) {
   return (
     <div className="bg-transparent">
       {/* Main Display Area */}
-      <div className="relative aspect-video rounded-xl overflow-hidden bg-white mb-6 border border-slate-100 shadow-sm">
+      <div className="relative aspect-video rounded-xl overflow-hidden bg-white dark:bg-slate-900 mb-6 border border-slate-100 dark:border-slate-800 shadow-sm">
         <img 
           src={getImageUrl(activePhoto || photoList[0].url)} 
           alt={title}

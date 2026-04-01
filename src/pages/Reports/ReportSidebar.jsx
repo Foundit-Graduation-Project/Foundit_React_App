@@ -166,16 +166,16 @@ export default function ReportSidebar({ item, match }) {
             </div>
           </div>
         )}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-xl font-bold text-slate-900 mb-1">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
             {getSidebarTitle()}
           </h3>
-          <p className="text-sm text-slate-500 mb-6">{getSidebarDesc()}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">{getSidebarDesc()}</p>
 
           <div className="space-y-3 mb-6">
             {item.status !== "MATCHED" && item.status !== "RESOLVED" && (
               <Link to={`/create-report`} className="block">
-                <Button className="w-full bg-[#1d61f2] hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
+                <Button className="w-full bg-[#1d61f2] hover:bg-blue-700 text-white h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2">
                   {isOwner ? (
                     <>
                       <Newspaper size={20} /> Create Another Report
