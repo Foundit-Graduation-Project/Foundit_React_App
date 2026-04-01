@@ -58,10 +58,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     };
 
     const getBadgeStyle = () => {
-        if (isResolvedStatus) return "bg-green-500 text-white hover:bg-green-500";
-        if (isMatchedStatus) return "bg-green-100 text-green-700 hover:bg-green-100";
-        if (type?.toUpperCase() === "FOUND") return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
-        return "bg-blue-100 text-blue-700 hover:bg-blue-100";
+        if (isResolvedStatus) return "bg-green-500 text-white hover:bg-green-500 shadow-sm";
+        if (isMatchedStatus) return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-100 border border-green-200 dark:border-green-800 shadow-sm";
+        if (type?.toUpperCase() === "FOUND") return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-100 border border-yellow-200 dark:border-yellow-800 shadow-sm";
+        return "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-100 border border-blue-200 dark:border-blue-800 shadow-sm";
     };
 
     // --- Action Handlers ---
