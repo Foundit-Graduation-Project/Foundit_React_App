@@ -74,29 +74,29 @@ const MyReports = () => {
 
   return (
     /* flex flex-col and min-h-screen ensures the footer stays at the bottom */
-    <div className="flex flex-col min-h-screen bg-gray-50 font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-100 shadow-sm">
+    <div className="flex flex-col min-h-screen bg-gray-50/50 dark:bg-gray-950 font-sans transition-colors">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-40 shadow-sm">
         <Nav />
       </div>
 
       {/* Main content area expands to push footer down */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-8 w-full">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">My Reports</h2>
-          <p className="text-gray-500 mt-1">Track and manage your lost and found submissions in one place.</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">My Reports</h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Track and manage your lost and found submissions in one place.</p>
         </div>
 
         {/* Toolbar: Tabs & Sorting */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           {/* Category Tabs */}
-          <div className="bg-white p-1 rounded-xl border border-gray-200 flex gap-1 shadow-sm">
+          <div className="bg-white dark:bg-gray-900 p-1 rounded-xl border border-gray-200 dark:border-gray-800 flex gap-1 shadow-sm">
             {["All Reports", "Lost", "Found", "Matched", "Resolved"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleFilterChange(tab)}
                 className={`px-5 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
                   ? "bg-blue-600 text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-50"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
                   }`}
               >
                 {tab}
@@ -107,27 +107,27 @@ const MyReports = () => {
           {/* Sort Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="text-gray-600 border-gray-200 bg-white rounded-xl shadow-sm hover:bg-gray-50">
+              <Button variant="outline" className="text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 justify-between sm:justify-start h-10 px-4">
                 <SortAsc className="w-4 h-4 mr-2 opacity-70" />
-                Sort by: {sortConfig.label}
+                <span className="text-sm font-medium">Sort by: {sortConfig.label}</span>
                 <ChevronDown className="w-4 h-4 ml-2 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white rounded-xl border-gray-100 shadow-xl min-w-[160px]">
+            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 rounded-xl border-gray-100 dark:border-gray-800 shadow-xl min-w-[160px]">
               <DropdownMenuItem
-                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
                 onClick={() => handleSortChange("Newest First", "-createdAt")}
               >
                 Newest First
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
                 onClick={() => handleSortChange("Oldest First", "createdAt")}
               >
                 Oldest First
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50"
+                className="text-sm font-medium py-2.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-gray-200"
                 onClick={() => handleSortChange("Name (A-Z)", "title")}
               >
                 Name (A-Z)
@@ -140,7 +140,7 @@ const MyReports = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32">
             <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-            <p className="text-gray-500 mt-4 font-semibold tracking-wide">Fetching your records...</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-4 font-semibold tracking-wide">Fetching your records...</p>
           </div>
         ) : error ? (
           <div className="bg-red-50 text-red-600 p-8 rounded-3xl text-center border border-red-100 max-w-2xl mx-auto shadow-sm">
@@ -166,12 +166,12 @@ const MyReports = () => {
                   />
                 ))
               ) : (
-                <div className="col-span-full text-center py-24 bg-white rounded-[2rem] border-2 border-dashed border-gray-100 shadow-sm flex flex-col items-center justify-center">
-                  <div className="p-5 bg-gray-50 rounded-full mb-4">
-                    <Search className="w-10 h-10 text-gray-300" />
+                <div className="col-span-full text-center py-24 bg-white dark:bg-gray-900 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center transition-all">
+                  <div className="p-5 bg-gray-50 dark:bg-gray-800/50 rounded-full mb-4">
+                    <Search className="w-10 h-10 text-gray-300 dark:text-gray-700" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-400">No {activeTab !== "All Reports" ? activeTab : ""} reports yet</h3>
-                  <p className="text-gray-400 text-sm mt-1">Start by creating a new lost or found report.</p>
+                  <h3 className="text-xl font-bold text-gray-400 dark:text-gray-500">No {activeTab !== "All Reports" ? activeTab : ""} reports yet</h3>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Start by creating a new lost or found report.</p>
                 </div>
               )}
             </div>
@@ -183,7 +183,7 @@ const MyReports = () => {
                   variant="outline"
                   disabled={page === 1}
                   onClick={() => setPage(p => p - 1)}
-                  className="rounded-xl"
+                  className="rounded-xl text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium h-11 px-6"
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" /> Previous
                 </Button>
@@ -191,7 +191,7 @@ const MyReports = () => {
                   variant="outline"
                   disabled={!reports || reports.length < PAGE_LIMIT}
                   onClick={() => setPage(p => p + 1)}
-                  className="rounded-xl"
+                  className="rounded-xl text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium h-11 px-6"
                 >
                   Next <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>

@@ -55,7 +55,7 @@ const myReportsNav = () => {
                         FoundIt
                     </Link>
                 </div>
-                <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
+                <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-400 font-sans transition-colors">
                     <Link to="/home">
                         <span className=" text-gray-500 hover:text-blue-600 
                                  dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
@@ -84,14 +84,14 @@ const myReportsNav = () => {
                     </Link>
                 </Button>
                 {/* User Avatar */}
-                <DropdownMenu>
+                <DropdownMenu dropDownClassName="dark:bg-slate-900 dark:border-slate-800">
                     <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-3 hover:bg-slate-50 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                             <div className="hidden sm:flex flex-col items-end">
                                 <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-white">{currentUser.name}</span>
                                 <span className="text-xs text-slate-500 dark:text-slate-400">{currentUser.role}</span>
                             </div>
-                            <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
+                            <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                                 <AvatarImage src={currentUser.avatar?.url} alt={currentUser.name} />
                                 <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
                                     {getInitials(currentUser.name)}

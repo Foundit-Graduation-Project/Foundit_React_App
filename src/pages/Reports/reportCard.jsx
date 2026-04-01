@@ -152,7 +152,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 {showDelete && !isMatchedStatus && (
                     <button
                         onClick={handleDelete}
-                        className="p-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 transition-all duration-200"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 dark:border-red-900/30 transition-all duration-200"
                     >
                         <Trash2 size={16} />
                     </button>
@@ -160,7 +160,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 {isMatchedStatus && !isResolvedStatus && activeMatch?.status !== "REJECTED" && (
                     <button
                         onClick={handleRejectMatch}
-                        className="p-2 bg-white/90 hover:bg-orange-500 hover:text-white text-orange-500 rounded-full shadow-md border border-orange-100 transition-all duration-200"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-orange-500 hover:text-white text-orange-500 rounded-full shadow-md border border-orange-100 dark:border-orange-900/30 transition-all duration-200"
                     >
                         <XCircle size={16} />
                     </button>
@@ -168,7 +168,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
             </div>
 
             {/* --- Image Section --- */}
-            <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+            <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden transition-colors">
                 <img
                     src={getImageUrl(images[0])}
                     alt={title}

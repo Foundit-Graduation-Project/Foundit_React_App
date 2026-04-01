@@ -137,6 +137,8 @@ const CreateReport = () => {
   const requiredFields = [
     "itemName",
     "category",
+    "brand",
+    "color",
     "date",
     "location",
     "description",
@@ -360,6 +362,7 @@ const CreateReport = () => {
                       value={formData.brand}
                       onChange={handleInputChange}
                       className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                      required
                     >
                       <option value="">Select Brand</option>
                       {brandMappings[formData.subCategory].map((b) => (
@@ -373,6 +376,7 @@ const CreateReport = () => {
                       value={formData.brand}
                       onChange={handleInputChange}
                       placeholder="e.g. Apple, Nike, Adidas"
+                      required
                     />
                   )}
                 </div>
@@ -385,6 +389,7 @@ const CreateReport = () => {
                   value={formData.color}
                   onChange={handleInputChange}
                   placeholder="e.g. Black, Silver, Blue"
+                  required
                 />
               </div>
 
