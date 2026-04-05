@@ -1,4 +1,4 @@
-import { BookOpen, User, FileText, Mail, Bell, Settings, Home, Search, CircleUserRound, PlusCircleIcon, MessageCircleMoreIcon, LogOut } from "lucide-react";
+import { BookOpen, User, FileText, Mail, Bell, Settings, Home, Search, CircleUserRound, PlusCircleIcon, MessageCircleMoreIcon, LogOut, Info } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Ensure AvatarImage is imported
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { label: "Chat", path: "/chat", icon: <MessageCircleMoreIcon className="w-4.5 h-4.5" /> },
   { label: "Notifications", path: "/notifications", icon: <Bell className="w-4.5 h-4.5" /> },
   { label: "Settings", path: "/settings", icon: <Settings className="w-4.5 h-4.5" /> },
+  { label: "About Us", path: "/about", icon: <Info className="w-4.5 h-4.5" /> },
   { label: "Logout", path: "/login", icon: <LogOut className="w-4.5 h-4.5" /> },
 ];
 

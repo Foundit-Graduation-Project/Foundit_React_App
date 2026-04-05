@@ -228,13 +228,13 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                             {"Resolve"}
                             <CheckCircle2 className="ml-2 w-4 h-4" />
                         </Button>
-                        <Button
+                        {/* <Button
                             variant="outline"
                             className="px-3 h-11 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all rounded-xl"
                             onClick={handleChat}
                         >
                             <MessageSquare size={20} className="fill-blue-50" />
-                        </Button>
+                        </Button> */}
                     </div>
                 ) : (
                     <Button

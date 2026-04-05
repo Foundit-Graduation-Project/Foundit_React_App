@@ -36,6 +36,7 @@ function AppRouter() {
       <Routes>
         {/* --- 1. Completely Open Routes (Accessible by Anyone) --- */}
         <Route path="/" element={<GetStart />} /> {/* Landing Page */}
+        <Route path="/about" element={<GetStart />} /> {/* About Us Page */}
         <Route path="/report/:id" element={<ReportDetails />} /> {/* Public Report View */}
 
         {/* --- 2. Public/Guest Only Routes --- */}

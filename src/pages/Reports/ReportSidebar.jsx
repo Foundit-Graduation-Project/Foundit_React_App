@@ -194,7 +194,7 @@ export default function ReportSidebar({ item, match }) {
                 variant="ghost"
                 className="w-full bg-[#1d61f2] text-white hover:text-white hover:bg-blue-700 h-14 rounded-lg text-base font-bold flex items-center justify-center gap-2"
               >
-                <Mail size={20} /> {isOwner ? "View Messages" : "Contact Owner"}
+                <Mail size={20} /> {isOwner && "Contact Owner"}
               </Button>
             )}
           </div>

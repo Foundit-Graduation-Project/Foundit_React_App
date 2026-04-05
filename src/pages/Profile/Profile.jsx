@@ -397,22 +397,7 @@ const Profile = () => {
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Language</label>
-                    <p className="text-xs text-gray-500 dark:text-slate-400">
-                      {settings.language === "en" ? "English (US)" : "Arabic (EG)"}
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    onClick={toggleLanguage}
-                    className="h-9 px-3 rounded-full border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 bg-transparent hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 dark:hover:border-blue-800 transition-all duration-300"
-                  >
-                    <Globe className="w-4 h-4 mr-2" />
-                    <span className="font-bold text-xs uppercase">{settings.language}</span>
-                  </Button>
-                </div>
+                
 
                 <div className="pt-4">
                   <Link to="/settings">

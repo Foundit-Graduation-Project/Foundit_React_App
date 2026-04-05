@@ -2,7 +2,7 @@ import TypeIt from "typeit-react";
 
 const StartHeroText = () => {
   return (
-    <div className="text-2xl font-bold text-slate-800">
+    <div className="text-2xl font-bold text-slate-800 dark:text-slate-200">
       <TypeIt
         options={{
           waitUntilVisible: true,

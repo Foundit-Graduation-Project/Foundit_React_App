@@ -9,6 +9,7 @@ import {
   Moon,
   MessageSquare,
   FileText,
+  Info,
 } from "lucide-react";
 import {
   Avatar,
@@ -138,7 +139,7 @@ const HomeNav = () => {
             to="/create-report"
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold h-10 px-3 sm:px-4 rounded-lg shadow-md shadow-blue-600/20 transition-transform active:scale-95 flex items-center justify-center shrink-0"
           >
-            <Plus className="w-4 h-4 sm:mr-2 stroke-[3px]" /> 
+            <Plus className="w-4 h-4 sm:mr-2 stroke-[3px]" />
             <span className="hidden sm:inline">Post<span className="hidden md:inline"> a Report</span></span>
           </Link>
         )}
@@ -239,46 +240,46 @@ const HomeNav = () => {
               {/* Messages and Notifications - Show on Home and Create Report */}
               {(location.pathname === "/home" ||
                 location.pathname === "/create-report") && (
-                <>
-                  <DropdownMenuItem
-                    className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"
-                    asChild
-                  >
-                    <Link to="/chat">
-                      <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-100 dark:group-hover:bg-green-900/50 transition-colors">
-                        <MessageSquare className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium text-slate-700 dark:text-slate-300">
-                        Messages
-                      </span>
-                    </Link>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"
-                    asChild
-                  >
-                    <Link to="/notifications">
-                      <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/50 transition-colors relative">
-                        <Bell className="w-4 h-4" />
-                        {unreadCount > 0 && (
-                          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900" />
-                        )}
-                      </div>
-                      <div className="flex flex-1 items-center justify-between">
+                  <>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"
+                      asChild
+                    >
+                      <Link to="/chat">
+                        <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-100 dark:group-hover:bg-green-900/50 transition-colors">
+                          <MessageSquare className="w-4 h-4" />
+                        </div>
                         <span className="font-medium text-slate-700 dark:text-slate-300">
-                          Notifications
+                          Messages
                         </span>
-                        {unreadCount > 0 && (
-                          <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-bold dark:bg-red-900/50 dark:text-red-400">
-                            {unreadCount > 9 ? "9+" : unreadCount}
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"
+                      asChild
+                    >
+                      <Link to="/notifications">
+                        <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/50 transition-colors relative">
+                          <Bell className="w-4 h-4" />
+                          {unreadCount > 0 && (
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900" />
+                          )}
+                        </div>
+                        <div className="flex flex-1 items-center justify-between">
+                          <span className="font-medium text-slate-700 dark:text-slate-300">
+                            Notifications
                           </span>
-                        )}
-                      </div>
-                    </Link>
-                  </DropdownMenuItem>
-                </>
-              )}
+                          {unreadCount > 0 && (
+                            <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-bold dark:bg-red-900/50 dark:text-red-400">
+                              {unreadCount > 9 ? "9+" : unreadCount}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
 
               {/* My Reports - Show only on Home */}
               {location.pathname === "/home" && (
@@ -296,6 +297,20 @@ const HomeNav = () => {
                   </Link>
                 </DropdownMenuItem>
               )}
+
+              <DropdownMenuItem
+                className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"
+                asChild
+              >
+                <Link to="/">
+                  <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/50 transition-colors">
+                    <Info className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">
+                    About Us
+                  </span>
+                </Link>
+              </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="flex items-center gap-2 p-2.5 rounded-xl cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all group"

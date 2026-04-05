@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const MovingBackground = () => {
     return (
-        <div className="fixed inset-0 z-0 overflow-hidden bg-slate-50">
+        <div className="fixed inset-0 z-0 overflow-hidden bg-slate-50 dark:bg-slate-950">
             {/* Soft mesh gradient blobs */}
             <motion.div
                 animate={{
