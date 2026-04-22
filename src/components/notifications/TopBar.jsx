@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, Sun, Moon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function TopBar({ onToggleSidebar, isMobile }) {
   const [isDark, setIsDark] = useState(false);
@@ -29,9 +30,9 @@ export function TopBar({ onToggleSidebar, isMobile }) {
 
         {/* BRANDING FIX: Changed to "FoundIt" with brand colors */}
         {isMobile && (
-          <span className="font-bold text-lg text-blue-600 dark:text-blue-400 tracking-tight ml-1">
+          <Link to="/home" className="font-bold text-lg text-blue-600 dark:text-blue-400 tracking-tight ml-1 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
             FoundIt
-          </span>
+          </Link>
         )}
       </div>
 

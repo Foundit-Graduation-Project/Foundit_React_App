@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search, ArrowUpDown, SortAsc } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { useSearchParams, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +19,12 @@ const PAGE_LIMIT = 9;
 
 const MyReports = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("search") || "";
+  const location = useLocation();
 
   // Local state for pagination, filtering, and sorting
-  const [activeTab, setActiveTab] = useState("All Reports");
+  const [activeTab, setActiveTab] = useState(location.state?.activeFilter || "All Reports");
   const [page, setPage] = useState(1);
 
   // State for sorting: stores both label for UI and value for API
@@ -40,9 +44,11 @@ const MyReports = () => {
       page,
       limit: PAGE_LIMIT,
       sort: sortConfig.value,
+      keyword: searchTerm,
       ...(activeTab === "Lost" && { type: "LOST" }),
       ...(activeTab === "Found" && { type: "FOUND" }),
-      ...(activeTab === "Matched" && { status: "MATCHED" })
+      ...(activeTab === "Matched" && { status: "MATCHED" }),
+      ...(activeTab === "Resolved" && { status: "RESOLVED" })
     };
 
     dispatch(fetchMyReports(params))
@@ -52,7 +58,7 @@ const MyReports = () => {
       });
 
     dispatch(fetchMyMatches());
-  }, [dispatch, page, activeTab, sortConfig]);
+  }, [dispatch, page, activeTab, sortConfig, searchTerm]);
 
   // Reset to first page when filters change
   const handleFilterChange = (tab) => {
@@ -84,7 +90,7 @@ const MyReports = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           {/* Category Tabs */}
           <div className="bg-white p-1 rounded-xl border border-gray-200 flex gap-1 shadow-sm">
-            {["All Reports", "Lost", "Found", "Matched"].map((tab) => (
+            {["All Reports", "Lost", "Found", "Matched", "Resolved"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleFilterChange(tab)}

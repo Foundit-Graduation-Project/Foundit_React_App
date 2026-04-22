@@ -9,6 +9,7 @@ import ReportGallery from "./ReportGallery";
 import ReportInfo from "./ReportInfo";
 import ReportSidebar from "./ReportSidebar";
 import ReportFooter from "./ReportFooter";
+import Footer from "../../components/layout/customFooters/myReportsFooter";
 import NotFound from './../NotFound/NotFound';
 
 import { fetchMyMatches } from "../../features/matches/matchesSlice";
@@ -65,6 +66,13 @@ export default function ReportDetails() {
             </span> */}
             {isOwner && (
               <div className="flex items-center gap-2 mb-2">
+                <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border ${
+                  item.type === 'LOST' 
+                    ? 'bg-blue-50 text-blue-600 border-blue-100' 
+                    : 'bg-yellow-50 text-yellow-600 border-yellow-100'
+                }`}>
+                  {item.type} ITEM
+                </span>
                 <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-100">
                   MY REPORT
                 </span>
@@ -96,21 +104,21 @@ export default function ReportDetails() {
           </div>
           <h1 className="text-4xl font-black text-slate-900 mb-2">{item.title}</h1>
           <p className="text-blue-600 font-semibold flex items-center gap-1.5">
-            <MapPin size={18} /> {isMatched ? item.locationName : item.locationName?.split(',').pop().trim()}
+            <MapPin size={18} /> {(isMatched || isOwner) ? item.locationName : item.locationName?.split(',').pop().trim()}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <ReportGallery images={item.images} title={item.title} id={item._id} />
-            <ReportInfo item={item} />
+            <ReportInfo item={item} isOwner={isOwner} />
           </div>
           <div className="lg:col-span-1">
             <ReportSidebar item={item} match={actualMatchData} />
           </div>
         </div>
       </main>
-      <ReportFooter />
+      <Footer />
     </div>
   );
 }

@@ -38,14 +38,14 @@ function ReportHeader() {
             </Button>
           </ul>
         </nav> */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full h-18 px-6 flex items-center justify-between gap-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-40 w-full h-18 px-6 flex items-center justify-between gap-8 shadow-sm transition-colors">
           <Nav />
         </div>
         <div className="py-3 px-10">
-          <div className="text-3xl font-bold text-slate-800 tracking-tight mb-2">
+          <div className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight mb-2 transition-colors">
             <h2>Create a New Report</h2>
           </div>
-          <p className="text-slate-500 text-lg max-w-lg leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-lg leading-relaxed transition-colors">
             Provide details to help our community to find your lost item
           </p>
         </div>

@@ -19,10 +19,11 @@ export function ChatArea({ isHiddenOnMobile }) {
   const isOtherUserTyping = typingUsers[activeChatId];
 
   // === HTTP REQUEST: SEND MESSAGE ===
-  const handleSendMessage = async (text) => {
+  const handleSendMessage = async (text, files) => {
     const msgData = {
       conversationId: activeChatId,
-      content: text,
+      content: text || undefined,
+      attachments: files && files.length > 0 ? files : undefined
     };
 
     try {

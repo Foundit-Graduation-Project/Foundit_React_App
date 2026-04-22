@@ -38,7 +38,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     const activeMatch = matches[0]; // Take the first relevant match from MyReports filter
     const hasChat = activeMatch?.hasChat || activeMatch?.status === "ACCEPTED" || activeMatch?.status === "VERIFIED";
     const matchScore = activeMatch?.score;
-    const isMatchedStatus = status?.toUpperCase() === "MATCHED" || activeMatch?.status === "VERIFIED";
+    const isMatchedStatus = (status?.toUpperCase() === "MATCHED" && activeMatch?.status !== "REJECTED") || activeMatch?.status === "VERIFIED";
     const isResolvedStatus = status?.toUpperCase() === "RESOLVED" || activeMatch?.status === "VERIFIED";
 
     // Identify the "other" report in the match for smart navigation
@@ -53,7 +53,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         if (!img) return "/src/assets/notFoundImage.jpg";
         const imageUrl = typeof img === 'string' ? img : img.url;
         if (!imageUrl) return "/src/assets/notFoundImage.jpg";
-        if (imageUrl.startsWith('http')) return imageUrl; 
+        if (imageUrl.startsWith('http')) return imageUrl;
         return `${BASE_URL}/${imageUrl.replace(/\\/g, '/')}`;
     };
 
@@ -68,13 +68,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     const handleViewDetails = (e) => {
         if (e) e.stopPropagation();
 
-        // Smart Navigation: Go to the "other" report if matched
-        if (isMatchedStatus && otherReport) {
-            navigate(`/report/${otherReport._id}`);
-        } else {
-            dispatch(setSelectedReport(report));
-            navigate(`/report/${_id}`);
-        }
+        // Always navigate to own report details to avoid "another account" confusion.
+        // The user can find match details within their own report page.
+        dispatch(setSelectedReport(report));
+        navigate(`/report/${_id}`);
     };
 
     const handleDelete = async (e) => {
@@ -91,7 +88,9 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
             customClass: { popup: 'rounded-xl' }
         });
         if (result.isConfirmed) {
-            dispatch(deleteReport(_id));
+            dispatch(deleteReport(_id)).unwrap().catch((err) => {
+                console.error("API Error:", err);
+            });
         }
     };
 
@@ -150,7 +149,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         >
             {/* --- Action Buttons (Top Left) --- */}
             <div className="absolute top-3 left-3 z-50 flex flex-col gap-2">
-                {showDelete && !isResolvedStatus && !isMatchedStatus && (
+                {showDelete && !isMatchedStatus && (
                     <button
                         onClick={handleDelete}
                         className="p-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 transition-all duration-200"
@@ -200,16 +199,16 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                     </h3>
                 </div>
                 {isMyReportView && (
-                <div className="space-y-1">
-                    <div className="flex items-center text-sm text-gray-500">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
-                        <span className="truncate text-xs font-medium">{locationName || "Location unavailable"}</span>
+                    <div className="space-y-1">
+                        <div className="flex items-center text-sm text-gray-500">
+                            <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                            <span className="truncate text-xs font-medium">{locationName || "Location unavailable"}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                            <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                        <Calendar className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
-                        <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
-                    </div>
-                </div>
                 )}
             </CardContent>
 
@@ -222,7 +221,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 ) : isMatchedStatus ? (
                     <div className="flex w-full gap-2">
                         <Button
-                            className={`flex-1 font-bold text-sm h-11 transition-all ${(hasChat || activeMatch?.status === 'ACCEPTED') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                            className={`flex-1 font-bold text-sm h-11 transition-all ${(hasChat || activeMatch?.status === 'ACCEPTED' && activeMatch?.status !== 'REJECTED') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
                             disabled={!hasChat && activeMatch?.status !== 'ACCEPTED'}
                             onClick={handleResolveMatch}
                         >

@@ -10,7 +10,7 @@ const FormInput = ({
   onChange,
 }) => (
   <div className="flex flex-col gap-2">
-    <label htmlFor={id} className="text-sm font-semibold text-slate-700">
+    <label htmlFor={id} className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
       {label}
     </label>
     <div className="relative">
@@ -26,7 +26,7 @@ const FormInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${Icon ? "pl-10" : "pl-4"}`}
+        className={`w-full p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors ${Icon ? "pl-10" : "pl-4"}`}
       />
     </div>
   </div>

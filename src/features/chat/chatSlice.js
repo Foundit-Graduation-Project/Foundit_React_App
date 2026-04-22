@@ -94,15 +94,23 @@ const formatDateLabel = (dateString) => {
 
 // Map a raw backend conversation to UI shape used by ChatSidebar
 // Backend: { _id, otherUser: { _id, name, email }, lastMessage: string, updatedAt }
-const mapConversation = (conv) => ({
-  id: conv._id,
-  name: conv.otherUser?.name || 'Unknown',        // displayed as chat title
-  otherUserId: conv.otherUser?._id || null,        // used to determine 'me' vs 'other'
-  avatar: null,                                     // no avatar in current User model
-  lastMessage: conv.lastMessage || '',
-  time: formatSidebarTime(conv.updatedAt),
-  unread: false,
-});
+const mapConversation = (conv) => {
+  const isSupport = !!conv.isSupport;
+  const isUnassignedSupport = isSupport && !conv.assignedTo;
+
+  return {
+    id: conv._id,
+    name: isUnassignedSupport ? 'FoundIt Support' : (conv.otherUser?.name || 'Unknown'),
+    otherUserId: conv.otherUser?._id || null,
+    avatar: null,
+    lastMessage: conv.lastMessage || '',
+    time: formatSidebarTime(conv.updatedAt),
+    unread: false,
+    isSupport,
+    assignedTo: conv.assignedTo,
+  };
+};
+
 
 // Map a raw backend message to UI shape used by ChatMessageList
 // Backend: { _id, conversation, sender: { _id, name }, content, createdAt }
@@ -113,6 +121,7 @@ const mapMessage = (msg, myUserId) => ({
   sender: (msg.sender?._id?.toString() === myUserId || msg.sender?.toString() === myUserId)
     ? 'me'
     : 'other',
+  attachments: msg.attachments || [],
   senderName: msg.sender?.name || '',
   time: msg.createdAt
     ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -151,26 +160,46 @@ const chatSlice = createSlice({
     },
 
     // === 🔌 SOCKET: receiveMessage ===
-    // Dispatched from Chat.jsx when socket emits 'receiveMessage'
     addMessage: (state, action) => {
       const rawMsg = action.payload;
       const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
       const myUserId = storedUser?._id;
       const message = mapMessage(rawMsg, myUserId);
       
-      // Strict deduplication ensures overlapping HTTP responses and socket echoes won't multiply
+      const conversationObj = rawMsg.conversationId || rawMsg.conversation;
+      const conversationIdStr = typeof conversationObj === "object" ? conversationObj._id : conversationObj;
+
+      // 1. Add message to message list if it's the active chat
       if (!state.messages.some(m => m.id === message.id)) {
         state.messages.push(message);
 
-        // Update sidebar last message preview
-        const chat = state.chats.find(c => c.id === message.chatId);
+        // 2. Find or create the chat in the sidebar
+        let chat = state.chats.find(c => c.id === conversationIdStr);
+        
         if (chat) {
-          chat.lastMessage = message.text;
+          // Update existing chat
+          chat.lastMessage = message.text || (message.attachments.length > 0 ? '📷 Photo' : '');
           chat.time = 'Just now';
-          // Mark unread only if the message is from someone else and that chat isn't open
-          if (message.sender !== 'me' && state.activeChatId !== message.chatId) {
+          if (message.sender !== 'me' && state.activeChatId !== conversationIdStr) {
             chat.unread = true;
           }
+        } else if (typeof conversationObj === "object") {
+          // Create new chat entry if we got the full object
+          const newChat = mapConversation(conversationObj);
+          newChat.lastMessage = message.text || (message.attachments.length > 0 ? '📷 Photo' : '');
+          newChat.unread = (message.sender !== 'me');
+          state.chats.unshift(newChat);
+        }
+      }
+    },
+
+    updateConversationAssignment: (state, action) => {
+      const { conversationId, assignedTo } = action.payload;
+      const chat = state.chats.find(c => c.id === conversationId);
+      if (chat) {
+        chat.assignedTo = assignedTo;
+        if (assignedTo) {
+          chat.name = assignedTo.name || "Admin";
         }
       }
     },
@@ -180,6 +209,7 @@ const chatSlice = createSlice({
       const { chatId, isTyping } = action.payload;
       state.typingUsers[chatId] = isTyping;
     },
+
     
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
@@ -272,5 +302,13 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setActiveChat, setSearchQuery, addMessage, setTypingStatus, markMessagesSeen, setOnlineUsers } = chatSlice.actions;
-export default chatSlice.reducer;
+export const { 
+  setActiveChat, 
+  setSearchQuery, 
+  addMessage, 
+  setTypingStatus, 
+  markMessagesSeen, 
+  setOnlineUsers,
+  updateConversationAssignment,
+} = chatSlice.actions;
+export default chatSlice.reducer;
