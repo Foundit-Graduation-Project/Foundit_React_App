@@ -14,6 +14,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Switch } from "../../components/ui/switch";
 import { Progress } from "../../components/ui/progress";
 import { AppSidebar } from "../../components/notifications/SideBar";
+import { TopNav } from "../../components/layout/TopNav";
 
 // --- Redux Imports ---
 import { useSelector, useDispatch } from "react-redux";
@@ -27,7 +28,6 @@ const Profile = () => {
   const isLoading = useSelector(selectUserLoading);
   const notifications = useSelector(selectAllNotifications) || [];
 
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,7 +72,7 @@ const Profile = () => {
     if (notifications.length === 0) {
       dispatch(fetchNotifications(1));
     }
-  }, [dispatch]);
+  }, [dispatch, notifications.length]);
 
   useEffect(() => {
     const handler = () => {
@@ -139,18 +139,27 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="flex h-screen w-full bg-background overflow-hidden transition-colors duration-300">
+      
+      <AppSidebar
+        collapsed={false}
+        isMobile={isMobile}
+        mobileOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
 
-      <div className="sticky top-0 h-screen w-64 shrink-0 dark:border-slate-800 dark:bg-slate-950 z-10 transition-colors duration-300">
-        <AppSidebar
-          collapsed={collapsed}
-          isMobile={isMobile}
-          mobileOpen={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-        />
-      </div>
+      <main className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden bg-background">
+        
+        {isMobile && (
+          <TopNav 
+            onToggleSidebar={() => setMobileOpen(true)} 
+            isMobile={isMobile} 
+            title="Profile Overview" 
+          />
+        )}
 
-      <main className="flex-1 p-8 transition-colors duration-300 w-full max-w-7xl mx-auto">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-10 custom-scrollbar">
+          <div className="max-w-7xl mx-auto">
 
         {/* Header */}
         <div className="mb-8">
@@ -388,22 +397,7 @@ const Profile = () => {
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Language</label>
-                    <p className="text-xs text-gray-500 dark:text-slate-400">
-                      {settings.language === "en" ? "English (US)" : "Arabic (EG)"}
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    onClick={toggleLanguage}
-                    className="h-9 px-3 rounded-full border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 bg-transparent hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 dark:hover:border-blue-800 transition-all duration-300"
-                  >
-                    <Globe className="w-4 h-4 mr-2" />
-                    <span className="font-bold text-xs uppercase">{settings.language}</span>
-                  </Button>
-                </div>
+                
 
                 <div className="pt-4">
                   <Link to="/settings">
@@ -417,6 +411,8 @@ const Profile = () => {
             </Card>
           </div>
 
+        </div>
+          </div>
         </div>
       </main>
     </div>

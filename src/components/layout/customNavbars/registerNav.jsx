@@ -17,10 +17,10 @@ export default function RegisterNav() {
                 </Link>
             </div>
 
-            <div className="flex items-center gap-8">
+            {/* <div className="flex items-center gap-8">
                 <button onClick={() => setIsModalOpen(true)} className="text-blue-600  font-semibold cursor-pointer transition-colors">Support</button>
                 <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
-            </div>
+            </div> */}
 
         </nav>
 

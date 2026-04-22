@@ -112,7 +112,7 @@ export default function MessagesApp() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white font-sans text-slate-900 overflow-hidden">
+    <div className="flex flex-col h-screen w-full bg-background font-sans text-foreground overflow-hidden">
       <Header />
       <main className="flex flex-1 overflow-hidden">
         <ChatSidebar isHiddenOnMobile={activeChatId !== null && isMobile} />

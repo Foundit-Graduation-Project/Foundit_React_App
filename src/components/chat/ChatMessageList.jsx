@@ -3,8 +3,8 @@ import { Skeleton, MessageBubble, TypingBubble } from "./Skeleton";
 
 export function ChatMessageList({
   isLoading,
-  activeMessages,
-  activeChat,
+  activeMessages = [],
+  activeChat = {},
   isOtherUserTyping,
   onFetchMore,
   hasMoreMessages = true,
@@ -71,7 +71,7 @@ export function ChatMessageList({
                 {/* --- DATE SEPARATOR --- */}
                 {showDateSeparator && msg.date && (
                   <div className="flex justify-center mt-2 mb-2">
-                    <span className="bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                    <span className="bg-secondary text-muted-foreground text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full transition-colors duration-300 shadow-sm border border-border/50">
                       {msg.date}
                     </span>
                   </div>
@@ -80,7 +80,7 @@ export function ChatMessageList({
                 {/* --- NEW MESSAGES SEPARATOR --- */}
                 {showNewBadge && (
                   <div className="flex justify-center my-3">
-                    <span className="bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                    <span className="bg-secondary text-muted-foreground text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full transition-colors duration-300 shadow-sm border border-border/50">
                       New Messages
                     </span>
                   </div>

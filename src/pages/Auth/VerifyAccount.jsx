@@ -27,12 +27,16 @@ function VerifyAccount() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLoading = useSelector(selectAuthLoading);
-  const email = useSelector(selectUnverifiedEmail);
 
-  // 1. Protection Check: If no email in state, they shouldn't be here
+  // 1. IMPROVED: Get the email from whichever state is available
+  const emailState = useSelector(selectUnverifiedEmail);
+  const currentUser = useSelector(state => state.auth.user);
+  const email = emailState || currentUser?.email;
+
+  // 2. Protection Check: Modified to allow authenticated but unverified users
   useEffect(() => {
     if (!email) {
-      toast.error("Session expired. Please log in again.");
+      toast.error("Please log in or sign up to verify your account.");
       navigate("/login");
     }
   }, [email, navigate]);

@@ -58,10 +58,10 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
     };
 
     const getBadgeStyle = () => {
-        if (isResolvedStatus) return "bg-green-500 text-white hover:bg-green-500";
-        if (isMatchedStatus) return "bg-green-100 text-green-700 hover:bg-green-100";
-        if (type?.toUpperCase() === "FOUND") return "bg-yellow-100 text-yellow-700 hover:bg-yellow-100";
-        return "bg-blue-100 text-blue-700 hover:bg-blue-100";
+        if (isResolvedStatus) return "bg-green-500 text-white hover:bg-green-500 shadow-sm";
+        if (isMatchedStatus) return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-100 border border-green-200 dark:border-green-800 shadow-sm";
+        if (type?.toUpperCase() === "FOUND") return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-100 border border-yellow-200 dark:border-yellow-800 shadow-sm";
+        return "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-100 border border-blue-200 dark:border-blue-800 shadow-sm";
     };
 
     // --- Action Handlers ---
@@ -144,7 +144,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
 
     return (
         <Card
-            className={`overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-all group cursor-pointer relative ${isResolvedStatus ? 'opacity-75' : ''}`}
+            className={`overflow-hidden border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all group cursor-pointer relative ${isResolvedStatus ? 'opacity-75' : ''}`}
             onClick={handleViewDetails}
         >
             {/* --- Action Buttons (Top Left) --- */}
@@ -152,7 +152,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 {showDelete && !isMatchedStatus && (
                     <button
                         onClick={handleDelete}
-                        className="p-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 transition-all duration-200"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full shadow-md border border-red-100 dark:border-red-900/30 transition-all duration-200"
                     >
                         <Trash2 size={16} />
                     </button>
@@ -160,7 +160,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                 {isMatchedStatus && !isResolvedStatus && activeMatch?.status !== "REJECTED" && (
                     <button
                         onClick={handleRejectMatch}
-                        className="p-2 bg-white/90 hover:bg-orange-500 hover:text-white text-orange-500 rounded-full shadow-md border border-orange-100 transition-all duration-200"
+                        className="p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-orange-500 hover:text-white text-orange-500 rounded-full shadow-md border border-orange-100 dark:border-orange-900/30 transition-all duration-200"
                     >
                         <XCircle size={16} />
                     </button>
@@ -168,7 +168,7 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
             </div>
 
             {/* --- Image Section --- */}
-            <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+            <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden transition-colors">
                 <img
                     src={getImageUrl(images[0])}
                     alt={title}
@@ -194,18 +194,18 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
             {/* --- Information Section --- */}
             <CardContent className="p-4 space-y-3">
                 <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-gray-900 text-lg line-clamp-1 group-hover:text-blue-600 transition-colors">
+                    <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {title}
                     </h3>
                 </div>
                 {isMyReportView && (
                     <div className="space-y-1">
-                        <div className="flex items-center text-sm text-gray-500">
-                            <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <MapPin className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500 shrink-0" />
                             <span className="truncate text-xs font-medium">{locationName || "Location unavailable"}</span>
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <Calendar className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500 shrink-0" />
                             <span className="text-xs">{dateHappened ? new Date(dateHappened).toLocaleDateString() : "Date unknown"}</span>
                         </div>
                     </div>
@@ -228,18 +228,18 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
                             {"Resolve"}
                             <CheckCircle2 className="ml-2 w-4 h-4" />
                         </Button>
-                        <Button
+                        {/* <Button
                             variant="outline"
                             className="px-3 h-11 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all rounded-xl"
                             onClick={handleChat}
                         >
                             <MessageSquare size={20} className="fill-blue-50" />
-                        </Button>
+                        </Button> */}
                     </div>
                 ) : (
                     <Button
                         variant="secondary"
-                        className="w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white font-bold h-11 rounded-lg border border-blue-100 transition-all"
+                        className="w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white font-bold h-11 rounded-lg border border-blue-100 dark:border-blue-900/50 transition-all"
                         onClick={handleViewDetails}
                     >
                         View Details <ArrowRight className="ml-2 w-4 h-4" />

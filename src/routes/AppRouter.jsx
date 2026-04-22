@@ -36,16 +36,19 @@ function AppRouter() {
       <Routes>
         {/* --- 1. Completely Open Routes (Accessible by Anyone) --- */}
         <Route path="/" element={<GetStart />} /> {/* Landing Page */}
+        <Route path="/about" element={<GetStart />} /> {/* About Us Page */}
         <Route path="/report/:id" element={<ReportDetails />} /> {/* Public Report View */}
 
-        {/* --- 2. Public/Guest Only Routes (Logged-in users can't access these) --- */}
+        {/* --- 2. Public/Guest Only Routes --- */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/verify-account" element={<VerifyAccount />} />
         </Route>
+
+        {/* --- 2.5 Neutral Routes (Accessible by anyone in transition) --- */}
+        <Route path="/verify-account" element={<VerifyAccount />} />
 
         {/* --- 3. Protected Routes (Must be logged in) --- */}
         <Route element={<ProtectedRoute />}>

@@ -21,13 +21,13 @@ const GetStart = () => {
   const user = useSelector(selectCurrentUser);
 
   return (
-    <div className="relative min-h-screen font-sans overflow-x-hidden">
+    <div className="relative min-h-screen font-sans overflow-x-hidden bg-slate-50 dark:bg-slate-950">
       <MovingBackground />
-      
+
       {/* Page Content Wrapper with higher z-index */}
       <div className="relative z-10">
         <div className="w-full relative">
-          <nav className="fixed top-3 left-0 right-0 z-50 w-[95%] lg:w-4/5 mx-auto px-4 py-4 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-700">
+          <nav className="fixed top-3 left-0 right-0 z-50 w-[95%] lg:w-4/5 mx-auto px-4 py-4 bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-slate-700/50 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-700">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
                 <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-md">
@@ -127,7 +127,7 @@ const GetStart = () => {
         <main className="max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 lg:pt-24 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-8 duration-700 text-center lg:text-left">
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight">
                 {isAuthenticated ? (
                   <>
                     Welcome Back, <br className="hidden md:block" />
@@ -159,7 +159,7 @@ const GetStart = () => {
               <Link to={isAuthenticated ? "/create-report" : "/login"}>
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto bg-slate-50/50 border-slate-200 hover:bg-white text-slate-900 rounded-2xl h-14 px-8 text-lg font-bold shadow-sm flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-slate-50/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 text-slate-900 dark:text-white rounded-2xl h-14 px-8 text-lg font-bold shadow-sm flex items-center justify-center gap-2"
                 >
                   {isAuthenticated ? (
                     <>
@@ -178,25 +178,25 @@ const GetStart = () => {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 shadow-sm"
+                    className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-950 bg-slate-200 dark:bg-slate-700 shadow-sm"
                   />
                 ))}
               </div>
-              <p className="text-sm text-slate-500">
-                Trusted by <span className="font-bold text-slate-900">+1000</span>{" "}
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Trusted by <span className="font-bold text-slate-900 dark:text-white">+1000</span>{" "}
                 community members
               </p>
             </div>
           </div>
         </main>
-        <section className="relative py-24 bg-white/70 backdrop-blur-md shadow-inner">
+        <section className="relative py-24 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md shadow-inner dark:shadow-none border-t dark:border-slate-800/50">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             {/* Header Section */}
             <div className="text-center space-y-4 mb-20">
               <h3 className="text-[#1d63ed] font-bold uppercase tracking-widest text-sm">
                 About Us
               </h3>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight max-w-3xl mx-auto">
                 Building safer, more connected communities through technology.
               </h2>
             </div>
@@ -204,8 +204,8 @@ const GetStart = () => {
             {/* Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Feature 1: Our Mission */}
-              <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+              <div className="p-10 rounded-[32px] bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:shadow-xl hover:shadow-blue-50 dark:hover:shadow-blue-900/20 transition-all duration-300 space-y-6 group">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-[#1d63ed] dark:text-blue-400 group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
                   <svg
                     className="w-7 h-7"
                     fill="none"
@@ -220,16 +220,16 @@ const GetStart = () => {
                     />
                   </svg>
                 </div>
-                <h4 className="text-2xl font-bold text-slate-900">Our Mission</h4>
-                <p className="text-slate-500 leading-relaxed">
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-white">Our Mission</h4>
+                <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
                   Building safer, more connected communities through technology.
                   We empower people to help one another efficiently.
                 </p>
               </div>
 
               {/* Feature 2: How it Works */}
-              <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+              <div className="p-10 rounded-[32px] bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:shadow-xl hover:shadow-blue-50 dark:hover:shadow-blue-900/20 transition-all duration-300 space-y-6 group">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-[#1d63ed] dark:text-blue-400 group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
                   <svg
                     className="w-7 h-7"
                     fill="none"
@@ -244,18 +244,18 @@ const GetStart = () => {
                     />
                   </svg>
                 </div>
-                <h4 className="text-2xl font-bold text-slate-900">
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-white">
                   How it Works
                 </h4>
-                <p className="text-slate-500 leading-relaxed">
+                <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
                   Simple reporting and AI-driven matching. Our system identifies
                   matches between lost and found items in real-time.
                 </p>
               </div>
 
               {/* Feature 3: Community First */}
-              <div className="p-10 rounded-[32px] bg-slate-50/50 border border-slate-100 hover:shadow-xl hover:shadow-blue-50 transition-all duration-300 space-y-6 group">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1d63ed] group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
+              <div className="p-10 rounded-[32px] bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:shadow-xl hover:shadow-blue-50 dark:hover:shadow-blue-900/20 transition-all duration-300 space-y-6 group">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-[#1d63ed] dark:text-blue-400 group-hover:bg-[#1d63ed] group-hover:text-white transition-colors duration-300">
                   <svg
                     className="w-7 h-7"
                     fill="none"
@@ -270,10 +270,10 @@ const GetStart = () => {
                     />
                   </svg>
                 </div>
-                <h4 className="text-2xl font-bold text-slate-900">
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-white">
                   Community First
                 </h4>
-                <p className="text-slate-500 leading-relaxed">
+                <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
                   Designed for universities, compounds, and organizations. A
                   tailored experience for closed and open groups.
                 </p>
@@ -281,8 +281,8 @@ const GetStart = () => {
             </div>
           </div>
         </section>
-        <footer className="w-full py-4 border-t border-slate-100 bg-white/50">
-          <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-[11px] font-medium text-slate-400">
+        <footer className="w-full py-4 border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-[11px] font-medium text-slate-500 dark:text-slate-400">
             <p>© 2026 Foundit</p>
 
           <div className="flex gap-4">
@@ -305,9 +305,9 @@ const GetStart = () => {
               Contact Support
             </button>
             <div className="flex gap-4">
-              <button onClick={() => setTermsOpen(true)} className="hover:text-gray-900 transition-colors">Terms of Service</button>
-              <button onClick={() => setPrivacyOpen(true)} className="hover:text-gray-900 transition-colors">Privacy Policy</button>
-              <button onClick={() => setIsModalOpen(true)} className="hover:text-gray-900 transition-colors">Contact Support</button>
+              <button onClick={() => setTermsOpen(true)} className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms of Service</button>
+              <button onClick={() => setPrivacyOpen(true)} className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</button>
+              <button onClick={() => setIsModalOpen(true)} className="hover:text-gray-900 dark:hover:text-white transition-colors">Contact Support</button>
             </div>
             <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
             <TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />

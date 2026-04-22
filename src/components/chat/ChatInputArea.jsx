@@ -82,13 +82,13 @@ export function ChatInputArea({
   return (
     <form
       onSubmit={handleSendSubmit}
-      className="p-4 bg-white border-t border-slate-200 shrink-0"
+      className="p-4 bg-card border-t border-border shrink-0 transition-colors duration-300"
     >
       {/* Previews */}
       {previews.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {previews.map((url, index) => (
-            <div key={url} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 group">
+            <div key={url} className="relative w-16 h-16 rounded-lg overflow-hidden border border-border group shadow-sm">
               <img src={url} alt="preview" className="w-full h-full object-cover" />
               <button
                 type="button"
@@ -102,7 +102,7 @@ export function ChatInputArea({
         </div>
       )}
 
-      <div className="flex items-center gap-2 bg-slate-100/80 p-1.5 rounded-xl border border-slate-200/60 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all">
+      <div className="flex items-center gap-2 bg-secondary/80 p-1.5 rounded-xl border border-border/60 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
         <input
           type="file"
           className="hidden"
@@ -115,7 +115,7 @@ export function ChatInputArea({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading || selectedFiles.length >= 5}
-          className="p-2 text-slate-500 hover:bg-slate-200 rounded-lg shrink-0 transition-all disabled:opacity-50"
+          className="p-2 text-muted-foreground hover:bg-muted rounded-lg shrink-0 transition-all disabled:opacity-50"
         >
           <ImageIcon className="w-5 h-5" />
         </button>
@@ -126,7 +126,7 @@ export function ChatInputArea({
           value={messageInput}
           onChange={handleInputChange}
           disabled={isLoading}
-          className="flex-1 bg-transparent border-none focus:ring-0 px-2 py-2 text-[15px] outline-none placeholder:text-slate-400 disabled:opacity-50"
+          className="flex-1 bg-transparent border-none focus:ring-0 px-2 py-2 text-[15px] outline-none text-foreground placeholder:text-muted-foreground transition-colors disabled:opacity-50"
         />
 
         <button

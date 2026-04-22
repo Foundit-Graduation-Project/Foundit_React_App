@@ -91,7 +91,15 @@ const Login = () => {
       toast.success("Welcome back!");
       navigate("/home"); // Redirect to the Home Feed!
     } else {
-      toast.error(resultAction.payload || "Login failed. Check your credentials.");
+      const errorMessage = resultAction.payload || "Login failed. Check your credentials.";
+      
+      // If the error is about verification, navigate to the verify-account page
+      if (errorMessage.toLowerCase().includes("verify your email")) {
+        toast.error("Please verify your account first.");
+        navigate("/verify-account");
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
 
