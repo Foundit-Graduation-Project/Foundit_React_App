@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { AppSidebar } from "../../components/notifications/SideBar";
-import { RightPanel } from "../../components/notifications/RightPanal";
 import { NotificationFeed } from "../../components/notifications/NotificationFeed";
+import { useDispatch } from "react-redux";
+import { fetchNotifications } from "../../features/notifications";
 
-export default function App() {
+export default function Notifications() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchNotifications());
+  }, [dispatch]);
 
   useEffect(() => {
     const handler = () => {
@@ -41,8 +48,6 @@ export default function App() {
         <section className="flex flex-1 flex-col h-full min-w-0">
           <NotificationFeed onToggleSidebar={handleToggleSidebar} isMobile={isMobile} />
         </section>
-        
-        <RightPanel />
       </main>
 
     </div>

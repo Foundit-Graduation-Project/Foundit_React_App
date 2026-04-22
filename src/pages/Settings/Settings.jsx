@@ -3,8 +3,11 @@ import { Menu } from "lucide-react";
 
 import { AppSidebar } from "../../components/notifications/SideBar"; 
 import ProfilePhotoSection from "../../components/settings/SettingsPhoto";
+import SettingsProfile from "../../components/settings/SettingsProfile";
 import PasswordSection from "../../components/settings/SettingsPassword";
 import PersonalizationSection from "../../components/settings/SettingsAppearance";
+import { useDispatch } from "react-redux";
+import { getMe } from "../../features/user";
 
 export default function SettingsPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -15,6 +18,11 @@ export default function SettingsPage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMe());
+  }, [dispatch]);
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
@@ -39,6 +47,7 @@ export default function SettingsPage() {
             </div>
 
             <ProfilePhotoSection />
+            <SettingsProfile />
             <PasswordSection />
             <PersonalizationSection />
 

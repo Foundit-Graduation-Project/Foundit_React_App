@@ -17,8 +17,25 @@ export const MessageBubble = ({ message, activeChat }) => {
       )}
 
       <div className={`flex flex-col ${isOther ? 'items-start' : 'items-end'}`}>
-        <div className={`px-4 py-3 text-[15px] leading-relaxed shadow-sm ${isOther ? 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm' : 'bg-blue-600 text-white rounded-2xl rounded-tr-sm'}`}>
-          {message.text}
+        <div className={`flex flex-col gap-2 p-1 shadow-sm overflow-hidden ${isOther ? 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm' : 'bg-blue-600 text-white rounded-2xl rounded-tr-sm'}`}>
+          {message.attachments && message.attachments.length > 0 && (
+            <div className={`flex flex-wrap gap-1 p-1 ${message.attachments.length > 1 ? "grid grid-cols-2" : ""}`}>
+              {message.attachments.map((url, i) => (
+                <img 
+                  key={i} 
+                  src={url} 
+                  alt="attachment" 
+                  className="rounded-xl max-h-[300px] w-full object-cover cursor-zoom-in hover:brightness-95 transition-all"
+                  onClick={() => window.open(url, '_blank')}
+                />
+              ))}
+            </div>
+          )}
+          {message.text && (
+            <div className="px-3 py-2">
+              {message.text}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-1.5 mt-1.5 px-1">
           <span className="text-[11px] font-medium text-slate-400">{message.time}</span>

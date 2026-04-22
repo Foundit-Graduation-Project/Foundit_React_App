@@ -1,71 +1,85 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addMessage, setActiveChat } from '../../features/chat/chatSlice';
-import { ChatMessageList } from './ChatMessageList';
-import { ChatHeader } from './ChatHeader';
-import { ChatInputArea } from './ChatInputArea';
-
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setActiveChat,
+  sendMessageAPI,
+  fetchMessages,
+} from "../../features/chat/chatSlice";
+import { ChatMessageList } from "./ChatMessageList";
+import { ChatHeader } from "./ChatHeader";
+import { ChatInputArea } from "./ChatInputArea";
 
 export function ChatArea({ isHiddenOnMobile }) {
   const dispatch = useDispatch();
-  const { chats, messages, activeChatId, isLoading, typingUsers } = useSelector(state => state.chat);
-  
-  const activeChat = chats.find(c => c.id === activeChatId);
-  const activeMessages = messages.filter(m => m.chatId === activeChatId);
+  const { chats, messages, activeChatId, isLoading, typingUsers, hasMoreMessages } = useSelector(
+    (state) => state.chat,
+  );
+
+  const activeChat = chats.find((c) => c.id === activeChatId);
+  const activeMessages = messages.filter((m) => m.chatId === activeChatId);
   const isOtherUserTyping = typingUsers[activeChatId];
 
-  // === 🔌 SOCKET.IO PREP: SEND MESSAGE ===
-  const handleSendMessage = (text) => {
-    const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
-    const newMsg = {
-      id: Date.now(), 
-      chatId: activeChatId,
-      text: text,
-      sender: "me",
-      time: timeString,
-      status: "sent"
+  // === HTTP REQUEST: SEND MESSAGE ===
+  const handleSendMessage = async (text, files) => {
+    const msgData = {
+      conversationId: activeChatId,
+      content: text || undefined,
+      attachments: files && files.length > 0 ? files : undefined
     };
 
-    // 1. Dispatch locally via the action from your chatSlice
-    dispatch(addMessage(newMsg));
+    try {
+      // Send HTTP request to backend
+      await dispatch(sendMessageAPI(msgData)).unwrap();
 
-    // 2. Send via socket
-    // socket.emit("send_message", newMsg);
+      // Backend saves it and emits socket event.
+      // The socket listener in Chat.jsx will receive it and update the UI.
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
-  const handleShareLocation = () => {
-    handleSendMessage("📍 Shared Location: 123 Main Street, Central District");
+  // === HTTP REQUEST: PAGINATION ===
+  const handleFetchMore = (firstMessageId) => {
+    if (!hasMoreMessages) return; // Stop when all history is loaded
+    dispatch(
+      fetchMessages({ conversationId: activeChatId, before: firstMessageId }),
+    );
   };
 
   if (!activeChat && !isLoading) {
-    return <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50/30">Select a conversation</div>;
+    return (
+      <div className="flex-1 flex items-center justify-center text-slate-400 bg-slate-50/30">
+        Select a conversation
+      </div>
+    );
   }
 
   return (
-    <section className={`flex-1 flex flex-col bg-slate-50/30 ${isHiddenOnMobile ? 'hidden md:flex' : 'flex'}`}>
-      
-      <ChatHeader 
-        activeChat={activeChat} 
-        isLoading={isLoading} 
-        isOtherUserTyping={isOtherUserTyping} 
+    <section
+      className={`flex-1 flex flex-col bg-slate-50/30 ${isHiddenOnMobile ? "hidden md:flex" : "flex"}`}
+    >
+      <ChatHeader
+        activeChat={activeChat}
+        isLoading={isLoading}
+        isOtherUserTyping={isOtherUserTyping}
         onBack={() => dispatch(setActiveChat(null))}
-        onShareLocation={handleShareLocation}
       />
-      
-      <ChatMessageList 
+
+      {/* we don't need is loading or active chat or is other user typing you can get them from slice */}
+      <ChatMessageList
         isLoading={isLoading}
         activeMessages={activeMessages}
         activeChat={activeChat}
         isOtherUserTyping={isOtherUserTyping}
+        onFetchMore={handleFetchMore}
+        hasMoreMessages={hasMoreMessages}
       />
-      
-      <ChatInputArea 
+
+      <ChatInputArea
         isLoading={isLoading}
         activeChatId={activeChatId}
+        otherUserId={activeChat?.otherUserId}
         onSendMessage={handleSendMessage}
       />
-      
     </section>
   );
 }

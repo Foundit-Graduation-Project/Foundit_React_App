@@ -2,13 +2,11 @@
 import { FileText } from "lucide-react";
 import ReportWhenAndWhere from "./ReportWhenAndWhere";
 
-export default function ReportInfo({ item }) {
+export default function ReportInfo({ item, isOwner }) {
   // Mapping the specs to match the visual hierarchy in the photo
   const specs = [
     { label: "BRAND", val: item.brand || "N/A" },
-    { label: "MODEL", val: item.model || 'N/A"' },
     { label: "COLOR", val: item.color || "N/A" },
-    { label: "YEAR", val: item.year || "N/A" }
   ];
 
   return (
@@ -21,7 +19,7 @@ export default function ReportInfo({ item }) {
           </div>
           <h2 className="text-2xl font-bold text-[#1e293b] tracking-tight">Item Description</h2>
         </div>
-        
+
         {/* Specs Grid - Matches the Photo layout */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 mb-10">
           {specs.map((spec, i) => (
@@ -41,22 +39,11 @@ export default function ReportInfo({ item }) {
           <p className="font-medium">
             {item.description || "I accidentally left my laptop in the 2nd floor study area of the Central Library yesterday afternoon around 4 PM. It was on one of the circular tables near the windows overlooking the quad."}
           </p>
-          
-          <div className="space-y-4">
-            <p>
-              <span className="font-bold text-[#334155]">Distinguishing Features:</span>{" "}
-              <span className="font-medium">{item.features || "It has a small 'NASA' sticker on the top right corner of the lid and a very minor scratch on the bottom casing. It's in a grey felt sleeve. The keyboard layout is English (US)."}</span>
-            </p>
-            
-            <p className="font-medium">
-              Reward offered for its safe return. Please contact me if you have seen it or handed it in to security.
-            </p>
-          </div>
         </div>
       </section>
 
       {/* When & Where Section */}
-      <ReportWhenAndWhere item={item} />
+      {(item.status === "MATCHED" || item.status === "RESOLVED" || isOwner) && <ReportWhenAndWhere item={item} />}
     </div>
   );
 }
