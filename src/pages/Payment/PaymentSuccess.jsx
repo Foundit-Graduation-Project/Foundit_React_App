@@ -1,9 +1,30 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Download, Plus, CreditCard } from "lucide-react";
+import {
+  CheckCircle2, Download, Plus, CreditCard, User,
+  Settings as SettingsIcon, Bell, LogOut,
+  Search
+} from "lucide-react";
 import { Button } from "../../components/ui/button";
-import PaymentNav from "../../components/layout/customNavbars/PaymentNav";
-
+import SupportModel from "../Auth/SupportModel";
+import TermsOfServicePopup from "../../components/popups/TermsOfServicePopup";
+import PrivacyPolicyPopup from "../../components/popups/PrivacyPolicyPopup";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "../../components/ui/avatar";
+import { currentUser } from "../../components/chat/mockData";
 const PaymentSuccess = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   // Mock data - In the future, this will come from Redux (paymentSlice) via useLocation or useSelector
   const transactionDetails = {
@@ -16,7 +37,67 @@ const PaymentSuccess = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
 
-      <PaymentNav />
+      <header className="bg-white border-b border-gray-200 py-4 px-6 md:px-10 sticky top-0 z-50">
+        <div className="w-full flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+              <Search className="w-5 h-5" />
+            </div>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">Foundit</span>
+          </div>
+          {/* User Avatar */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-3 hover:bg-slate-50 p-1 sm:pr-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                <div className="hidden sm:flex flex-col items-end">
+                  <span className="text-sm font-semibold leading-tight text-slate-900">{currentUser.name}</span>
+                  <span className="text-xs text-slate-500">{currentUser.role}</span>
+                </div>
+                <Avatar className="w-9 h-9 border border-slate-100 shadow-sm">
+                  <AvatarImage src={currentUser?.avatarUrl} alt={currentUser.name} />
+                  <AvatarFallback className={`font-medium ${currentUser.color}`}>
+                    {currentUser.initials}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none text-slate-900">{currentUser.name}</p>
+                  <p className="text-xs leading-none text-slate-500">alex.rivera@example.com</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Link to="/profile" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Link to="/settings" className="flex items-center w-full">
+                    <SettingsIcon className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Link to="/notifications" className="flex items-center w-full">
+                    <Bell className="mr-2 h-4 w-4" />
+                    <span>Notifications</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                <LogOut className="mr-2 h-4 w-4" /><span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md mb-6 text-sm text-gray-500">
           <span className="text-blue-600">Billing</span>
@@ -110,16 +191,19 @@ const PaymentSuccess = () => {
           </div>
           <div className="mt-8 text-xs text-gray-400 flex flex-col gap-2">
             <p>
-              Questions? <a href="#" className="text-blue-600 hover:underline">Contact Support</a> or visit our <a href="#" className="text-blue-600 hover:underline">Help Center</a>.
+              Questions? <button onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:underline">Contact Support</button>.
             </p>
+            <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
           </div>
 
         </div>
         {/* Footer Links */}
         <div className="mt-8 text-xs text-gray-400 flex flex-col gap-2">
           <div className="flex justify-center gap-4 mt-2">
-            <a href="#" className="hover:text-gray-600">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-600">Terms of Service</a>
+            <button onClick={() => setPrivacyOpen(true)} className="hover:text-gray-600 transition-colors">Privacy Policy</button>
+            <PrivacyPolicyPopup open={privacyOpen} setOpen={setPrivacyOpen} />
+            <button onClick={() => setTermsOpen(true)} className="hover:text-gray-600 transition-colors">Terms of Service</button>
+            <TermsOfServicePopup open={termsOpen} setOpen={setTermsOpen} />
           </div>
         </div>
       </div>

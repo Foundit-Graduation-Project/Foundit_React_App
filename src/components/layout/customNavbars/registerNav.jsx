@@ -1,27 +1,27 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { Wallet } from 'lucide-react'
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-
+import { Search, Wallet } from 'lucide-react'
+import SupportModel from '../../../pages/Auth/SupportModel'
+import { useState } from 'react';
 export default function RegisterNav() {
-  return (
-       <nav className="w-full h-16 bg-white border-b border-gray-100 px-4 md:px-10 flex items-center justify-between sticky top-0 z-50">
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    return (
+        <nav className="w-full h-16 bg-white border-b border-gray-100 px-4 md:px-10 flex items-center justify-between sticky top-0 z-50">
 
             <div className="flex items-center gap-2">
-                <div className="bg-blue-600 p-1.5 rounded-lg flex items-center justify-center">
-                    <Wallet className="h-5 w-5 text-white" />
+                <div className="bg-blue-600 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-md">
+                    <Search className="w-5 h-5" />
                 </div>
                 <span className="text-xl font-bold text-gray-900 tracking-tight">
-                    FinTrack
+                    Foundit
                 </span>
             </div>
 
             <div className="flex items-center gap-8">
-               <p className='text-sm text-slate-500'>Need help? <a className='text-blue-600  font-semibold cursor-pointer'>Support</a></p>
-              
+                <button onClick={() => setIsModalOpen(true)} className="text-blue-600  font-semibold cursor-pointer transition-colors">Support</button>
+                <SupportModel isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
             </div>
 
         </nav>
 
-  )
+    )
 }

@@ -10,6 +10,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Switch } from "../../components/ui/switch";
 import { Progress } from "../../components/ui/progress";
 import { AppSidebar } from "../../components/notifications/SideBar";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -160,9 +161,11 @@ const Profile = () => {
                   </p>
                 </div>
 
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-6 shadow-lg shadow-blue-200 dark:shadow-none">
-                  Refill Credits
-                </Button>
+                <Link to="/payment/checkout">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-6 shadow-lg shadow-blue-200 dark:shadow-none">
+                    Refill Credits
+                  </Button>
+                </Link>
               </div>
             </Card>
 
@@ -295,11 +298,13 @@ const Profile = () => {
                 </div>
 
                 <div className="pt-4">
-                  <Button variant="outline" className="w-full border-gray-200 dark:border-slate-700 
+                  <Link to="/settings">
+                    <Button variant="outline" className="w-full border-gray-200 dark:border-slate-700 
                                          text-gray-700 dark:text-slate-300 
                                          hover:bg-gray-50 dark:hover:bg-slate-800 h-10">
-                    View Full Settings
-                  </Button>
+                      View Full Settings
+                    </Button>
+                  </Link>
                 </div>
 
               </div>
