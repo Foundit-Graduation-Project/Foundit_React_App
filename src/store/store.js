@@ -7,15 +7,17 @@ import authReducer from "../features/auth";
 import userReducer from "../features/user";
 import paymentReducer from "../features/payment/paymentSlice";
 import notificationsReducer from "../features/notifications";
+import matchReducer from "../features/matches/matchesSlice";
 export const store = configureStore({
   reducer: {
     report: reportReducer,
     chat: chatReducer,
     settings: settingsReducer,
     auth: authReducer,
+    notifications: notificationsReducer,
+    match: matchReducer,
     user: userReducer,
-    payment: paymentReducer,
-    notifications: notificationsReducer
-  },
+    payment: paymentReducer
+    },
 });
 
