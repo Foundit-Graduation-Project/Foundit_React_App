@@ -119,6 +119,13 @@ export const reportsSlice = createSlice({
       state.error = null;
       state.progress = 0;
     },
+    setSelectedReport: (state, action) => {
+    state.selectedReport = action.payload;
+    },
+  },
+});
+
+export const { updateField, resetForm,setSelectedReport } = reportsSlice.actions;
     clearReportError: (state) => {
       state.error = null;
     },

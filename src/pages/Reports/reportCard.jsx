@@ -57,6 +57,14 @@ const ReportCard = ({ report, showDelete = false, matches = [], hideTypeBadge = 
         return `${BASE_URL}/${imageUrl.replace(/\\/g, '/')}`;
     };
 
+    //  Initialize hooks
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleViewDetails = () => {
+        dispatch(setSelectedReport(report));
+        navigate(`/report/${id}`);
+    };
     const getBadgeStyle = () => {
         if (isResolvedStatus) return "bg-green-500 text-white hover:bg-green-500 shadow-sm";
         if (isMatchedStatus) return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-100 border border-green-200 dark:border-green-800 shadow-sm";
