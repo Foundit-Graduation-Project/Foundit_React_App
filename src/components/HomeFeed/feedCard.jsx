@@ -3,6 +3,7 @@ import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../components/ui/card";
 import { motion } from "framer-motion"; // 1. Import Framer Motion
+import { Link } from "react-router-dom";
 
 const FeedCard = ({ item, index }) => {
     const { title, description, location, time, type, image } = item;
@@ -70,14 +71,16 @@ const FeedCard = ({ item, index }) => {
 
                 {/* 🔘 Footer Actions */}
                 <CardFooter className="p-5 pt-0">
-                    <Button
-                        className={`w-full font-semibold h-11 shadow-sm transition-all duration-300 ${isLost
+                    <Link to={`/report/${item.id}`} className="w-full">
+                        <Button
+                            className={`w-full font-semibold h-11 shadow-sm transition-all duration-300 ${isLost
                                 ? "bg-blue-600 hover:bg-blue-700 text-white hover:shadow-blue-200 hover:shadow-lg"
                                 : "bg-emerald-600 hover:bg-emerald-700 text-white hover:shadow-emerald-200 hover:shadow-lg"
-                            }`}
-                    >
-                        {isLost ? "Contact Owner" : "Claim Item"}
-                    </Button>
+                                }`}
+                        >
+                            {isLost ? "Contact Owner" : "Claim Item"}
+                        </Button>
+                    </Link>
                 </CardFooter>
             </Card>
         </motion.div>

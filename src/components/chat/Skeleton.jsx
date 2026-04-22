@@ -2,7 +2,7 @@ import React from 'react';
 import { Check, CheckCheck } from 'lucide-react';
 
 export const Skeleton = ({ className }) => (
-  <div className={`animate-pulse rounded-md bg-slate-200/60 ${className}`} />
+  <div className={`animate-pulse rounded-md bg-muted/60 dark:bg-muted/40 ${className}`} />
 );
 
 export const MessageBubble = ({ message, activeChat }) => {
@@ -17,13 +17,30 @@ export const MessageBubble = ({ message, activeChat }) => {
       )}
 
       <div className={`flex flex-col ${isOther ? 'items-start' : 'items-end'}`}>
-        <div className={`px-4 py-3 text-[15px] leading-relaxed shadow-sm ${isOther ? 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm' : 'bg-blue-600 text-white rounded-2xl rounded-tr-sm'}`}>
-          {message.text}
+        <div className={`flex flex-col gap-2 p-1 shadow-sm overflow-hidden transition-colors duration-300 ${isOther ? 'bg-secondary text-foreground rounded-2xl rounded-tl-sm' : 'bg-blue-600 text-white rounded-2xl rounded-tr-sm'}`}>
+          {message.attachments && message.attachments.length > 0 && (
+            <div className={`flex flex-wrap gap-1 p-1 ${message.attachments.length > 1 ? "grid grid-cols-2" : ""}`}>
+              {message.attachments.map((url, i) => (
+                <img 
+                  key={i} 
+                  src={url} 
+                  alt="attachment" 
+                  className="rounded-xl max-h-[300px] w-full object-cover cursor-zoom-in hover:brightness-95 transition-all"
+                  onClick={() => window.open(url, '_blank')}
+                />
+              ))}
+            </div>
+          )}
+          {message.text && (
+            <div className="px-3 py-2">
+              {message.text}
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-1.5 mt-1.5 px-1">
-          <span className="text-[11px] font-medium text-slate-400">{message.time}</span>
-          {!isOther && message.status === 'sent' && <Check className="w-3.5 h-3.5 text-slate-400" />}
-          {!isOther && message.status === 'delivered' && <CheckCheck className="w-3.5 h-3.5 text-slate-400" />}
+        <div className="flex items-center gap-1.5 mt-1.5 px-1 uppercase tracking-tighter">
+          <span className="text-[10px] font-bold text-muted-foreground">{message.time}</span>
+          {!isOther && message.status === 'sent' && <Check className="w-3.5 h-3.5 text-muted-foreground" />}
+          {!isOther && message.status === 'delivered' && <CheckCheck className="w-3.5 h-3.5 text-muted-foreground" />}
           {!isOther && message.status === 'seen' && <CheckCheck className="w-3.5 h-3.5 text-blue-500" />}
         </div>
       </div>
@@ -36,10 +53,10 @@ export const TypingBubble = ({ activeChat }) => (
     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium shrink-0 mt-1 ${activeChat.avatarColor}`}>
       {activeChat.avatarInitials}
     </div>
-    <div className="bg-slate-100 px-4 py-4 rounded-2xl rounded-tl-sm flex items-center gap-1.5 shadow-sm h-[44px]">
-      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+    <div className="bg-secondary px-4 py-4 rounded-2xl rounded-tl-sm flex items-center gap-1.5 shadow-sm h-[44px] transition-colors duration-300">
+      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce"></div>
     </div>
   </div>
 );

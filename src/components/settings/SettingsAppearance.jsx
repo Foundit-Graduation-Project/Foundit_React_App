@@ -20,20 +20,7 @@ export default function PersonalizationSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Language */}
-        <div className="bg-card border border-border rounded-xl p-6 flex flex-col gap-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
-            <span className="text-lg">🌐</span> Language
-          </h3>
-          <Select value={language} onValueChange={(val) => dispatch(setLanguage(val))}>
-            <SelectTrigger className="bg-background border-border">
-              <SelectValue placeholder="Select language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English (United States)</SelectItem>
-              <SelectItem value="ar">Arabic (العربية)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        
 
         {/* Theme */}
         <div className="bg-card border border-border rounded-xl p-6 flex flex-col gap-4">
